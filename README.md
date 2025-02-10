@@ -1,2 +1,0 @@
-# SE1808_SWP391_Project_group5
-SE1808_SWP391_Project_group5
