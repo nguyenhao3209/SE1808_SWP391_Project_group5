@@ -129,7 +129,4 @@ public class Products {
     public void setUpdateAt(Date updateAt) {
         this.updateAt = updateAt;
     }
-
-    
-    
 }
