@@ -18,7 +18,7 @@ public class Products {
     private String description;
     private int stockQuantity;
     private String brand;
-    private Category categoryID;
+    private Category category;
     private BigDecimal price;
     private BigDecimal discountPercent;
     private String imageURL;
@@ -28,13 +28,13 @@ public class Products {
     public Products() {
     }
 
-    public Products(int productID, String productName, String description, int stockQuantity, String brand, Category categoryID, BigDecimal price, BigDecimal discountPercent, String imageURL, Date createAt, Date updateAt) {
+    public Products(int productID, String productName, String description, int stockQuantity, String brand, Category category, BigDecimal price, BigDecimal discountPercent, String imageURL, Date createAt, Date updateAt) {
         this.productID = productID;
         this.productName = productName;
         this.description = description;
         this.stockQuantity = stockQuantity;
         this.brand = brand;
-        this.categoryID = categoryID;
+        this.category = category;
         this.price = price;
         this.discountPercent = discountPercent;
         this.imageURL = imageURL;
@@ -82,14 +82,13 @@ public class Products {
         this.brand = brand;
     }
 
-    public Category getCategoryID() {
-        return categoryID;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryID(Category categoryID) {
-        this.categoryID = categoryID;
+    public void setCategory(Category category) {
+        this.category = category;
     }
-
     public BigDecimal getPrice() {
         return price;
     }

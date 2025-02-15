@@ -79,5 +79,4 @@ public class Reply {
         this.comment = comment;
     }
     
-    
 }
