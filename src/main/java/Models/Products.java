@@ -1,8 +1,8 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package Models;
 
 import java.math.BigDecimal;
@@ -10,37 +10,65 @@ import java.sql.Date;
 
 /**
  *
- * @author HaoNTCE180451
+ * @author CE180220_Trần Minh Khánh
  */
 public class Products {
     private int productID;
     private String productName;
-    private String description;
+    private BigDecimal price;
     private int stockQuantity;
     private String brand;
-    private Category category;
-    private BigDecimal price;
-    private BigDecimal discountPercent;
+    private int categoryID;
+    private String description;
     private String imageURL;
-    private Date createAt;
-    private Date updateAt;
+    private Date createdAt;
+    private Date updatedAt;
+    private BigDecimal discountProduct;
+    
+    private int numberOfFeedbacks;
+    private double avgRating;
 
     public Products() {
     }
 
-    public Products(int productID, String productName, String description, int stockQuantity, String brand, Category category, BigDecimal price, BigDecimal discountPercent, String imageURL, Date createAt, Date updateAt) {
+    public Products(int productID, String productName, BigDecimal price, int stockQuantity, String brand, int category, String description, String imageURL, Date createdAt, Date updatedAt, BigDecimal discountProduct) {
         this.productID = productID;
         this.productName = productName;
-        this.description = description;
+        this.price = price;
         this.stockQuantity = stockQuantity;
         this.brand = brand;
-        this.category = category;
-        this.price = price;
-        this.discountPercent = discountPercent;
+        this.categoryID = categoryID;
+        this.description = description;
         this.imageURL = imageURL;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.discountProduct = discountProduct;
     }
+
+    public Products(int productID, String productName, BigDecimal price, int stockQuantity, String brand, String category, String description, String imageURL, BigDecimal discountProduct) {
+        this.productID = productID;
+        this.productName = productName;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.brand = brand;
+        this.categoryID = categoryID;
+        this.description = description;
+        this.imageURL = imageURL;
+        this.discountProduct = discountProduct;
+    }
+
+    public Products(String productName, BigDecimal price, int stockQuantity, String brand, String category, String description, String imageURL, BigDecimal discountProduct) {
+        this.productName = productName;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.brand = brand;
+        this.categoryID = categoryID;
+        this.description = description;
+        this.imageURL = imageURL;
+        this.discountProduct = discountProduct;
+    }
+    
+    
 
     public int getProductID() {
         return productID;
@@ -58,12 +86,12 @@ public class Products {
         this.productName = productName;
     }
 
-    public String getDescription() {
-        return description;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public int getStockQuantity() {
@@ -82,27 +110,20 @@ public class Products {
         this.brand = brand;
     }
 
-    public Category getCategory() {
-        return category;
+    public int getCategoryID() {
+        return categoryID;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-    public BigDecimal getPrice() {
-        return price;
+    public void setCategoryID(int categoryID) {
+        this.categoryID = categoryID;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public String getDescription() {
+        return description;
     }
 
-    public BigDecimal getDiscountPercent() {
-        return discountPercent;
-    }
-
-    public void setDiscountPercent(BigDecimal discountPercent) {
-        this.discountPercent = discountPercent;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImageURL() {
@@ -113,19 +134,45 @@ public class Products {
         this.imageURL = imageURL;
     }
 
-    public Date getCreateAt() {
-        return createAt;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Date getUpdateAt() {
-        return updateAt;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdateAt(Date updateAt) {
-        this.updateAt = updateAt;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
+
+    public BigDecimal getDiscountProduct() {
+        return discountProduct;
+    }
+
+    public void setDiscountProduct(BigDecimal discountProduct) {
+        this.discountProduct = discountProduct;
+    }
+
+    public int getNumberOfFeedbacks() {
+        return numberOfFeedbacks;
+    }
+
+    public void setNumberOfFeedbacks(int numberOfFeedbacks) {
+        this.numberOfFeedbacks = numberOfFeedbacks;
+    }
+
+    public double getAvgRating() {
+        return avgRating;
+    }
+
+    public void setAvgRating(double avgRating) {
+        this.avgRating = avgRating;
+    }
+
 }
+
