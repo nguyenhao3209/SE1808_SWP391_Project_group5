@@ -18,7 +18,7 @@ public class Products {
     private BigDecimal price;
     private int stockQuantity;
     private String brand;
-    private int categoryID;
+    private Category categoryID;
     private String description;
     private String imageURL;
     private Date createdAt;
@@ -110,11 +110,11 @@ public class Products {
         this.brand = brand;
     }
 
-    public int getCategoryID() {
+    public Category getCategoryID() {
         return categoryID;
     }
 
-    public void setCategoryID(int categoryID) {
+    public void setCategoryID(Category categoryID) {
         this.categoryID = categoryID;
     }
 
