@@ -74,7 +74,7 @@ public class SearchServlet extends HttpServlet {
         // Gọi ProductsDAO để lấy danh sách sản phẩm theo các tiêu chí lọc
         ProductsDAO productsDAO = new ProductsDAO();
         ArrayList<Products> productsList = productsDAO.searchProductsWithFilters2(keyword, categories, brands, priceRange, pageNumber, 9);
-
+        System.out.println(productsList.size());
         // Đặt danh sách sản phẩm vào request để hiển thị trên trang JSP
         request.setAttribute("productsList", productsList);
 

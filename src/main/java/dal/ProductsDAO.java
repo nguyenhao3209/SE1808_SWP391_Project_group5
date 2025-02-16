@@ -21,7 +21,7 @@ import java.util.List;
  * @author CE180220_Trần Minh Khánh
  */
 public class ProductsDAO extends DBContext {
-    
+
 //     public List<String> getAllCategory() {
 //        ArrayList<String> list = new ArrayList<>();
 //        String sql = "select distinct c.CategoryName "
@@ -39,7 +39,6 @@ public class ProductsDAO extends DBContext {
 //        }
 //        return list;
 //    }
-     
     public List<Category> getAllCategory() {
         ArrayList<Category> list = new ArrayList<>();
         String sql = "select * "
@@ -57,7 +56,7 @@ public class ProductsDAO extends DBContext {
         }
         return list;
     }
-    
+
     public List<String> getAllBrand() {
         ArrayList<String> list = new ArrayList<>();
         String sql = "select distinct Brand "
@@ -75,24 +74,25 @@ public class ProductsDAO extends DBContext {
         }
         return list;
     }
+
     public ArrayList<Products> searchProductsWithFilters2(String keyword, String[] categories, String[] brands, String priceRange, int pageNumber, int pageSize) {
         ArrayList<Products> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-                "SELECT p.ProductID,\n" +
-"    p.ProductName,\n" +
-"    p.Price,\n" +
-"    p.StockQuantity,\n" +
-"    p.Brand,\n" +
-"    p.CategoryID,\n" +
-"    CAST(p.Description AS NVARCHAR(MAX)) AS Description, \n" +
-"    CAST(p.ImageURL AS NVARCHAR(MAX)) AS ImageURL, \n" +
-"    p.CreateAt,\n" +
-"    p.UpdateAt,\n" +
-"    p.DiscountPercent,\n" +
-"    COUNT(f.FeedbackID) AS FeedbackCount,\n" +
-"    AVG(f.Rating) AS AverageRating, c.CategoryName\n" +
-"FROM Products p LEFT JOIN Feedback f ON p.ProductID = f.ProductID left join Category c on c.CategoryID = p.CategoryID\n" +
-"WHERE p.ProductName LIKE ?"
+                "SELECT p.ProductID,\n"
+                + "    p.ProductName,\n"
+                + "    p.Price,\n"
+                + "    p.StockQuantity,\n"
+                + "    p.Brand,\n"
+                + "    p.CategoryID,\n"
+                + "    CAST(p.Description AS NVARCHAR(MAX)) AS Description, \n"
+                + "    CAST(p.ImageURL AS NVARCHAR(MAX)) AS ImageURL, \n"
+                + "    p.CreateAt,\n"
+                + "    p.UpdateAt,\n"
+                + "    p.DiscountPercent,\n"
+                + "    COUNT(f.FeedbackID) AS FeedbackCount,\n"
+                + "    AVG(f.Rating) AS AverageRating, c.CategoryName\n"
+                + "FROM Products p LEFT JOIN Feedback f ON p.ProductID = f.ProductID left join Category c on c.CategoryID = p.CategoryID\n"
+                + "WHERE p.ProductName LIKE ?"
         );
 
         // Add category filter
@@ -131,10 +131,10 @@ public class ProductsDAO extends DBContext {
         }
 
         // Add grouping and pagination
-        sql.append(" GROUP BY p.ProductID, p.ProductName, p.Price, p.StockQuantity, p.Brand, p.CategoryID, CAST(p.Description AS NVARCHAR(MAX)), CAST(p.ImageURL AS NVARCHAR(MAX)),  p.CreateAt,\n" +
-"    p.UpdateAt, p.DiscountPercent, c.CategoryName");
+        sql.append(" GROUP BY p.ProductID, p.ProductName, p.Price, p.StockQuantity, p.Brand, p.CategoryID, CAST(p.Description AS NVARCHAR(MAX)), CAST(p.ImageURL AS NVARCHAR(MAX)),  p.CreateAt,\n"
+                + "    p.UpdateAt, p.DiscountPercent, c.CategoryName");
         sql.append(" ORDER BY p.ProductID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-        
+
         try {
             PreparedStatement ps = connection.prepareStatement(sql.toString());
             int index = 1;
@@ -162,7 +162,7 @@ public class ProductsDAO extends DBContext {
 
             // Set page size
             ps.setInt(index++, pageSize);
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Products p = new Products();
@@ -171,7 +171,8 @@ public class ProductsDAO extends DBContext {
                 p.setPrice(rs.getBigDecimal("Price"));
                 p.setStockQuantity(rs.getInt("StockQuantity"));
                 p.setBrand(rs.getString("Brand"));
-                p.setCategory(new Category(rs.getInt("CategoryID"),rs.getString("CategoryName")));
+                Category c = getCategoryByID(rs.getInt("CategoryID"));
+                p.setCategory(c);
                 p.setDescription(rs.getString("Description"));
                 p.setImageURL(rs.getString("ImageURL"));
                 p.setDiscountProduct(rs.getBigDecimal("DiscountPercent"));
@@ -186,7 +187,7 @@ public class ProductsDAO extends DBContext {
         }
         return list;
     }
-    
+
 //    public ArrayList<Products> searchProductsWithFilters(String keyword, String[] categories, String[] brands, String priceRange, int pageNumber, int pageSize) {
 //        ArrayList<Products> list = new ArrayList<>();
 //        StringBuilder sql = new StringBuilder("SELECT * FROM Products WHERE ProductName LIKE ?");
@@ -277,7 +278,6 @@ public class ProductsDAO extends DBContext {
 //        }
 //        return list;
 //    }
-    
     public int getTotalProducts(String keyword, String[] categories, String[] brands, String priceRange) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Products WHERE ProductName LIKE ?");
 
@@ -292,7 +292,7 @@ public class ProductsDAO extends DBContext {
             }
             sql.append(")");
         }
-        
+
         if (brands != null && brands.length > 0) {
             sql.append(" AND Brand IN (");
             for (int i = 0; i < brands.length; i++) {
@@ -303,7 +303,7 @@ public class ProductsDAO extends DBContext {
             }
             sql.append(")");
         }
-        
+
         if (priceRange != null && !priceRange.isEmpty()) {
             if (priceRange.equals("low")) {
                 sql.append(" AND Price < 150");
@@ -313,7 +313,7 @@ public class ProductsDAO extends DBContext {
                 sql.append(" AND Price > 300");
             }
         }
-        
+
         int total = 0;
         try {
             PreparedStatement ps = connection.prepareStatement(sql.toString());
@@ -335,7 +335,7 @@ public class ProductsDAO extends DBContext {
                     ps.setString(index++, brand);
                 }
             }
-            
+
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 total = rs.getInt(1); // Lấy giá trị COUNT từ kết quả truy vấn
@@ -347,12 +347,12 @@ public class ProductsDAO extends DBContext {
         }
         return total;
     }
-    
+
     public ArrayList<String> getBrandByCategory(String category) {
         ArrayList<String> listBrand = new ArrayList<>();
         String sql = "SELECT DISTINCT Brand\n"
                 + "FROM [dbo].[Products]\n"
-                + "WHERE Category = ?;";
+                + "WHERE CategoryID = ?;";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, category);
@@ -366,8 +366,8 @@ public class ProductsDAO extends DBContext {
         }
         return listBrand;
     }
-    
-        public ArrayList<Cart> getCartByUserID(String userID) {
+
+    public ArrayList<Cart> getCartByUserID(String userID) {
         ArrayList<Cart> cart = new ArrayList();
         String sql = "SELECT [CartID]\n"
                 + "      ,[CustomerID]\n"
@@ -398,7 +398,7 @@ public class ProductsDAO extends DBContext {
     }
 
     public void updateCart(Cart item) {
-       String sql = "UPDATE [dbo].[Cart]\n"
+        String sql = "UPDATE [dbo].[Cart]\n"
                 + "   SET [Quantity] = ?\n"
                 + " WHERE CartID = ?";
         try {
@@ -516,13 +516,7 @@ public class ProductsDAO extends DBContext {
         }
         return null;
     }
-    
-    public static void main(String[] args){
-        ProductsDAO proDAO = new ProductsDAO();
-        ArrayList<Cart> cart = proDAO.getCartByUserID("CU0001");
-        for (Cart c : cart) {
-            System.out.println(c.getCustomer().getCustomerName());
-        }
-        
+
+    public static void main(String[] args) {
     }
 }
