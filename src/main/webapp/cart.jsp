@@ -1,210 +1,216 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart</title>
-    <link rel="stylesheet" href="css/Cart.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Shopping Cart</title>
+        <link rel="stylesheet" href="./CSS/Cart.css">
+    </head>
+    <body>
+         <jsp:include page="common/header.jsp"/>
+        <form id="cart-form" action="cart" method="POST">
+            <div class="cart-container">
+                <!-- Shopping Cart -->
+                <div class="cart-left">
+                    <h2>Your Shopping Cart</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="select-all" title="Select All"> <!-- Nút Select All -->
+                                </th>
+                                <th>Item Info</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                                <th>Action</th> <!-- Thêm cột Action -->
+                            </tr>
+                        </thead>
+                        <tbody id="cart-items">
+                            <c:forEach var="item" items="${sessionScope.cartList}">
+                                <tr class="cart-item" data-id="${item.product.productID}" data-price="${item.product.price}" data-stock="${item.product.stockQuantity}">
+                                    <td>
+                                        <input type="checkbox" class="select-item" name="selectedItems" value="${item.cartID}">
+                                    </td>
+                                    <td>
+                                        <div class="product-info">
+                                            <c:if test="${item.product.category.categoryName eq 'Accessory'}">
+                                                <img src="./img/${item.product.category.categoryName}/${item.product.getImageURL()}" alt="${item.product.productName}">
+                                            </c:if>
+                                            <c:if test="${item.product.category.categoryName ne 'Accessory'}">
+                                                <img src="./img/${item.product.category.categoryName}/${item.product.brand}/${item.product.getImageURL()}" alt="${item.product.productName}">
+                                            </c:if>
+                                            <div class="product-details">
+                                                <strong>${item.product.productName}</strong>
+                                                <p>${item.product.category.categoryName}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" name="quantity_${item.cartID}" value="${item.quantity}" class="item-quantity">
+                                        <div class="qty-container">
+                                            <button type="button" class="qty-btn decrease">−</button>
+                                            <span class="qty-display">${item.quantity}</span>
+                                            <button type="button" class="qty-btn increase">+</button>
+                                        </div>
+                                    </td>
+                                    <td class="price">${item.product.price}</td>
+                                    <td class="total"><fmt:formatNumber value="${item.quantity * item.product.price}" pattern="###,##0.00" /></td>
+                                    <td>
+                                        <!-- Icon Xóa -->
+                                        <button type="submit" name="action" value="remove_${item.cartID}" class="btn-remove" title="Remove Item">
+                                            ✖
+                                        </button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Order Summary -->
+                <div class="cart-right">
+                    <h3>ORDER SUMMARY</h3>
+                    <div class="summary-item">
+                        <span>Items <span id="total-items">0</span></span>
+                        <span>$<span id="subtotal">0</span></span>
+                    </div>
+                    <ul id="summary-list">
+                        <!-- Danh sách sản phẩm được chọn sẽ hiển thị ở đây -->
+                    </ul>
+                    <div class="total-price">
+                        <span>Total</span>
+                        <span>$<span id="total">0</span></span>
+                    </div>
+                    <input type="hidden" name="action" value="update"/>
+                    <button type="submit" class="checkout-btn">CHECKOUT</button>
+                </div>
+            </div>
 
-<div class="cart-container">
-    <!-- LEFT: Shopping Cart -->
-    <div class="cart-left">
-        <h2>Your Shopping Cart</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Select</th>
-                    <th>Item Info</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody id="cart-items">
-                <!-- Product 1 -->
-                <tr class="cart-item" data-price="100">
-                    <td><input type="checkbox" class="select-item"></td>
-                    <td>
-                        <div class="product-info">
-                            <img src="track-suit.jpg" alt="Track Suit">
-                            <div class="product-details">
-                                <strong>TRACK SUIT</strong>
-                                <p>Clothing</p>
-                                <a href="#" class="delete-item">Delete</a>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="qty-container">
-                            <button class="qty-btn decrease">−</button>
-                            <span class="qty-display">3</span>
-                            <button class="qty-btn increase">+</button>
-                        </div>
-                    </td>
-                    <td class="price">£100</td>
-                    <td class="total">£300</td>
-                </tr>
+        </form>
 
-                <!-- Product 2 -->
-                <tr class="cart-item" data-price="67">
-                    <td><input type="checkbox" class="select-item"></td>
-                    <td>
-                        <div class="product-info">
-                            <img src="hoodie.jpg" alt="Hoodie">
-                            <div class="product-details">
-                                <strong>Hoodie</strong>
-                                <p>Clothing</p>
-                                <a href="#" class="delete-item">Delete</a>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="qty-container">
-                            <button class="qty-btn decrease">−</button>
-                            <span class="qty-display">3</span>
-                            <button class="qty-btn increase">+</button>
-                        </div>
-                    </td>
-                    <td class="price">£67</td>
-                    <td class="total">£201</td>
-                </tr>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const selectAllCheckbox = document.getElementById("select-all"); // Checkbox Select All
+                const cartItems = document.querySelectorAll(".cart-item"); // Các dòng sản phẩm
+                const totalItemsElement = document.getElementById("total-items");
+                const subtotalElement = document.getElementById("subtotal");
+                const totalElement = document.getElementById("total");
+                const summaryList = document.getElementById("summary-list");
+                let discount = 0;
 
-                <!-- Product 3 -->
-                <tr class="cart-item" data-price="59">
-                    <td><input type="checkbox" class="select-item"></td>
-                    <td>
-                        <div class="product-info">
-                            <img src="grey-hoodie.jpg" alt="Grey Hoodie">
-                            <div class="product-details">
-                                <strong>GREY HOODIE</strong>
-                                <p>Clothing</p>
-                                <a href="#" class="delete-item">Delete</a>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="qty-container">
-                            <button class="qty-btn decrease">−</button>
-                            <span class="qty-display">2</span>
-                            <button class="qty-btn increase">+</button>
-                        </div>
-                    </td>
-                    <td class="price">£59</td>
-                    <td class="total">£118</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                // Hàm tính toán tổng tiền và hiển thị danh sách sản phẩm
+                function calculateTotal() {
+                    let index = 0;
+                    let subtotal = 0;
+                    let totalItems = 0;
+                    let selectedProducts = []; // Danh sách các sản phẩm đã chọn
 
-    <!-- RIGHT: Order Summary -->
-    <div class="cart-right">
-        <h3>ORDER SUMMARY</h3>
-        <div class="summary-item">
-            <span>Items <span id="total-items">0</span></span>
-            <span>£<span id="subtotal">0</span></span>
-        </div>
-        <div class="summary-item">
-            <span>Shipping</span>
-            <select id="shipping">
-                <option value="5">Standard delivery - £5.00</option>
-                <option value="10">Express delivery - £10.00</option>
-            </select>
-        </div>
-        <div class="promo-code">
-            <label>Promo Code</label>
-            <input type="text" id="promo-code" placeholder="Enter your code">
-            <button id="apply-promo">APPLY</button>
-        </div>
-        <div class="total-price">
-            <span>Total</span>
-            <span>£<span id="total">0</span></span>
-        </div>
-        <button class="checkout-btn">CHECKOUT</button>
-    </div>
-</div>
+                    cartItems.forEach(item => {
+                        const checkbox = item.querySelector(".select-item");
+                        const quantityInput = item.querySelector(".item-quantity");
+                        const quantity = parseInt(quantityInput.value);
+                        const price = parseFloat(item.dataset.price);
+                        const totalElement = item.querySelector(".total");
+                        const productName = item.querySelector(".product-details strong").textContent.trim();
 
-<script>document.addEventListener("DOMContentLoaded", function () {
-    const cartItems = document.querySelectorAll(".cart-item");
-    const totalItemsElement = document.getElementById("total-items");
-    const subtotalElement = document.getElementById("subtotal");
-    const totalElement = document.getElementById("total");
-    const shippingElement = document.getElementById("shipping");
-    const promoInput = document.getElementById("promo-code");
-    const applyPromoButton = document.getElementById("apply-promo");
+                        // Tính tổng tiền của từng sản phẩm và hiển thị
+                        const totalPrice = quantity * price;
+                        totalElement.textContent = totalPrice.toFixed(2); // Hiển thị giá tổng từng sản phẩm
 
-    function updateCart() {
-        let subtotal = 0;
-        let totalItems = 0;
+                        if (checkbox.checked) {
+                            subtotal += totalPrice;
+                            totalItems += quantity;
+                            let productInfo = ++index + `. ` + productName + `   (x` + quantity + `)`;
+                            selectedProducts.push(productInfo); // Lưu tên sản phẩm và số lượng
+                        }
+                    });
 
-        cartItems.forEach(item => {
-            let checkbox = item.querySelector(".select-item");
-            if (checkbox.checked) {
-                let quantity = parseInt(item.querySelector(".qty-display").textContent);
-                let price = parseInt(item.dataset.price);
-                let total = quantity * price;
+                    // Xóa danh sách sản phẩm cũ trong "Order Summary"
+                    summaryList.innerHTML = "";
 
-                subtotal += total;
-                totalItems += quantity;
-            }
-        });
+                    // Hiển thị các sản phẩm đã chọn trong "Order Summary"
+                    selectedProducts.forEach(product => {
+                        const p = document.createElement("p");
+                        p.textContent = product; // Hiển thị tên sản phẩm và số lượng
+                        summaryList.appendChild(p);
+                    });
 
-        let shippingCost = parseInt(shippingElement.value);
-        let total = subtotal + shippingCost;
+                    // Cập nhật tổng tiền và số lượng
+                    let total = subtotal - (subtotal * discount) / 100;
+                    subtotalElement.textContent = subtotal.toFixed(2);
+                    totalItemsElement.textContent = totalItems;
+                    totalElement.textContent = total.toFixed(2);
+                }
 
-        subtotalElement.textContent = subtotal;
-        totalItemsElement.textContent = totalItems;
-        totalElement.textContent = total;
-    }
+                // Xử lý sự kiện "Select All"
+                selectAllCheckbox.addEventListener("change", function () {
+                    const isChecked = selectAllCheckbox.checked; // Trạng thái của Select All
+                    cartItems.forEach(item => {
+                        const checkbox = item.querySelector(".select-item");
+                        checkbox.checked = isChecked; // Đặt trạng thái checkbox theo Select All
+                    });
+                    calculateTotal(); // Tính lại tổng khi thay đổi trạng thái checkbox
+                });
 
-    cartItems.forEach(item => {
-        let qtyDisplay = item.querySelector(".qty-display");
-        let decreaseBtn = item.querySelector(".decrease");
-        let increaseBtn = item.querySelector(".increase");
-        let deleteBtn = item.querySelector(".delete-item");
-        let checkbox = item.querySelector(".select-item");
+                // Xử lý sự kiện thay đổi trạng thái checkbox trong từng sản phẩm
+                cartItems.forEach(item => {
+                    const checkbox = item.querySelector(".select-item");
+                    checkbox.addEventListener("change", function () {
+                        // Nếu bất kỳ checkbox nào bị bỏ chọn, bỏ chọn Select All
+                        if (!checkbox.checked) {
+                            selectAllCheckbox.checked = false;
+                        }
+                        // Nếu tất cả checkbox đều được chọn, chọn Select All
+                        const allChecked = Array.from(cartItems).every(item => item.querySelector(".select-item").checked);
+                        if (allChecked) {
+                            selectAllCheckbox.checked = true;
+                        }
+                        calculateTotal();
+                    });
+                });
 
-        increaseBtn.addEventListener("click", () => {
-            let qty = parseInt(qtyDisplay.textContent);
-            qtyDisplay.textContent = qty + 1;
-            updateCart();
-        });
+                // Các sự kiện tăng/giảm số lượng
+                cartItems.forEach(item => {
+                    const decreaseButton = item.querySelector(".decrease");
+                    const increaseButton = item.querySelector(".increase");
+                    const quantityDisplay = item.querySelector(".qty-display");
+                    const quantityInput = item.querySelector(".item-quantity");
 
-        decreaseBtn.addEventListener("click", () => {
-            let qty = parseInt(qtyDisplay.textContent);
-            if (qty > 1) {
-                qtyDisplay.textContent = qty - 1;
-                updateCart();
-            }
-        });
+                    // Lấy stock quantity từ data attribute
+                    const stockQuantity = parseInt(item.dataset.stock);
 
-        deleteBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            item.remove();
-            updateCart();
-        });
+                    decreaseButton.addEventListener("click", () => {
+                        let quantity = parseInt(quantityDisplay.textContent);
+                        if (quantity > 1) {
+                            quantity--;
+                            quantityDisplay.textContent = quantity;
+                            quantityInput.value = quantity;
+                            calculateTotal();
+                        }
+                    });
 
-        checkbox.addEventListener("change", updateCart);
-    });
+                    increaseButton.addEventListener("click", () => {
+                        let quantity = parseInt(quantityDisplay.textContent);
 
-    shippingElement.addEventListener("change", updateCart);
+                        // Kiểm tra nếu số lượng chưa vượt quá stock
+                        if (quantity < stockQuantity) {
+                            quantity++;
+                            quantityDisplay.textContent = quantity;
+                            quantityInput.value = quantity;
+                            calculateTotal();
+                        } else {
+                            alert("Cannot add more. Stock limit reached!");
+                        }
+                    });
+                });
 
-    applyPromoButton.addEventListener("click", () => {
-        let code = promoInput.value.trim();
-        if (code === "DISCOUNT10") {
-            let currentTotal = parseInt(totalElement.textContent);
-            let discount = Math.floor(currentTotal * 0.10);
-            totalElement.textContent = currentTotal - discount;
-            alert("Promo code applied! 10% off.");
-        } else {
-            alert("Invalid promo code.");
-        }
-    });
+                calculateTotal(); // Gọi hàm tính toán khi tải trang
+            });
 
-    updateCart();
-});
-</script>
-</body>
+        </script>
+    </body>
 </html>

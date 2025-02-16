@@ -35,6 +35,23 @@ public class Orders {
         this.totalPrice = totalPrice;
         this.createAt = createAt;
     }
+    
+    public Orders(Customers customer, Vouchers voucher, String status, String paymentMethod, BigDecimal totalPrice) {
+        this.customer = customer;
+        this.voucher = voucher;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
+        this.totalPrice = totalPrice;
+    }
+    
+    public Orders(Customers customer, String status, String paymentMethod, BigDecimal totalPrice) {
+        this.customer = customer;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
+        this.totalPrice = totalPrice;
+    }
+    
+    
 
     public int getOrderID() {
         return orderID;

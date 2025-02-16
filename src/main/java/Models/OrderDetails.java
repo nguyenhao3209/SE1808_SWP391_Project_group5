@@ -28,6 +28,19 @@ public class OrderDetails {
         this.price = price;
         this.quantity = quantity;
     }
+    
+    public OrderDetails(Orders order, Products product, int quantity, BigDecimal price) {
+        this.order = order;
+        this.product = product;
+        this.price = price;
+        this.quantity = quantity;
+    }
+    
+    public OrderDetails(Products product, int quantity, BigDecimal price) {
+        this.product = product;
+        this.price = price;
+        this.quantity = quantity;
+    }
 
     public int getOrderDetail() {
         return orderDetail;

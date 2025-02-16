@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package Models;
 
 import java.sql.Date;
@@ -12,11 +11,13 @@ import java.sql.Date;
  * @author HaoNTCE180451
  */
 public class Cart {
+
     private int cartID;
     private Customers customer;
     private Date createAt;
     private Products product;
     private int quantity;
+    private boolean selected;
 
     public Cart() {
     }
@@ -25,6 +26,12 @@ public class Cart {
         this.cartID = cartID;
         this.customer = customer;
         this.createAt = createAt;
+        this.product = product;
+        this.quantity = quantity;
+    }
+    
+    public Cart(Customers customer, Products product, int quantity) {
+        this.customer = customer;
         this.product = product;
         this.quantity = quantity;
     }
@@ -68,4 +75,14 @@ public class Cart {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+    
+    
 }

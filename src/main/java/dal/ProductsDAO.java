@@ -4,8 +4,12 @@
  */
 package dal;
 
+import Models.Cart;
 import Models.Category;
+import Models.Customers;
 import Models.Products;
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -167,7 +171,7 @@ public class ProductsDAO extends DBContext {
                 p.setPrice(rs.getBigDecimal("Price"));
                 p.setStockQuantity(rs.getInt("StockQuantity"));
                 p.setBrand(rs.getString("Brand"));
-                p.setCategoryID(new Category(rs.getInt("CategoryID"),rs.getString("CategoryName")));
+                p.setCategory(new Category(rs.getInt("CategoryID"),rs.getString("CategoryName")));
                 p.setDescription(rs.getString("Description"));
                 p.setImageURL(rs.getString("ImageURL"));
                 p.setDiscountProduct(rs.getBigDecimal("DiscountPercent"));
@@ -361,5 +365,164 @@ public class ProductsDAO extends DBContext {
         } catch (SQLException e) {
         }
         return listBrand;
+    }
+    
+        public ArrayList<Cart> getCartByUserID(String userID) {
+        ArrayList<Cart> cart = new ArrayList();
+        String sql = "SELECT [CartID]\n"
+                + "      ,[CustomerID]\n"
+                + "      ,[CreatedAt]\n"
+                + "      ,[ProductID]\n"
+                + "      ,[Quantity]\n"
+                + "  FROM [dbo].[Cart]\n"
+                + "  WHERE CustomerID = ?";
+        CustomersDAO cusDAO = new CustomersDAO();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, userID);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Customers customer = cusDAO.getCustomerByID(rs.getString("CustomerID"));
+                Products pro = getProductByID(rs.getInt("ProductID"));
+                cart.add(new Cart(rs.getInt("CartID"), customer, rs.getDate("CreatedAt"), pro, rs.getInt("Quantity")));
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return cart;
+    }
+
+    public void updateCart(Cart item) {
+       String sql = "UPDATE [dbo].[Cart]\n"
+                + "   SET [Quantity] = ?\n"
+                + " WHERE CartID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, item.getQuantity());
+            ps.setInt(2, item.getCartID());
+
+            ps.executeUpdate();
+            ps.close();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public int getQuantityOfItemByUserID(String userID) {
+        String sql = "SELECT COUNT(CartID) AS 'CountItems' FROM [dbo].[Cart] WHERE CustomerID = ?";
+        int totalQuantity = 0;
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, userID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                totalQuantity = rs.getInt("CountItems");
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return totalQuantity;
+    }
+
+    public boolean removeItemOfCart(int itemID) {
+        String sql = "DELETE FROM [dbo].[Cart]\n"
+                + "      WHERE CartID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, itemID);
+
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
+    public Products getProductByID(int productId) {
+        String sql = "SELECT [ProductID]\n"
+                + "      ,[ProductName]\n"
+                + "      ,[Description]\n"
+                + "      ,[StockQuantity]\n"
+                + "      ,[Brand]\n"
+                + "      ,[CategoryID]\n"
+                + "      ,[Price]\n"
+                + "      ,[DiscountPercent]\n"
+                + "      ,[ImageURL]\n"
+                + "      ,[CreateAt]\n"
+                + "      ,[UpdateAt]\n"
+                + "  FROM [dbo].[Products]\n"
+                + "  WHERE ProductID = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int id = rs.getInt("ProductID");
+                String name = rs.getString("ProductName");
+                String description = rs.getString("Description");
+                int stockQuantity = rs.getInt("StockQuantity");
+                String brand = rs.getString("Brand");
+                Category category = getCategoryByID(rs.getInt("CategoryID"));
+                BigDecimal price = rs.getBigDecimal("Price");
+                BigDecimal discount = rs.getBigDecimal("DiscountPercent");
+                String imageUrl = rs.getString("ImageURL");
+                Date created_at = rs.getDate("CreateAt");
+                Date updated_at = rs.getDate("UpdateAt");
+                Products product = new Products(id, name, price, stockQuantity, brand, category, description, imageUrl, created_at, updated_at, discount);
+                return product;
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public Category getCategoryByID(int id) {
+        String sql = "SELECT [CategoryID]\n"
+                + "      ,[CategoryName]\n"
+                + "      ,[Description]\n"
+                + "  FROM [dbo].[Category]\n"
+                + "  WHERE CategoryID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Category cat = new Category(rs.getInt("CategoryID"), rs.getString("CategoryName"), rs.getString("Description"));
+                return cat;
+            }
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+        }
+        return null;
+    }
+    
+    public static void main(String[] args){
+        ProductsDAO proDAO = new ProductsDAO();
+        ArrayList<Cart> cart = proDAO.getCartByUserID("CU0001");
+        for (Cart c : cart) {
+            System.out.println(c.getCustomer().getCustomerName());
+        }
+        
     }
 }
