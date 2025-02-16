@@ -7,11 +7,11 @@
             <div class="cours-bx">
                 <div class="action-box">
                     <c:choose>
-                        <c:when test="${product.getCategory() ne 'Accessory'}">
-                            <img src="./img/${product.getCategory()}/${product.brand}/${product.imageURL}" alt="${product.productName}" />
+                        <c:when test="${product.getCategoryID().getCategoryName() ne 'Accessory'}">
+                            <img src="./img/${product.getCategoryID().getCategoryName()}/${product.brand}/${product.imageURL}" alt="${product.productName}" />
                         </c:when>
                         <c:otherwise>
-                            <img src="./img/${product.getCategory()}/${product.imageURL}" alt="${product.productName}" />
+                            <img src="./img/${product.getCategoryID().getCategoryName()}/${product.imageURL}" alt="${product.productName}" />
                         </c:otherwise>
                     </c:choose>
 
@@ -19,7 +19,7 @@
                 </div>
                 <div class="info-bx text-center">
                     <h5><a href="productsDetail?id=${product.productID}">${product.productName}</a></h5>
-                    <span>${product.category} - ${product.brand}</span>
+                    <span>${product.getCategoryID().getCategoryName()} - ${product.brand}</span>
                 </div>
                 <div class="cours-more-info">
                     <div class="review">

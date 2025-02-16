@@ -244,5 +244,21 @@ public class CustomersDAO extends DBContext {
         return user;
 
     }
+    
+    public void updateCustomer(Customers user) {
+        String sql = "UPDATE Customers SET CustomerName = ?, Phone = ?, Address = ?, Avatar = ? WHERE CustomerID = ?";
+        try ( Connection conn = new DBContext().connection;  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, user.getCustomerName());
+            ps.setString(2, user.getPhone());
+            ps.setString(3, user.getAddress());
+            ps.setString(4, user.getAvatar());
+            ps.setString(5, user.getCustomerId());
+
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 

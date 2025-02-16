@@ -37,7 +37,7 @@ public class Products {
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.brand = brand;
-        this.categoryID = categoryID;
+//        this.categoryID = categoryID;
         this.description = description;
         this.imageURL = imageURL;
         this.createdAt = createdAt;
@@ -51,7 +51,7 @@ public class Products {
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.brand = brand;
-        this.categoryID = categoryID;
+//        this.categoryID = categoryID;
         this.description = description;
         this.imageURL = imageURL;
         this.discountProduct = discountProduct;
@@ -62,7 +62,7 @@ public class Products {
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.brand = brand;
-        this.categoryID = categoryID;
+//        this.categoryID = categoryID;
         this.description = description;
         this.imageURL = imageURL;
         this.discountProduct = discountProduct;

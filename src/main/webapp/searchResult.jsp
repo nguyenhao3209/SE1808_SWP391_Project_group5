@@ -6,6 +6,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Badminton Shop - Product</title>
+ 
+        
         <!-- Thư viện Font Awesome để sử dụng các icon -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <!-- Bootstrap CSS -->
@@ -22,6 +24,15 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
+        
+               	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+       <link rel="stylesheet" type="text/css" href="css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="icomoon/icomoon.css">
+	<link rel="stylesheet" type="text/css" href="css/vendor.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
+        
         <style>
 
             .search-container {
@@ -413,13 +424,10 @@
                     transform: translateX(0);
                 }
             }
-
-
-
-        </style>
+            </style>
     </head>
     <body>
-        <jsp:include page="./menu.jsp"/>
+        <jsp:include page="common/header.jsp"/>
         <div class="page-content bg-white">
             <div class="content-block">
                 <!-- About Us -->
@@ -430,8 +438,7 @@
                                 <div class="widget courses-search-bx placeani">
                                     <div class="form-group">
                                         <div class="input-group">
-                                            <label>Search ...</label>
-                                            <input name="keyword" type="text" class="form-control">
+                                            <input name="keyword" type="text" class="form-control" placeholder="Search ...">
                                         </div>
                                     </div>
                                 </div>
@@ -439,24 +446,24 @@
                                     <h5 class="widget-title style-1">All Category</h5>
                                     <ul>
                                         <c:forEach items="${categoryList}" var="c">
-                                            <label><input type="checkbox" name="category" value="${c}"> ${c}</label><br>
-                                            </c:forEach>
+                                            <label><input type="checkbox" name="category" value="${c.categoryID}"> ${c.categoryName}</label>
+                                        </c:forEach>
                                     </ul>
                                 </div>
                                 <div class="widget widget_archive">
                                     <h5 class="widget-title style-1">All Brand</h5>
                                     <ul>
                                         <c:forEach items="${brandList}" var="c">
-                                            <label><input type="checkbox" name="brand" value="${c}"> ${c}</label><br></c:forEach>
+                                            <label><input type="checkbox" name="brand" value="${c}"> ${c}</label></c:forEach>
                                         </ul>
                                     </div>
                                     <div class="widget widget_archive">
                                         <h5 class="widget-title style-1">Price</h5>
                                         <ul>
-                                            <label><input type="radio" name="priceRange" value="all" checked> All</label><br>
-                                            <label><input type="radio" name="priceRange"  value="low"> Under 150$</label><br>
-                                            <label><input type="radio" name="priceRange" value="medium"> 150$ - 300$</label><br>
-                                            <label><input type="radio" name="priceRange" value="high"> Over 300$</label><br>
+                                            <label><input type="radio" name="priceRange" value="all" checked> All</label>
+                                            <label><input type="radio" name="priceRange"  value="low"> Under 150$</label>
+                                            <label><input type="radio" name="priceRange" value="medium"> 150$ - 300$</label>
+                                            <label><input type="radio" name="priceRange" value="high"> Over 300$</label>
                                         </ul>
                                     </div>
                                 </div>
@@ -467,19 +474,18 @@
                                             <div class="cours-bx">
                                                 <div class="action-box">
                                                     <c:choose>
-                                                        <c:when test="${product.getCategory() ne 'Accessory'}">
-                                                            <img src="./img/${product.getCategory()}/${product.brand}/${product.imageURL}" alt="${product.productName}" />
+                                                        <c:when test="${product.getCategoryID().getCategoryName() ne 'Accessory'}">
+                                                            <img src="./img/${product.getCategoryID().getCategoryName()}/${product.brand}/${product.imageURL}" alt="${product.productName}" />
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <img src="./img/${product.getCategory()}/${product.imageURL}" alt="${product.productName}" />
+                                                            <img src="./img/${product.getCategoryID().getCategoryName()}/${product.imageURL}" alt="${product.productName}" />
                                                         </c:otherwise>
                                                     </c:choose>
-                                                    <!--<img src="assets/images/courses/pic1.jpg" alt="">-->
-                                                    <a href="productsDetail?id=${product.productID}&category=${product.category}" class="btn">Show Detail</a>
+                                                    <a href="productsDetail?id=${product.productID}" class="btn">Show Detail</a>
                                                 </div>
                                                 <div class="info-bx text-center">
                                                     <h5><a href="productsDetail?id=${product.productID}">${product.productName}</a></h5>
-                                                    <span>${product.category} - ${product.brand}</span>
+                                                    <span>${product.getCategoryID().getCategoryName()} - ${product.brand}</span>
                                                 </div>
                                                 <div class="cours-more-info">
                                                     <div class="review">
@@ -574,28 +580,13 @@
         </div>
          contact area END -->
 
-        <jsp:include page="footer.jsp" />
-
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <!-- External JavaScripts -->
-        <script src="assets/js/jquery.min.js"></script>
-        <script src="assets/vendors/bootstrap/js/popper.min.js"></script>
-        <script src="assets/vendors/bootstrap/js/bootstrap.min.js"></script>
-        <script src="assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
-        <script src="assets/vendors/bootstrap-touchspin/jquery.bootstrap-touchspin.js"></script>
-        <script src="assets/vendors/magnific-popup/magnific-popup.js"></script>
-        <script src="assets/vendors/counter/waypoints-min.js"></script>
-        <script src="assets/vendors/counter/counterup.min.js"></script>
-        <script src="assets/vendors/imagesloaded/imagesloaded.js"></script>
-        <script src="assets/vendors/masonry/masonry.js"></script>
-        <script src="assets/vendors/masonry/filter.js"></script>
-        <script src="assets/vendors/owl-carousel/owl.carousel.js"></script>
-        <script src="assets/js/functions.js"></script>
-        <script src="assets/js/contact.js"></script>
-        <script src='assets/vendors/switcher/switcher.js'></script>
+<jsp:include page="common/footer.jsp" />
+	<script src="js/jquery-1.11.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+		crossorigin="anonymous"></script>
+	<script src="js/plugins.js"></script>
+	<script src="js/script.js"></script>
         <script>
                                         function loadProducts(page) {
                                             let searchQuery = $("input[name='keyword']").val();
