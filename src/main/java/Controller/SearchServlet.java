@@ -5,6 +5,7 @@
 
 package Controller;
 
+import Models.Category;
 import Models.Products;
 import dal.ProductsDAO;
 import jakarta.servlet.RequestDispatcher;
@@ -82,7 +83,7 @@ public class SearchServlet extends HttpServlet {
         int totalPages = (int) Math.ceil((double) totalProducts / 9); // Tính tổng số trang
 
         //get category and brand list
-        List<String> categoryList = productsDAO.getAllCategory();
+        List<Category> categoryList = productsDAO.getAllCategory();
         List<String> brandList = productsDAO.getAllBrand();
         request.setAttribute("categoryList", categoryList);
         request.setAttribute("brandList", brandList);
