@@ -474,18 +474,18 @@
                                             <div class="cours-bx">
                                                 <div class="action-box">
                                                     <c:choose>
-                                                        <c:when test="${product.getCategoryID().getCategoryName() ne 'Accessory'}">
-                                                            <img src="./img/${product.getCategoryID().getCategoryName()}/${product.brand}/${product.imageURL}" alt="${product.productName}" />
+                                                        <c:when test="${product.getCategory().getCategoryName() ne 'Accessory'}">
+                                                            <img src="./img/${product.getCategory().getCategoryName()}/${product.brand}/${product.imageURL}" alt="${product.productName}" />
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <img src="./img/${product.getCategoryID().getCategoryName()}/${product.imageURL}" alt="${product.productName}" />
+                                                            <img src="./img/${product.getCategory().getCategoryName()}/${product.imageURL}" alt="${product.productName}" />
                                                         </c:otherwise>
                                                     </c:choose>
                                                     <a href="productsDetail?id=${product.productID}" class="btn">Show Detail</a>
                                                 </div>
                                                 <div class="info-bx text-center">
                                                     <h5><a href="productsDetail?id=${product.productID}">${product.productName}</a></h5>
-                                                    <span>${product.getCategoryID().getCategoryName()} - ${product.brand}</span>
+                                                    <span>${product.getCategory().getCategoryName()} - ${product.brand}</span>
                                                 </div>
                                                 <div class="cours-more-info">
                                                     <div class="review">
