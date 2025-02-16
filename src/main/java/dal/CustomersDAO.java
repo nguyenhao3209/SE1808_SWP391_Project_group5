@@ -260,5 +260,52 @@ public class CustomersDAO extends DBContext {
             e.printStackTrace();
         }
     }
+    
+    
+    Customers getCustomerByID(String id) {
+        Customers user = null;
+        String query = "SELECT * FROM Customers WHERE CustomerID = ? ";
+        try {
+            connection = new DBContext().connection;
+            ps = connection.prepareStatement(query);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                // Lấy mật khẩu mã hóa từ cơ sở dữ liệu
+                String hashedPassword = rs.getString("Password");
+                user = new Customers();
+                user.setCustomerId(rs.getString("CustomerID"));
+                user.setCustomerName(rs.getString("CustomerName"));
+                user.setEmail(rs.getString("Email"));
+                user.setAvatar(rs.getString("Avatar"));
+                user.setPassword(rs.getString("Password"));
+                user.setPhone(rs.getString("Phone"));
+                user.setAddress(rs.getString("Address"));
+                user.setRole(Role.valueOf(rs.getString("Role")));
+                user.setStatus(Status.valueOf(rs.getString("Status")));
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    public void updateUser(Customers customer) {
+        String sql = "UPDATE Customers SET CustomerName = ?, Email = ?, Phone = ?, Address = ?, Avatar = ? WHERE CustomerID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, customer.getCustomerName());
+            ps.setString(2, customer.getEmail());
+            ps.setString(3, customer.getPhone());
+            ps.setString(4, customer.getAddress());
+            ps.setString(5, customer.getAvatar());
+            ps.setString(6, customer.getCustomerId());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
