@@ -366,7 +366,6 @@ public class ProductsDAO extends DBContext {
         }
         return listBrand;
     }
-
     public ArrayList<Cart> getCartByUserID(String userID) {
         ArrayList<Cart> cart = new ArrayList();
         String sql = "SELECT [CartID]\n"
@@ -398,7 +397,7 @@ public class ProductsDAO extends DBContext {
     }
 
     public void updateCart(Cart item) {
-        String sql = "UPDATE [dbo].[Cart]\n"
+       String sql = "UPDATE [dbo].[Cart]\n"
                 + "   SET [Quantity] = ?\n"
                 + " WHERE CartID = ?";
         try {
@@ -516,7 +515,11 @@ public class ProductsDAO extends DBContext {
         }
         return null;
     }
-
-    public static void main(String[] args) {
+    public static void main(String[] args){
+        ProductsDAO proDAO = new ProductsDAO();
+        ArrayList<Cart> cart = proDAO.getCartByUserID("CU0001");
+        for (Cart c : cart) {
+            System.out.println(c.getCustomer().getCustomerName());
+        }
     }
 }
