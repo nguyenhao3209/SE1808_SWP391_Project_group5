@@ -82,23 +82,24 @@ public class AddToCartServlet extends HttpServlet {
         } else if ("buyNow".equals(action)) {
             response.sendRedirect("checkout.jsp");
         }
-        
+
     }
 
     private void addToCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String size = request.getParameter("size");
+        String categoryName = request.getParameter("categoryName");
+        String size = request.getParameter("sizeID");
         HttpSession session = request.getSession();
         ProductsDAO proDAO = new ProductsDAO();
-
+        System.out.println(categoryName);
         Customers user = (Customers) session.getAttribute("user");
         if (user == null) {
             session.setAttribute("errorMessage", "You need to log in to add products to your cart.");
             response.sendRedirect("login");
             return;
         }
-
+        System.out.println(size);
         String productID = request.getParameter("productId");
         String quantityStr = request.getParameter("quantity");
 
@@ -117,8 +118,13 @@ public class AddToCartServlet extends HttpServlet {
                 response.sendRedirect("productDetails?id=" + productID);
                 return;
             }
-
-            Products pro = proDAO.getProductByID(Integer.parseInt(productID));
+            Products pro = null;
+            if ((categoryName.equals("Shoes") || categoryName.equals("Clothes")) && size != null) {
+                 pro = proDAO.getProductByIDAndSizeID(Integer.parseInt(productID), Integer.parseInt(size));   
+            } else {
+                System.out.println(categoryName + " " + size);
+                pro = proDAO.getProductByID(Integer.parseInt(productID));
+            }
             if (pro != null) {
                 ArrayList<Cart> itemsList = proDAO.getCartByUserID(user.getCustomerId());
                 boolean itemExisted = false;
@@ -151,7 +157,7 @@ public class AddToCartServlet extends HttpServlet {
             } else {
                 session.setAttribute("notification", "Product not found!");
                 session.setAttribute("notificationType", "error");
-                response.sendRedirect("product");
+                response.sendRedirect("home");
             }
         } catch (NumberFormatException e) {
             session.setAttribute("notification", "Invalid quantity format.");
@@ -160,7 +166,7 @@ public class AddToCartServlet extends HttpServlet {
         } catch (Exception e) {
             session.setAttribute("notification", "An error occurred. Please try again.");
             session.setAttribute("notificationType", "error");
-            response.sendRedirect("product");
+            response.sendRedirect("home");
         }
     }
 

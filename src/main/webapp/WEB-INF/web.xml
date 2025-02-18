@@ -25,12 +25,12 @@
         <url-pattern>/payment</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>AddToCartServlet</servlet-name>
-        <url-pattern>/addToCart</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ProductDetailsServlet</servlet-name>
         <url-pattern>/productDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddToCartServlet</servlet-name>
+        <url-pattern>/addToCart</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>AdminController</servlet-name>

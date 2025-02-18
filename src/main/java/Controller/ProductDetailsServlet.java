@@ -5,6 +5,7 @@
 
 package Controller;
 
+import Models.ProductSizes;
 import Models.Products;
 import Models.Specifications;
 import dal.ProductsDAO;
@@ -78,7 +79,9 @@ public class ProductDetailsServlet extends HttpServlet {
 
         // Lưu product vào request và chuyển hướng đến productDetails.jsp
         request.setAttribute("product", product);
+        ArrayList<ProductSizes> productSizes = productDAO.getSizesOfProductByID(productId);
         request.setAttribute("specifications", specifications);
+        request.setAttribute("productSizes", productSizes);
         RequestDispatcher dispatcher = request.getRequestDispatcher("productDetails.jsp");
         dispatcher.forward(request, response);
     } 

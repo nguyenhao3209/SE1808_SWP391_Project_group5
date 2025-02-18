@@ -54,11 +54,9 @@
                     <c:if test="${product.category.categoryName eq 'Shoes' || product.category.categoryName eq 'Clothes'}">
                         <div class="size-selector">
                             <label for="size">Size:</label>
-                            <select id="size" name="size">
-                                <c:forEach var="spec" items="${specifications}">
-                                    <c:if test="${spec.key eq 'Size'}">
-                                        <option value="${spec.value}">${spec.value}</option>
-                                    </c:if>
+                            <select id="size" name="sizeID">
+                                <c:forEach var="spec" items="${productSizes}">
+                                    <option value="${spec.sizeID}">${spec.size}</option>
                                 </c:forEach>
                             </select>
                         </div>
@@ -72,6 +70,7 @@
                     </div>
 
                     <!-- Gửi dữ liệu đến Servlet -->
+                    <input type="hidden" name="categoryName" value="${product.category.categoryName}">
                     <input type="hidden" name="productId" value="${product.productID}">
                     <input type="hidden" name="productName" value="${product.productName}">
 
