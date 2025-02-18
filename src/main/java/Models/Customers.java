@@ -5,8 +5,6 @@
 
 package Models;
 
-import com.nimbusds.oauth2.sdk.Role;
-import java.io.ObjectInputFilter.Status;
 import java.time.LocalDateTime;
 
 /**
@@ -52,21 +50,6 @@ private String customerId;  // ID người dùng (khóa chính)
     public enum Status {
         ACTIVE, INACTIVE
     }
-
-//    public User(int userId, String userName, String email, String password, String phone, String address,
-//                Role role, Status status, String passwordRecoveryToken, LocalDateTime tokenExpiry, String avatar) {
-//        this.userId = userId;
-//        this.userName = userName;
-//        this.email = email;
-//        this.password = password;
-//        this.phone = phone;
-//        this.address = address;
-//        this.role = role;
-//        this.status = status;
-//        this.passwordRecoveryToken = passwordRecoveryToken;
-//        this.tokenExpiry = tokenExpiry;
-//        this.avatar = avatar;
-//    }
 
     public Customers(String userName, String email) {
         this.customerName = userName;

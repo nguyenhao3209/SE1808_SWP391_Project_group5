@@ -1,34 +1,28 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Models;
 
-import java.time.DateTimeException;
+import java.time.LocalDateTime;
 
-/**
- *
- * @author HaoNTCE180451
- */
 public class Reply {
     private int replyID;
-    private Customers customer;
-    private Staffs staff;
-    private Feedback feedback;
-    private DateTimeException createAt;
+    private String customerID;
+    private String staffID;
+    private String feedbackID;
+    private LocalDateTime createdAt;
     private String comment;
+
+    private Customers customers;
 
     public Reply() {
     }
 
-    public Reply(int replyID, Customers customer, Staffs staff, Feedback feedback, DateTimeException createAt, String comment) {
+    public Reply(int replyID, String customerID, String staffID, String feedbackID, LocalDateTime createdAt, String comment, Customers customers) {
         this.replyID = replyID;
-        this.customer = customer;
-        this.staff = staff;
-        this.feedback = feedback;
-        this.createAt = createAt;
+        this.customerID = customerID;
+        this.staffID = staffID;
+        this.feedbackID = feedbackID;
+        this.createdAt = createdAt;
         this.comment = comment;
+        this.customers = customers;
     }
 
     public int getReplyID() {
@@ -39,36 +33,36 @@ public class Reply {
         this.replyID = replyID;
     }
 
-    public Customers getCustomer() {
-        return customer;
+    public String getCustomerID() {
+        return customerID;
     }
 
-    public void setCustomer(Customers customer) {
-        this.customer = customer;
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
     }
 
-    public Staffs getStaff() {
-        return staff;
+    public String getStaffID() {
+        return staffID;
     }
 
-    public void setStaff(Staffs staff) {
-        this.staff = staff;
+    public void setStaffID(String staffID) {
+        this.staffID = staffID;
     }
 
-    public Feedback getFeedback() {
-        return feedback;
+    public String getFeedbackID() {
+        return feedbackID;
     }
 
-    public void setFeedback(Feedback feedback) {
-        this.feedback = feedback;
+    public void setFeedbackID(String feedbackID) {
+        this.feedbackID = feedbackID;
     }
 
-    public DateTimeException getCreateAt() {
-        return createAt;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(DateTimeException createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getComment() {
@@ -78,5 +72,14 @@ public class Reply {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    public Customers getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(Customers customers) {
+        this.customers = customers;
+    }
+    
     
 }
