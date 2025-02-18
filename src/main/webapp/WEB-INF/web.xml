@@ -32,6 +32,14 @@
         <servlet-name>ProductDetailsServlet</servlet-name>
         <url-pattern>/productDetails</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>AdminController</servlet-name>
+        <servlet-class>Controller.AdminController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminController</servlet-name>
+        <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
