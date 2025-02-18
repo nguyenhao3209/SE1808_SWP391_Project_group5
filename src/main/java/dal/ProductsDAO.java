@@ -8,6 +8,7 @@ import Models.Cart;
 import Models.Category;
 import Models.Customers;
 import Models.Products;
+import Models.Specifications;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -366,6 +367,7 @@ public class ProductsDAO extends DBContext {
         }
         return listBrand;
     }
+
     public ArrayList<Cart> getCartByUserID(String userID) {
         ArrayList<Cart> cart = new ArrayList();
         String sql = "SELECT [CartID]\n"
@@ -397,7 +399,7 @@ public class ProductsDAO extends DBContext {
     }
 
     public void updateCart(Cart item) {
-       String sql = "UPDATE [dbo].[Cart]\n"
+        String sql = "UPDATE [dbo].[Cart]\n"
                 + "   SET [Quantity] = ?\n"
                 + " WHERE CartID = ?";
         try {
@@ -450,48 +452,72 @@ public class ProductsDAO extends DBContext {
     }
 
     public Products getProductByID(int productId) {
-        String sql = "SELECT [ProductID]\n"
-                + "      ,[ProductName]\n"
-                + "      ,[Description]\n"
-                + "      ,[StockQuantity]\n"
-                + "      ,[Brand]\n"
-                + "      ,[CategoryID]\n"
-                + "      ,[Price]\n"
-                + "      ,[DiscountPercent]\n"
-                + "      ,[ImageURL]\n"
-                + "      ,[CreateAt]\n"
-                + "      ,[UpdateAt]\n"
-                + "  FROM [dbo].[Products]\n"
-                + "  WHERE ProductID = ?";
+        String sql = "SELECT p.ProductID, p.ProductName, p.Price, p.StockQuantity, p.Brand, "
+                + "p.CategoryID, CAST(p.Description AS NVARCHAR(MAX)) AS Description, "
+                + "CAST(p.ImageURL AS NVARCHAR(MAX)) AS ImageURL, p.CreateAt, p.UpdateAt, "
+                + "p.DiscountPercent, COUNT(f.FeedbackID) AS FeedbackCount, "
+                + "COALESCE(AVG(f.Rating), 0) AS AverageRating, c.CategoryName "
+                + "FROM Products p "
+                + "LEFT JOIN Feedback f ON p.ProductID = f.ProductID "
+                + "LEFT JOIN Category c ON c.CategoryID = p.CategoryID "
+                + "WHERE p.ProductID = ? "
+                + "GROUP BY p.ProductID, p.ProductName, p.Price, p.StockQuantity, p.Brand, "
+                + "p.CategoryID, CAST(p.Description AS NVARCHAR(MAX)), CAST(p.ImageURL AS NVARCHAR(MAX)), "
+                + "p.CreateAt, p.UpdateAt, p.DiscountPercent, c.CategoryName";
 
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, productId);
-            ResultSet rs = ps.executeQuery();
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Products p = new Products();
+                    p.setProductID(rs.getInt("ProductID"));
+                    p.setProductName(rs.getString("ProductName"));
+                    p.setPrice(rs.getBigDecimal("Price"));
+                    p.setStockQuantity(rs.getInt("StockQuantity"));
+                    p.setBrand(rs.getString("Brand"));
 
-            if (rs.next()) {
-                int id = rs.getInt("ProductID");
-                String name = rs.getString("ProductName");
-                String description = rs.getString("Description");
-                int stockQuantity = rs.getInt("StockQuantity");
-                String brand = rs.getString("Brand");
-                Category category = getCategoryByID(rs.getInt("CategoryID"));
-                BigDecimal price = rs.getBigDecimal("Price");
-                BigDecimal discount = rs.getBigDecimal("DiscountPercent");
-                String imageUrl = rs.getString("ImageURL");
-                Date created_at = rs.getDate("CreateAt");
-                Date updated_at = rs.getDate("UpdateAt");
-                Products product = new Products(id, name, price, stockQuantity, brand, category, description, imageUrl, created_at, updated_at, discount);
-                return product;
+                    // Tạo Category từ dữ liệu truy vấn
+                    Category c = new Category();
+                    c.setCategoryID(rs.getInt("CategoryID"));
+                    c.setCategoryName(rs.getString("CategoryName"));
+                    p.setCategory(c);
+
+                    p.setDescription(rs.getString("Description"));
+                    p.setImageURL(rs.getString("ImageURL"));
+                    p.setDiscountProduct(rs.getBigDecimal("DiscountPercent"));
+                    p.setNumberOfFeedbacks(rs.getInt("FeedbackCount"));
+                    p.setAvgRating(rs.getDouble("AverageRating")); // Đã xử lý null bằng COALESCE
+
+                    return p;
+                }
             }
-
-            rs.close();
-            ps.close();
-
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
+    }
+
+    public ArrayList<Specifications> getSpecificationsByProductId(int productId) {
+        ArrayList<Specifications> specifications = new ArrayList<>();
+        String query = "SELECT * FROM Specifications WHERE ProductID = ?";
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, productId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                specifications.add(new Specifications(
+                        rs.getInt("SpecificationID"),
+                        getProductByID(rs.getInt("ProductID")),
+                        rs.getString("Key"),
+                        rs.getString("Value")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return specifications;
     }
 
     public Category getCategoryByID(int id) {
@@ -515,11 +541,62 @@ public class ProductsDAO extends DBContext {
         }
         return null;
     }
-    public static void main(String[] args){
-        ProductsDAO proDAO = new ProductsDAO();
-        ArrayList<Cart> cart = proDAO.getCartByUserID("CU0001");
-        for (Cart c : cart) {
-            System.out.println(c.getCustomer().getCustomerName());
+
+    public static void main(String[] args) {
+        ProductsDAO dao = new ProductsDAO();
+        ArrayList<Specifications> specs = dao.getSpecificationsByProductId(444);
+        for (Specifications spec : specs) {
+            System.out.println(spec.getProduct().getProductName());
         }
+    }
+
+    public void insertToCart(Cart item) {
+        String sql = "INSERT INTO [dbo].[Cart]\n"
+                + "           ([CustomerID]\n"
+                + "           ,[ProductID]\n"
+                + "           ,[Quantity])\n"
+                + "     VALUES (?,?,?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, item.getCustomer().getCustomerId());
+            ps.setInt(2, item.getProduct().getProductID());
+            ps.setInt(3, item.getQuantity());
+
+            ps.executeUpdate();
+            ps.close();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+    
+    public Cart getCartByCartID(int cartID) {
+        String sql = "SELECT [CartID]\n"
+                + "      ,[CustomerID]\n"
+                + "      ,[ProductID]\n"
+                + "      ,[Quantity]\n"
+                + "      ,[CreatedAt]\n"
+                + "  FROM [dbo].[Cart]\n"
+                + "  WHERE CartID = ?";
+        CustomersDAO uDAO = new CustomersDAO();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, cartID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Customers user = uDAO.getCustomerByID(rs.getString("CustomerID"));
+                Products pro = getProductByID(rs.getInt("ProductID"));
+                Cart cart = new Cart(user, pro, rs.getInt("Quantity"));
+                return cart;
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
     }
 }

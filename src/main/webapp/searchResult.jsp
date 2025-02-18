@@ -481,10 +481,10 @@
                                                             <img src="./img/${product.getCategory().getCategoryName()}/${product.imageURL}" alt="${product.productName}" />
                                                         </c:otherwise>
                                                     </c:choose>
-                                                    <a href="productsDetail?id=${product.productID}" class="btn">Show Detail</a>
+                                                    <a href="productDetails?id=${product.productID}" class="btn">Show Detail</a>
                                                 </div>
                                                 <div class="info-bx text-center">
-                                                    <h5><a href="productsDetail?id=${product.productID}">${product.productName}</a></h5>
+                                                    <h5><a href="productDetails?id=${product.productID}">${product.productName}</a></h5>
                                                     <span>${product.getCategory().getCategoryName()} - ${product.brand}</span>
                                                 </div>
                                                 <div class="cours-more-info">
