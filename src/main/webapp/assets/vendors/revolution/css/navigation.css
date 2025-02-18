@@ -758,8 +758,8 @@ opacity:1
     font-size:13px;
     font-weight:700;
     text-transform:uppercase;
-    font-family:"Roboto Slab"
-    margin-bottom:5px;
+    font-family:"Roboto Slab";
+    margin-bottom: 5px;
 }
 
 .erinyen .tp-tab-desc {
@@ -1419,8 +1419,8 @@ border-radius:6px;
     font-size:13px;
     font-weight:700;
     text-transform:uppercase;
-    font-family:"Roboto Slab"
-    margin-bottom:5px;
+    font-family:"Roboto Slab";
+    margin-bottom: 5px;
 }
 
 .hebe .tp-tab-desc {

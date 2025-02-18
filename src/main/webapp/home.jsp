@@ -244,16 +244,16 @@
                             <div class="title">
                                 <span>Some quality items</span>
                             </div>
-                            <h2 class="section-title">Popular Books</h2>
+                            <h2 class="section-title">Sale Products</h2>
                         </div>
 
                         <ul class="tabs">
                             <li data-tab-target="#all-genre" class="active tab">All Genre</li>
-                            <li data-tab-target="#business" class="tab">Business</li>
-                            <li data-tab-target="#technology" class="tab">Technology</li>
-                            <li data-tab-target="#romantic" class="tab">Romantic</li>
-                            <li data-tab-target="#adventure" class="tab">Adventure</li>
-                            <li data-tab-target="#fictional" class="tab">Fictional</li>
+                            <li data-tab-target="#business" class="tab">Racket</li>
+                            <li data-tab-target="#technology" class="tab">Shoes</li>
+                            <li data-tab-target="#romantic" class="tab">Clothes</li>
+                            <li data-tab-target="#adventure" class="tab">Bag</li>
+                            <li data-tab-target="#fictional" class="tab">Accessory</li>
                         </ul>
 
                         <div class="tab-content">
