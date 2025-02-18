@@ -1,30 +1,24 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+ */package Models;
 
-package Models;
+import java.time.LocalDateTime;
 
-import java.time.DateTimeException;
-
-/**
- *
- * @author HaoNTCE180451
- */
 public class News {
     private int newsID;
     private Staffs staff;
     private String author;
     private String title;
     private String content;
-    private DateTimeException publishedDate;
+    private LocalDateTime publishedDate;
     private String filePath;
     private String image;
 
     public News() {
     }
 
-    public News(int newsID, Staffs staff, String author, String title, String content, DateTimeException publishedDate, String filePath, String image) {
+    public News(int newsID, Staffs staff, String author, String title, String content, LocalDateTime publishedDate, String filePath, String image) {
         this.newsID = newsID;
         this.staff = staff;
         this.author = author;
@@ -75,11 +69,12 @@ public class News {
         this.content = content;
     }
 
-    public DateTimeException getPublishedDate() {
+    public LocalDateTime getPublishedDate() {
         return publishedDate;
     }
 
-    public void setPublishedDate(DateTimeException publishedDate) {
+    // Corrected setter to accept LocalDateTime
+    public void setPublishedDate(LocalDateTime publishedDate) {
         this.publishedDate = publishedDate;
     }
 
@@ -98,6 +93,4 @@ public class News {
     public void setImage(String image) {
         this.image = image;
     }
-    
-    
 }
