@@ -23,7 +23,7 @@
         <link rel="stylesheet" type="text/css" href="css/normalize.css">
         <link rel="stylesheet" type="text/css" href="icomoon/icomoon.css">
         <link rel="stylesheet" type="text/css" href="css/vendor.css">
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
   
 
     </head>
@@ -93,7 +93,7 @@
 
                 <div class="col-md-2">
                     <div class="main-logo">
-                        <a href="index.html"><img src="img/logo2.png" alt="logo"></a>
+                        <a href="index.html"><img src="img/logo4.png" alt="logo"></a>
                     </div>
 
                 </div>
