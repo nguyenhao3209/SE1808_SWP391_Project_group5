@@ -1,45 +1,52 @@
 package Models;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class Feedback {
-    private String feedbackID;
-    private String customerID;
+    private int reviewID;
+    private Customers user;
     private int productID;
     private int rating;
     private String comment;
-    private LocalDateTime createdAt;
-    
+    private Date createdAt;
+    private String customerId;
+
     private List<Reply> replies;
 
+    // Constructor mặc định
     public Feedback() {
+        this.createdAt = new Date(System.currentTimeMillis());
     }
 
-    public Feedback(String feedbackID, String customerID, int productID, int rating, String comment, LocalDateTime createdAt, List<Reply> replies) {
-        this.feedbackID = feedbackID;
-        this.customerID = customerID;
+    public Feedback(int reviewID, Customers user, int productID, int rating, String comment, Date createdAt, String customerId, List<Reply> replies) {
+        this.reviewID = reviewID;
+        this.user = user;
         this.productID = productID;
         this.rating = rating;
         this.comment = comment;
         this.createdAt = createdAt;
+        this.customerId = customerId;
         this.replies = replies;
     }
 
-    public String getFeedbackID() {
-        return feedbackID;
+    public int getReviewID() {
+        return reviewID;
+    }
+   
+
+    public void setReviewID(int reviewID) {
+        this.reviewID = reviewID;
+    }
+   
+
+    public Customers getUser() {
+        return user;
     }
 
-    public void setFeedbackID(String feedbackID) {
-        this.feedbackID = feedbackID;
-    }
-
-    public String getCustomerID() {
-        return customerID;
-    }
-
-    public void setCustomerID(String customerID) {
-        this.customerID = customerID;
+    public void setUser(Customers user) {
+        this.user = user;
     }
 
     public int getProductID() {
@@ -66,12 +73,20 @@ public class Feedback {
         this.comment = comment;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public List<Reply> getReplies() {
@@ -81,6 +96,8 @@ public class Feedback {
     public void setReplies(List<Reply> replies) {
         this.replies = replies;
     }
-
-    
+     @Override
+    public String toString() {
+        return "Feedback{" + "reviewID=" + reviewID + ", user=" + user + ", productID=" + productID + ", rating=" + rating + ", comment=" + comment + ", createdAt=" + createdAt + '}';
+    }
 }

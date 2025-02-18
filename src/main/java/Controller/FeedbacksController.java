@@ -27,17 +27,10 @@ public class FeedbacksController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    private void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+         String action = request.getParameter("action");
         response.setContentType("text/html;charset=UTF-8");
-        String action = request.getParameter("action");
-        String productID = request.getParameter("productID");
-
         if (action == null) {
-            response.sendRedirect("productsDetail?id=" + productID);
+            response.sendRedirect("productDetails?id=" + request.getParameter("productID"));
             return;
         }
 
@@ -48,11 +41,8 @@ public class FeedbacksController extends HttpServlet {
             case "edit":
                 editFeedback(request, response);
                 break;
-            case "delete":
-                deleteFeedback(request, response);
-                break;
             default:
-                response.sendRedirect("productsDetail?id=" + productID);
+                response.sendRedirect("productDetails?id=" + request.getParameter("productID"));
                 break;
         }
     }
@@ -60,42 +50,79 @@ public class FeedbacksController extends HttpServlet {
     private void addFeedback(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String productID = request.getParameter("productID");
-        String customerID = request.getParameter("customerID");
+        String customerID = request.getParameter("userID");
         String comment = request.getParameter("comment");
-        int rating = Integer.parseInt(request.getParameter("rating"));
+        String rating = request.getParameter("rating");
 
-        Feedback feedback = new Feedback();
-        feedback.setProductID(Integer.parseInt(productID));
-        feedback.setCustomerID(customerID);
-        feedback.setRating(rating);
-        feedback.setComment(comment);
+        ReviewsDAO dao = new ReviewsDAO();
+        Feedback newReply = new Feedback();
+        newReply.setRating(Integer.parseInt(rating));
+        newReply.setProductID(Integer.parseInt(productID));
+        newReply.setCustomerId(customerID);
+        newReply.setComment(comment);
 
-        reviewsDAO.addReview(feedback);
-        response.sendRedirect("productsDetail?id=" + productID);
+        dao.addReview(newReply);
+
+        response.sendRedirect("productDetails?id=" + productID);
     }
 
     private void editFeedback(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String feedbackID = request.getParameter("feedbackID");
+        String feedbackId = request.getParameter("feedbackId");
         String comment = request.getParameter("comment");
-        
-        Feedback feedback = reviewsDAO.getFeedbackById(feedbackID);
-        if (feedback != null) {
-            feedback.setComment(comment);
-            reviewsDAO.updateFeedback(feedback);
+
+        if (feedbackId == null || feedbackId.isEmpty()) {
+            response.sendRedirect("productDetails?id=" + request.getParameter("productID"));
+            return;
         }
 
-        response.sendRedirect("productsDetail?id=" + request.getParameter("productID"));
+        ReviewsDAO dao = new ReviewsDAO();
+        Feedback reply = dao.getFeedbackById(Integer.parseInt(feedbackId));
+
+        if (reply != null) {
+            reply.setComment(comment);
+            dao.updateFeedback(reply);
+        }
+
+        response.sendRedirect("productDetails?id=" + request.getParameter("productID"));
     }
 
     private void deleteFeedback(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String feedbackID = request.getParameter("feedbackID");
-        
-        if (feedbackID != null && !feedbackID.isEmpty()) {
-            reviewsDAO.deleteFeedback(feedbackID);
+        String feedbackId = request.getParameter("feedbackId");
+
+        if (feedbackId == null || feedbackId.isEmpty()) {
+            response.sendRedirect("productDetails?id=" + request.getParameter("productID"));
+            return;
         }
-        
-        response.sendRedirect("productsDetail?id=" + request.getParameter("productID"));
+
+        ReviewsDAO dao = new ReviewsDAO();
+        Feedback reply = dao.getFeedbackById(Integer.parseInt(feedbackId));
+
+        if (reply != null) {
+            dao.deleteFeedback(Integer.parseInt(feedbackId));
+        }
+
+        response.sendRedirect("productDetails?id=" + request.getParameter("productID"));
     }
+
+    private void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        String action = request.getParameter("action");
+
+        if (action == null) {
+            response.sendRedirect("productDetails?id=" + request.getParameter("productID"));
+            return;
+        }
+
+        switch (action) {
+            case "delete":
+                deleteFeedback(request, response);
+                break;
+            default:
+                response.sendRedirect("productDetails?id=" + request.getParameter("productID"));
+                break;
+        }
+}
 }

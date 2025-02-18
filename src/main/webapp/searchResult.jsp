@@ -487,7 +487,7 @@
 
                                                     <h5><a href="productsDetail?id=${product.productID}">${product.productName}</a></h5>
 
-                                                    <h5><a href="productDetails?id=${product.productID}">${product.productName}</a></h5>
+                                                    
 
                                                     <span>${product.getCategory().getCategoryName()} - ${product.brand}</span>
                                                 </div>

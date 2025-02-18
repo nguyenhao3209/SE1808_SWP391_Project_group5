@@ -1,28 +1,28 @@
 package Models;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Reply {
     private int replyID;
-    private String customerID;
-    private String staffID;
-    private String feedbackID;
-    private LocalDateTime createdAt;
+    private int feedbackID;
+    private String customerId;
     private String comment;
-
-    private Customers customers;
+    private Date createdAt;
+    private String staffID;
+    private Customers user;
 
     public Reply() {
     }
 
-    public Reply(int replyID, String customerID, String staffID, String feedbackID, LocalDateTime createdAt, String comment, Customers customers) {
+    public Reply(int replyID, int feedbackID, String customerId, String comment, Date createdAt, String staffID, Customers user) {
         this.replyID = replyID;
-        this.customerID = customerID;
-        this.staffID = staffID;
         this.feedbackID = feedbackID;
-        this.createdAt = createdAt;
+        this.customerId = customerId;
         this.comment = comment;
-        this.customers = customers;
+        this.createdAt = createdAt;
+        this.staffID = staffID;
+        this.user = user;
     }
 
     public int getReplyID() {
@@ -33,36 +33,20 @@ public class Reply {
         this.replyID = replyID;
     }
 
-    public String getCustomerID() {
-        return customerID;
-    }
-
-    public void setCustomerID(String customerID) {
-        this.customerID = customerID;
-    }
-
-    public String getStaffID() {
-        return staffID;
-    }
-
-    public void setStaffID(String staffID) {
-        this.staffID = staffID;
-    }
-
-    public String getFeedbackID() {
+    public int getFeedbackID() {
         return feedbackID;
     }
 
-    public void setFeedbackID(String feedbackID) {
+    public void setFeedbackID(int feedbackID) {
         this.feedbackID = feedbackID;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public String getComment() {
@@ -73,13 +57,28 @@ public class Reply {
         this.comment = comment;
     }
 
-    public Customers getCustomers() {
-        return customers;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCustomers(Customers customers) {
-        this.customers = customers;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getStaffID() {
+        return staffID;
+    }
+
+    public void setStaffID(String staffID) {
+        this.staffID = staffID;
+    }
+
+    public Customers getUser() {
+        return user;
+    }
+
+    public void setUser(Customers user) {
+        this.user = user;
     }
     
-    
-}
+    }
