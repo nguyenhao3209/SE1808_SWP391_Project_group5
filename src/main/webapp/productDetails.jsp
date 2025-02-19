@@ -144,6 +144,6 @@
             });
 
         </script>
-
+        <jsp:include page="feedbacks.jsp"/>
     </body>
 </html>
