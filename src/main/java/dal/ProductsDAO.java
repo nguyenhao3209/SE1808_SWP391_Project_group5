@@ -7,6 +7,7 @@ package dal;
 import Models.Cart;
 import Models.Category;
 import Models.Customers;
+import Models.ProductSizes;
 import Models.Products;
 import Models.Specifications;
 import java.math.BigDecimal;
@@ -542,7 +543,7 @@ public class ProductsDAO extends DBContext {
         return null;
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         ProductsDAO proDAO = new ProductsDAO();
         ArrayList<Cart> cart = proDAO.getCartByUserID("CU0001");
         for (Cart c : cart) {
@@ -576,7 +577,7 @@ public class ProductsDAO extends DBContext {
             System.out.println(e);
         }
     }
-    
+
     public Cart getCartByCartID(int cartID) {
         String sql = "SELECT [CartID]\n"
                 + "      ,[CustomerID]\n"
@@ -607,4 +608,72 @@ public class ProductsDAO extends DBContext {
         return null;
 
     }
+
+    public ArrayList<ProductSizes> getSizesOfProductByID(int productId) {
+        ArrayList<ProductSizes> productSizes = new ArrayList<>();
+        String sql = "SELECT SizeID, Size, StockQuantity FROM ProductSizes WHERE ProductID = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int sizeId = rs.getInt("SizeID");
+                String size = rs.getString("Size");
+                int stockQuantity = rs.getInt("StockQuantity");
+                ProductSizes psObj = new ProductSizes(sizeId, getProductByID(productId), size, stockQuantity);
+                productSizes.add(psObj);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return productSizes;
+    }
+
+    public Products getProductByIDAndSizeID(int productID, int sizeID) {
+        String sql = "SELECT p.ProductID, p.ProductName, p.Description, p.StockQuantity, "
+                + "p.Brand, p.CategoryID, c.CategoryName, p.Price, p.DiscountPercent, "
+                + "p.ImageURL, p.CreateAt, p.UpdateAt, "
+                + "COUNT(f.FeedbackID) AS FeedbackCount, AVG(f.Rating) AS AverageRating "
+                + "FROM Products p "
+                + "JOIN ProductSizes ps ON p.ProductID = ps.ProductID "
+                + "LEFT JOIN Category c ON p.CategoryID = c.CategoryID "
+                + "LEFT JOIN Feedback f ON p.ProductID = f.ProductID "
+                + "WHERE p.ProductID = ? AND ps.SizeID = ? "
+                + "GROUP BY p.ProductID, p.ProductName, p.Description, p.StockQuantity, "
+                + "p.Brand, p.CategoryID, c.CategoryName, p.Price, p.DiscountPercent, "
+                + "p.ImageURL, p.CreateAt, p.UpdateAt";
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, productID);
+            ps.setInt(2, sizeID);
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Products p = new Products();
+                    p.setProductID(rs.getInt("ProductID"));
+                    p.setProductName(rs.getString("ProductName"));
+                    p.setPrice(rs.getBigDecimal("Price"));
+                    p.setStockQuantity(rs.getInt("StockQuantity"));
+                    p.setBrand(rs.getString("Brand"));
+                    p.setDescription(rs.getString("Description"));
+                    p.setCategory(getCategoryByID(rs.getInt("categoryID")));
+                    p.setImageURL(rs.getString("ImageURL"));
+                    p.setDiscountProduct(rs.getBigDecimal("DiscountPercent"));
+                    p.setNumberOfFeedbacks(rs.getInt("FeedbackCount"));
+                    p.setAvgRating(rs.getDouble("AverageRating"));
+
+
+                    return p;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return null;
+    }
+
 }

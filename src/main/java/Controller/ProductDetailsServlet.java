@@ -100,6 +100,7 @@ public class ProductDetailsServlet extends HttpServlet {
 
 // Lưu product vào request và chuyển hướng đến productDetails.jsp
         request.setAttribute("product", product);
+        ArrayList<ProductSizes> productSizes = productDAO.getSizesOfProductByID(productId);
         request.setAttribute("specifications", specifications);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("productDetails.jsp");
