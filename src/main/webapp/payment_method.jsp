@@ -100,7 +100,7 @@
 
                         <c:forEach var="item" items="${sessionScope.cartList}">
                             <tr>
-                                <td>${item.product.productName}</td>
+                                <td>${item.product.productName} <c:if test="${not empty item.productSizes}">(Size: ${item.productSizes.size})</c:if></td>
                                 <td>
                                     <c:if test="${item.product.discountProduct > 0}">
                                         <div class="product-price">

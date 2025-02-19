@@ -27,10 +27,6 @@
                         <span>${product.numberOfFeedbacks} Review</span>
                         <ul class="cours-star">
                             <li class="active">${product.avgRating}<i class="fa fa-star"></i></li>
-                            <!--                                                            <li class="active"><i class="fa fa-star"></i></li>
-                                                                                        <li class="active"><i class="fa fa-star"></i></li>
-                                                                                        <li><i class="fa fa-star"></i></li>
-                                                                                        <li><i class="fa fa-star"></i></li>-->
                         </ul>
                     </div>
                     <div class="price">

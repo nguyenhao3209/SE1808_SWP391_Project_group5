@@ -16,6 +16,7 @@ public class Cart {
     private Customers customer;
     private Date createAt;
     private Products product;
+    private ProductSizes productSizes;
     private int quantity;
     private boolean selected;
 
@@ -29,14 +30,29 @@ public class Cart {
         this.product = product;
         this.quantity = quantity;
     }
-    
+
     public Cart(int cartID, Customers customer, Products product, int quantity) {
         this.cartID = cartID;
         this.customer = customer;
         this.product = product;
         this.quantity = quantity;
     }
-    
+
+    public Cart(Customers customer, Products product, ProductSizes productSize, int quantity) {
+        this.customer = customer;
+        this.product = product;
+        this.productSizes = productSize;
+        this.quantity = quantity;
+    }
+
+    public Cart(int cartID, Customers customer, Products product, ProductSizes productSize, int quantity) {
+        this.cartID = cartID;
+        this.customer = customer;
+        this.product = product;
+        this.productSizes = productSize;
+        this.quantity = quantity;
+    }
+
     public Cart(Customers customer, Products product, int quantity) {
         this.customer = customer;
         this.product = product;
@@ -75,6 +91,14 @@ public class Cart {
         this.product = product;
     }
 
+    public ProductSizes getProductSizes() {
+        return productSizes;
+    }
+
+    public void setProductSizes(ProductSizes productSizes) {
+        this.productSizes = productSizes;
+    }
+
     public int getQuantity() {
         return quantity;
     }
@@ -90,6 +114,5 @@ public class Cart {
     public void setSelected(boolean selected) {
         this.selected = selected;
     }
-    
-    
+
 }

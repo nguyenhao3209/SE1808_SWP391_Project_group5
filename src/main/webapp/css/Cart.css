@@ -22,7 +22,7 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 1100px;
+    max-width: 1400px;
     margin: auto;
 }
 
@@ -128,11 +128,47 @@ table td img {
     border-radius: 5px;
 }
 
-/* Price & Total */
-.price, .total {
-    font-size: 18px;
+/* Giá gốc (được gạch ngang nếu có giảm giá) */
+.original-price {
+    font-size: 14px; /* Cỡ chữ nhỏ hơn giá đã giảm */
+    color: #999; /* Màu xám nhạt */
+    text-decoration: line-through; /* Gạch ngang */
+    margin-right: 8px; /* Khoảng cách so với giá giảm */
+}
+
+/* Giá đã giảm */
+.discounted-price {
+    font-size: 18px; /* Cỡ chữ lớn hơn để nổi bật */
+    font-weight: bold; /* Chữ đậm */
+    color: #e63946; /* Màu đỏ để thu hút sự chú ý */
+}
+
+/* Phần trăm giảm giá */
+.discount-percentage {
+    font-size: 14px; /* Cỡ chữ nhỏ hơn giá giảm */
+    color: #e63946; /* Màu đỏ nhất quán */
     font-weight: bold;
-    color: #333;
+    background: #ffe5e5; /* Nền nhẹ để làm nổi bật */
+    padding: 2px 5px;
+    border-radius: 5px;
+    margin-left: 8px; /* Khoảng cách so với giá giảm */
+}
+
+/* Tổng tiền (total price) trong từng dòng sản phẩm */
+.total {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2a9d8f; /* Màu xanh tạo cảm giác tích cực */
+}
+
+/* Tổng cộng (Total) ở phần Order Summary */
+.total-price span {
+    font-size: 20px; /* Kích thước lớn hơn */
+    font-weight: bold;
+}
+
+.total-price span:last-child {
+    color: #e63946; /* Màu đỏ nhấn mạnh */
 }
 
 /* Right Side - Order Summary */
@@ -219,7 +255,7 @@ select {
 
 /* Checkout Button */
 .checkout-btn {
-    width: 100%;
+    width: 60%;
     padding: 14px;
     background: orange;
     border: none;
