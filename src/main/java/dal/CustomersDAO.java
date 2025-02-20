@@ -307,5 +307,33 @@ public class CustomersDAO extends DBContext {
             e.printStackTrace();
         }
     }
+
+   public List<Customers> getAllCustomers() {
+    List<Customers> customersList = new ArrayList<>();
+    String query = "SELECT * FROM Customers";
+    
+    try (Connection conn = new DBContext().connection;
+         PreparedStatement ps = conn.prepareStatement(query);
+         ResultSet rs = ps.executeQuery()) {
+        
+        while (rs.next()) {
+            Customers customer = new Customers();
+            customer.setCustomerId(rs.getString("CustomerID"));
+            customer.setCustomerName(rs.getString("CustomerName"));
+            customer.setEmail(rs.getString("Email"));
+            customer.setPhone(rs.getString("Phone"));
+            customer.setAddress(rs.getString("Address"));
+            customer.setAvatar(rs.getString("Avatar"));
+            customer.setRole(Customers.Role.valueOf(rs.getString("Role")));
+            customer.setStatus(Customers.Status.valueOf(rs.getString("Status")));
+            customersList.add(customer);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    
+    return customersList;
+}
+
 }
 
