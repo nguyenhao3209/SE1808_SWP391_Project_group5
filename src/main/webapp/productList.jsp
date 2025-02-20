@@ -15,9 +15,10 @@
                         </c:otherwise>
                     </c:choose>
 
-                    <a href="productsDetail?id=${product.productID}" class="btn">Show Detail</a>
+                    <a href="productDetails?id=${product.productID}" class="btn">Show Detail</a>
                 </div>
                 <div class="info-bx text-center">
+
                     <h5><a href="productsDetail?id=${product.productID}">${product.productName}</a></h5>
                     <span>${product.category.getCategoryName()} - ${product.brand}</span>
                 </div>
@@ -26,10 +27,6 @@
                         <span>${product.numberOfFeedbacks} Review</span>
                         <ul class="cours-star">
                             <li class="active">${product.avgRating}<i class="fa fa-star"></i></li>
-                            <!--                                                            <li class="active"><i class="fa fa-star"></i></li>
-                                                                                        <li class="active"><i class="fa fa-star"></i></li>
-                                                                                        <li><i class="fa fa-star"></i></li>
-                                                                                        <li><i class="fa fa-star"></i></li>-->
                         </ul>
                     </div>
                     <div class="price">

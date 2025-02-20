@@ -7,9 +7,9 @@ package dal;
 import Models.Cart;
 import Models.Category;
 import Models.Customers;
+import Models.ProductSizes;
 import Models.Products;
-import java.math.BigDecimal;
-import java.sql.Date;
+import Models.Specifications;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,6 +39,12 @@ public class ProductsDAO extends DBContext {
 //        }
 //        return list;
 //    }
+    
+    
+    public ProductsDAO() {
+        super();
+    }
+
     public List<Category> getAllCategory() {
         ArrayList<Category> list = new ArrayList<>();
         String sql = "select * "
@@ -366,16 +372,14 @@ public class ProductsDAO extends DBContext {
         }
         return listBrand;
     }
+
     public ArrayList<Cart> getCartByUserID(String userID) {
-        ArrayList<Cart> cart = new ArrayList();
-        String sql = "SELECT [CartID]\n"
-                + "      ,[CustomerID]\n"
-                + "      ,[CreatedAt]\n"
-                + "      ,[ProductID]\n"
-                + "      ,[Quantity]\n"
-                + "  FROM [dbo].[Cart]\n"
-                + "  WHERE CustomerID = ?";
+        ArrayList<Cart> cart = new ArrayList<>();
+        String sql = "SELECT [CartID], [CustomerID], [ProductID], [SizeID], [Quantity], [CreatedAt] "
+                + "FROM [Cart] WHERE CustomerID = ?";
+
         CustomersDAO cusDAO = new CustomersDAO();
+
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, userID);
@@ -384,12 +388,23 @@ public class ProductsDAO extends DBContext {
             while (rs.next()) {
                 Customers customer = cusDAO.getCustomerByID(rs.getString("CustomerID"));
                 Products pro = getProductByID(rs.getInt("ProductID"));
-                cart.add(new Cart(rs.getInt("CartID"), customer, rs.getDate("CreatedAt"), pro, rs.getInt("Quantity")));
+
+                int sizeID = rs.getInt("SizeID");
+                ProductSizes size = null;
+                if (!rs.wasNull()) {
+                    size = getProductSizeByID(sizeID);
+                }
+
+                if (pro.getCategory().getCategoryName().equals("Shoes")
+                        || pro.getCategory().getCategoryName().equals("Clothes")) {
+                    cart.add(new Cart(rs.getInt("CartID"), customer, pro, size, rs.getInt("Quantity")));
+                } else {
+                    cart.add(new Cart(rs.getInt("CartID"), customer, pro, rs.getInt("Quantity")));
+                }
             }
 
             rs.close();
             ps.close();
-
         } catch (SQLException e) {
             System.out.println(e);
         }
@@ -397,7 +412,7 @@ public class ProductsDAO extends DBContext {
     }
 
     public void updateCart(Cart item) {
-       String sql = "UPDATE [dbo].[Cart]\n"
+        String sql = "UPDATE [dbo].[Cart]\n"
                 + "   SET [Quantity] = ?\n"
                 + " WHERE CartID = ?";
         try {
@@ -450,48 +465,72 @@ public class ProductsDAO extends DBContext {
     }
 
     public Products getProductByID(int productId) {
-        String sql = "SELECT [ProductID]\n"
-                + "      ,[ProductName]\n"
-                + "      ,[Description]\n"
-                + "      ,[StockQuantity]\n"
-                + "      ,[Brand]\n"
-                + "      ,[CategoryID]\n"
-                + "      ,[Price]\n"
-                + "      ,[DiscountPercent]\n"
-                + "      ,[ImageURL]\n"
-                + "      ,[CreateAt]\n"
-                + "      ,[UpdateAt]\n"
-                + "  FROM [dbo].[Products]\n"
-                + "  WHERE ProductID = ?";
+        String sql = "SELECT p.ProductID, p.ProductName, p.Price, p.StockQuantity, p.Brand, "
+                + "p.CategoryID, CAST(p.Description AS NVARCHAR(MAX)) AS Description, "
+                + "CAST(p.ImageURL AS NVARCHAR(MAX)) AS ImageURL, p.CreateAt, p.UpdateAt, "
+                + "p.DiscountPercent, COUNT(f.FeedbackID) AS FeedbackCount, "
+                + "COALESCE(AVG(f.Rating), 0) AS AverageRating, c.CategoryName "
+                + "FROM Products p "
+                + "LEFT JOIN Feedback f ON p.ProductID = f.ProductID "
+                + "LEFT JOIN Category c ON c.CategoryID = p.CategoryID "
+                + "WHERE p.ProductID = ? "
+                + "GROUP BY p.ProductID, p.ProductName, p.Price, p.StockQuantity, p.Brand, "
+                + "p.CategoryID, CAST(p.Description AS NVARCHAR(MAX)), CAST(p.ImageURL AS NVARCHAR(MAX)), "
+                + "p.CreateAt, p.UpdateAt, p.DiscountPercent, c.CategoryName";
 
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, productId);
-            ResultSet rs = ps.executeQuery();
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Products p = new Products();
+                    p.setProductID(rs.getInt("ProductID"));
+                    p.setProductName(rs.getString("ProductName"));
+                    p.setPrice(rs.getBigDecimal("Price"));
+                    p.setStockQuantity(rs.getInt("StockQuantity"));
+                    p.setBrand(rs.getString("Brand"));
 
-            if (rs.next()) {
-                int id = rs.getInt("ProductID");
-                String name = rs.getString("ProductName");
-                String description = rs.getString("Description");
-                int stockQuantity = rs.getInt("StockQuantity");
-                String brand = rs.getString("Brand");
-                Category category = getCategoryByID(rs.getInt("CategoryID"));
-                BigDecimal price = rs.getBigDecimal("Price");
-                BigDecimal discount = rs.getBigDecimal("DiscountPercent");
-                String imageUrl = rs.getString("ImageURL");
-                Date created_at = rs.getDate("CreateAt");
-                Date updated_at = rs.getDate("UpdateAt");
-                Products product = new Products(id, name, price, stockQuantity, brand, category, description, imageUrl, created_at, updated_at, discount);
-                return product;
+                    // Tạo Category từ dữ liệu truy vấn
+                    Category c = new Category();
+                    c.setCategoryID(rs.getInt("CategoryID"));
+                    c.setCategoryName(rs.getString("CategoryName"));
+                    p.setCategory(c);
+
+                    p.setDescription(rs.getString("Description"));
+                    p.setImageURL(rs.getString("ImageURL"));
+                    p.setDiscountProduct(rs.getBigDecimal("DiscountPercent"));
+                    p.setNumberOfFeedbacks(rs.getInt("FeedbackCount"));
+                    p.setAvgRating(rs.getDouble("AverageRating")); // Đã xử lý null bằng COALESCE
+
+                    return p;
+                }
             }
-
-            rs.close();
-            ps.close();
-
         } catch (SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return null;
+    }
+
+    public ArrayList<Specifications> getSpecificationsByProductId(int productId) {
+        ArrayList<Specifications> specifications = new ArrayList<>();
+        String query = "SELECT * FROM Specifications WHERE ProductID = ?";
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, productId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                specifications.add(new Specifications(
+                        rs.getInt("SpecificationID"),
+                        getProductByID(rs.getInt("ProductID")),
+                        rs.getString("Key"),
+                        rs.getString("Value")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return specifications;
     }
 
     public Category getCategoryByID(int id) {
@@ -515,11 +554,117 @@ public class ProductsDAO extends DBContext {
         }
         return null;
     }
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         ProductsDAO proDAO = new ProductsDAO();
-        ArrayList<Cart> cart = proDAO.getCartByUserID("CU0001");
-        for (Cart c : cart) {
-            System.out.println(c.getCustomer().getCustomerName());
+        Products proS = proDAO.getProductByID(500);
+        System.out.println(proS.getAvgRating());
+    }
+
+    public void insertToCart(Cart item) {
+        String sql = "INSERT INTO [dbo].[Cart] "
+                + "([CustomerID], [ProductID], [SizeID], [Quantity]) "
+                + "VALUES (?, ?, ?, ?)";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, item.getCustomer().getCustomerId());
+            ps.setInt(2, item.getProduct().getProductID());
+
+            if (item.getProductSizes() != null) {
+                ps.setInt(3, item.getProductSizes().getSizeID());
+            } else {
+                ps.setNull(3, java.sql.Types.INTEGER);
+            }
+
+            ps.setInt(4, item.getQuantity());
+
+            ps.executeUpdate();
+            ps.close();
+
+        } catch (SQLException e) {
+            System.out.println(e);
         }
     }
+
+    public Cart getCartByCartID(int cartID) {
+        String sql = "SELECT [CartID]\n"
+                + "      ,[CustomerID]\n"
+                + "      ,[ProductID]\n"
+                + "      ,[SizeID]\n"
+                + "      ,[Quantity]\n"
+                + "      ,[CreatedAt]\n"
+                + "  FROM [dbo].[Cart]\n"
+                + "  WHERE CartID = ?";
+        CustomersDAO uDAO = new CustomersDAO();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, cartID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Customers user = uDAO.getCustomerByID(rs.getString("CustomerID"));
+                Products pro = getProductByID(rs.getInt("ProductID"));
+                Cart cart = new Cart(user, pro, rs.getInt("Quantity"));
+                return cart;
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+
+    }
+
+    public ArrayList<ProductSizes> getSizesOfProductByID(int productId) {
+        ArrayList<ProductSizes> productSizes = new ArrayList<>();
+        String sql = "SELECT SizeID, Size, StockQuantity FROM ProductSizes WHERE ProductID = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int sizeId = rs.getInt("SizeID");
+                String size = rs.getString("Size");
+                int stockQuantity = rs.getInt("StockQuantity");
+                ProductSizes psObj = new ProductSizes(sizeId, getProductByID(productId), size, stockQuantity);
+                productSizes.add(psObj);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return productSizes;
+    }
+
+    public ProductSizes getProductSizeByID(int sizeID) {
+
+        String sql = "SELECT [SizeID], [ProductID], [Size], [StockQuantity] "
+                + "FROM [dbo].[ProductSizes] WHERE SizeID = ?";
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, sizeID);
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    ProductSizes proSizes = new ProductSizes();
+                    proSizes.setSizeID(rs.getInt("SizeID"));
+                    proSizes.setProduct(getProductByID(rs.getInt("ProductID")));
+                    proSizes.setSize(rs.getString("Size"));
+                    proSizes.setStockQuantity(rs.getInt("StockQuantity"));
+                    return proSizes;
+                }
+            }
+        } catch (SQLException e) {
+        }
+        return null;
+    }
+
 }

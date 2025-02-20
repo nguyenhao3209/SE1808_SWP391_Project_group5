@@ -29,7 +29,7 @@ public class DBContext {
         }
     }
   public static void main(String[] args) {
-        String url = "jdbc:sqlserver://localhost:1433;databaseName=SE1808_SWP391_Group5;encrypt=false;trustServerCertificate=true";
+        String url = "jdbc:sqlserver://localhost:1433;databaseName=SE1808_SWP391_Group5;trustServerCertificate=true";
         String user = "sa";
         String pass = "123456";
 

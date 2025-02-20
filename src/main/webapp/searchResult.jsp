@@ -6,8 +6,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Badminton Shop - Product</title>
- 
-        
+
+
         <!-- Thư viện Font Awesome để sử dụng các icon -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <!-- Bootstrap CSS -->
@@ -24,15 +24,15 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
-        
-               	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 
-       <link rel="stylesheet" type="text/css" href="css/normalize.css">
-	<link rel="stylesheet" type="text/css" href="icomoon/icomoon.css">
-	<link rel="stylesheet" type="text/css" href="css/vendor.css">
-	<link rel="stylesheet" type="text/css" href="style.css">
-        
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="icomoon/icomoon.css">
+        <link rel="stylesheet" type="text/css" href="css/vendor.css">
+        <link rel="stylesheet" type="text/css" href="style.css">
+
         <style>
 
             .search-container {
@@ -424,7 +424,7 @@
                     transform: translateX(0);
                 }
             }
-            </style>
+        </style>
     </head>
     <body>
         <jsp:include page="common/header.jsp"/>
@@ -447,7 +447,7 @@
                                     <ul>
                                         <c:forEach items="${categoryList}" var="c">
                                             <label><input type="checkbox" name="category" value="${c.categoryID}"> ${c.categoryName}</label>
-                                        </c:forEach>
+                                            </c:forEach>
                                     </ul>
                                 </div>
                                 <div class="widget widget_archive">
@@ -481,9 +481,10 @@
                                                             <img src="./img/${product.getCategory().getCategoryName()}/${product.imageURL}" alt="${product.productName}" />
                                                         </c:otherwise>
                                                     </c:choose>
-                                                    <a href="productsDetail?id=${product.productID}" class="btn">Show Detail</a>
+                                                    <a href="productDetails?id=${product.productID}" class="btn">Show Detail</a>
                                                 </div>
                                                 <div class="info-bx text-center">
+
                                                     <h5><a href="productsDetail?id=${product.productID}">${product.productName}</a></h5>
                                                     <span>${product.getCategory().getCategoryName()} - ${product.brand}</span>
                                                 </div>
@@ -572,21 +573,21 @@
 
         </div>
 
-<!--         Container chứa icon Zalo 
-        <div class="zalo-container" id="zaloContainer">
-            <a href="https://zalo.me/0968020458" target="_blank" class="zalo-icon">
-                <img src="./img/zalo-logo.png" alt="Zalo">
-            </a>
-        </div>
-         contact area END -->
+        <!--         Container chứa icon Zalo 
+                <div class="zalo-container" id="zaloContainer">
+                    <a href="https://zalo.me/0968020458" target="_blank" class="zalo-icon">
+                        <img src="./img/zalo-logo.png" alt="Zalo">
+                    </a>
+                </div>
+                 contact area END -->
 
-<jsp:include page="common/footer.jsp" />
-	<script src="js/jquery-1.11.0.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-		crossorigin="anonymous"></script>
-	<script src="js/plugins.js"></script>
-	<script src="js/script.js"></script>
+        <jsp:include page="common/footer.jsp" />
+        <script src="js/jquery-1.11.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/script.js"></script>
         <script>
                                         function loadProducts(page) {
                                             let searchQuery = $("input[name='keyword']").val();

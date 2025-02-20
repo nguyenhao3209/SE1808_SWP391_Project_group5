@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package Models;
 
 /**
@@ -10,17 +9,18 @@ package Models;
  * @author HaoNTCE180451
  */
 public class Specifications {
+
     private int specificationID;
-    private int productID;
+    private Products product;
     private String key;
     private String value;
 
     public Specifications() {
     }
 
-    public Specifications(int specificationID, int productID, String key, String value) {
+    public Specifications(int specificationID, Products product, String key, String value) {
         this.specificationID = specificationID;
-        this.productID = productID;
+        this.product = product;
         this.key = key;
         this.value = value;
     }
@@ -33,12 +33,12 @@ public class Specifications {
         this.specificationID = specificationID;
     }
 
-    public int getProductID() {
-        return productID;
+    public Products getProduct() {
+        return product;
     }
 
-    public void setProductID(int productID) {
-        this.productID = productID;
+    public void setProduct(Products product) {
+        this.product = product;
     }
 
     public String getKey() {
@@ -56,6 +56,4 @@ public class Specifications {
     public void setValue(String value) {
         this.value = value;
     }
-    
-    
 }

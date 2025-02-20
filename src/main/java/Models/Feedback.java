@@ -1,48 +1,60 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Models;
 
-import java.time.DateTimeException;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
-/**
- *
- * @author HaoNTCE180451
- */
 public class Feedback {
-    private int FeedbackID;
-    private Customers customer;
+    private int reviewID;
+    private Customers user;
+    private int productID;
     private int rating;
     private String comment;
-    private DateTimeException createAt;
+    private Date createdAt;
+    private String customerId;
 
+    private List<Reply> replies;
+
+    // Constructor mặc định
     public Feedback() {
+        this.createdAt = new Date(System.currentTimeMillis());
     }
 
-    public Feedback(int FeedbackID, Customers customer, int rating, String comment, DateTimeException createAt) {
-        this.FeedbackID = FeedbackID;
-        this.customer = customer;
+    public Feedback(int reviewID, Customers user, int productID, int rating, String comment, Date createdAt, String customerId, List<Reply> replies) {
+        this.reviewID = reviewID;
+        this.user = user;
+        this.productID = productID;
         this.rating = rating;
         this.comment = comment;
-        this.createAt = createAt;
+        this.createdAt = createdAt;
+        this.customerId = customerId;
+        this.replies = replies;
     }
 
-    public int getFeedbackID() {
-        return FeedbackID;
+    public int getReviewID() {
+        return reviewID;
+    }
+   
+
+    public void setReviewID(int reviewID) {
+        this.reviewID = reviewID;
+    }
+   
+
+    public Customers getUser() {
+        return user;
     }
 
-    public void setFeedbackID(int FeedbackID) {
-        this.FeedbackID = FeedbackID;
+    public void setUser(Customers user) {
+        this.user = user;
     }
 
-    public Customers getCustomer() {
-        return customer;
+    public int getProductID() {
+        return productID;
     }
 
-    public void setCustomer(Customers customer) {
-        this.customer = customer;
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
 
     public int getRating() {
@@ -61,13 +73,31 @@ public class Feedback {
         this.comment = comment;
     }
 
-    public DateTimeException getCreateAt() {
-        return createAt;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(DateTimeException createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
-    
-    
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public List<Reply> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Reply> replies) {
+        this.replies = replies;
+    }
+     @Override
+    public String toString() {
+        return "Feedback{" + "reviewID=" + reviewID + ", user=" + user + ", productID=" + productID + ", rating=" + rating + ", comment=" + comment + ", createdAt=" + createdAt + '}';
+    }
 }

@@ -67,27 +67,7 @@ public class PaymentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        //BuyNow
-        HttpSession session = request.getSession();
-        Customers customer = (Customers) session.getAttribute("user");
-        ArrayList<Cart> newList = new ArrayList<>();
-        String productID = request.getParameter("selectedItems");
-        String quantity = request.getParameter("quantity");
-        BigDecimal brandTotal = BigDecimal.ZERO;
-
-        ProductsDAO proDAO = new ProductsDAO();
-        Products pro = proDAO.getProductByID(Integer.parseInt(productID));
-
-        if (productID != null && quantity != null) {
-            brandTotal = pro.getFinalPrice().multiply(BigDecimal.valueOf(Integer.parseInt(quantity)));
-            Cart cart = new Cart(customer, pro, Integer.parseInt(quantity));
-            newList.add(cart);
-            session.setAttribute("cartList", newList);
-            session.setAttribute("brandTotal", brandTotal);
-        }
-        request.getRequestDispatcher("payment_method.jsp").forward(request, response);
+        
     }
 
     /**

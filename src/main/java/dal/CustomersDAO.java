@@ -290,6 +290,29 @@ public class CustomersDAO extends DBContext {
         }
         return user;
     }
+    public Customers getUserByID(String id) {
+        Customers user = null;
+        String query = "SELECT * FROM Customers WHERE CustomerID = ?";
+        try {
+            connection = new DBContext().connection;
+            ps = connection.prepareStatement(query);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                user = new Customers();
+                user.setCustomerId(rs.getString("CustomerID"));
+                user.setCustomerName(rs.getString("CustomerName"));
+                user.setEmail(rs.getString("Email"));
+                user.setPhone(rs.getString("Phone"));
+                user.setAddress(rs.getString("Address"));
+                user.setRole(Role.valueOf(rs.getString("Role")));
+                user.setStatus(Status.valueOf(rs.getString("Status")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
 
     public void updateUser(Customers customer) {
         String sql = "UPDATE Customers SET CustomerName = ?, Email = ?, Phone = ?, Address = ?, Avatar = ? WHERE CustomerID = ?";
