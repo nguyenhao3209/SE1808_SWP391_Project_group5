@@ -55,7 +55,7 @@
             }
             .table td {
                 vertical-align: middle;
-                text-align: center;
+                text-align: left;
                 border: 1px solid #dee2e6;
             }
             .total-row {
@@ -79,7 +79,7 @@
         </style>
     </head>
     <body>
-         <jsp:include page="common/header.jsp"/>
+        <jsp:include page="common/header.jsp"/>
         <c:if test="${empty sessionScope.cartList}">
             <p style="color:red;">Cart is empty</p>
         </c:if>
@@ -90,6 +90,7 @@
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
+                            <th>Picture</th>
                             <th>Product</th>
                             <th>Price</th>
                             <th>Quantity</th>
@@ -100,8 +101,16 @@
 
                         <c:forEach var="item" items="${sessionScope.cartList}">
                             <tr>
-                                <td>${item.product.productName} <c:if test="${not empty item.productSizes}">(Size: ${item.productSizes.size})</c:if></td>
                                 <td>
+                                    <c:if test="${item.product.category.categoryName eq 'Accessory'}">
+                                        <img width="80px" src="./img/${item.product.category.categoryName}/${item.product.getImageURL()}" alt="${item.product.productName}">
+                                    </c:if>
+                                    <c:if test="${item.product.category.categoryName ne 'Accessory'}">
+                                        <img width="80px" src="./img/${item.product.category.categoryName}/${item.product.brand}/${item.product.getImageURL()}" alt="${item.product.productName}">
+                                    </c:if>
+                                </td>
+                                <td>${item.product.productName} <c:if test="${not empty item.productSizes}">(Size: ${item.productSizes.size})</c:if></td>
+                                    <td>
                                     <c:if test="${item.product.discountProduct > 0}">
                                         <div class="product-price">
                                             <span class="original-price"><fmt:formatNumber value="${item.product.price}" pattern="###,##0.00" /> VND</span><br/>
@@ -120,7 +129,7 @@
                         </c:forEach>
                         <!-- Grand Total Row -->
                         <tr class="total-row">
-                            <td colspan="2" class="text-end">Total</td>
+                            <td colspan="3" class="text-end">Total Amount</td>
                             <td colspan="2">
                                 $<fmt:formatNumber value="${sessionScope.brandTotal}" pattern="###,##0.00" />
                             </td>

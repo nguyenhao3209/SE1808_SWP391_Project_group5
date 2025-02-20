@@ -16,6 +16,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Shopping Cart</title>
         <link rel="stylesheet" href="./css/Cart.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
     </head>
     <body>
         <jsp:include page="common/header.jsp"/>
@@ -78,11 +79,11 @@
                                             <span class="discounted-price">$<fmt:formatNumber value="${item.product.price}" pattern="###,##0.00" /></span>
                                         </c:if>
                                     </td>
-                                    <td class="total"><fmt:formatNumber value="${item.quantity * (item.product.price - (item.product.price * item.product.discountProduct) / 100.0)}" pattern="###,##0.00" /></td>
+                                    <td class="total">$<fmt:formatNumber value="${item.quantity * (item.product.price - (item.product.price * item.product.discountProduct) / 100.0)}" pattern="###,##0.00" /></td>
                                     <td>
                                         <!-- Icon Xóa -->
-                                        <button type="submit" name="action" value="remove_${item.cartID}" class="btn-remove" title="Remove Item">
-                                            ✖
+                                        <button style="background-color: white !important;" type="submit" name="action" value="remove_${item.cartID}" onclick="return confirmDelete(this);" class="btn-remove" title="Remove Item">
+                                            <i style="color: #CE201F;" class="fa-solid fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -109,7 +110,7 @@
                 </div>
             </div>
         </form>
-
+        <div id="notification" class="notification"></div>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const selectAllCheckbox = document.getElementById("select-all");
@@ -120,6 +121,7 @@
                 const summaryList = document.getElementById("summary-list");
 
                 function calculateTotal() {
+                    let index = 0;
                     let subtotal = 0;
                     let totalItems = 0;
                     const selectedProducts = [];
@@ -130,19 +132,20 @@
                         const price = parseFloat(item.dataset.price);
                         const discount = parseFloat(item.dataset.discount) || 0;
                         const totalElement = item.querySelector(".total");
-
+                        const productName = item.querySelector(".product-details strong").textContent;
                         const discountedPrice = price - (price * discount / 100);
                         const totalPrice = quantity * discountedPrice;
-                        totalElement.textContent = totalPrice.toFixed(2);
+                        totalElement.textContent = `$${totalPrice.toFixed(2)}`;
+                        ;
 
                         if (checkbox.checked) {
                             subtotal += totalPrice;
                             totalItems += quantity;
-                            selectedProducts.push(`${item.querySelector(".product-details strong").textContent} (x${quantity})`);
+                            selectedProducts.push(++index + `. ` + productName + ` (x` + quantity + `)`);
                         }
                     });
 
-                    summaryList.innerHTML = selectedProducts.map(product => `<p>${product}</p>`).join("");
+                    summaryList.innerHTML = selectedProducts.map(product => `<p>` + product + `</p>`).join("");
                     subtotalElement.textContent = subtotal.toFixed(2);
                     totalItemsElement.textContent = totalItems;
                     totalElement.textContent = subtotal.toFixed(2);
@@ -189,5 +192,40 @@
                 calculateTotal();
             });
         </script>
+        <script>
+            // Display notification dynamically
+            function showNotification(message, type) {
+                const notificationElement = document.getElementById('notification');
+                notificationElement.textContent = message;
+                notificationElement.className = `notification ${type}`;
+                notificationElement.style.display = 'block';
+
+                // Fade out after 3 seconds
+                setTimeout(() => {
+                    notificationElement.style.display = 'none';
+                }, 3000);
+            }
+
+            // Trigger notification on page load if sessionScope variables exist
+            window.onload = () => {
+                const notification = "${sessionScope.notification}";
+                const notificationType = "${sessionScope.notificationType}";
+
+                if (notification && notificationType) {
+                    showNotification(notification, notificationType);
+                }
+            };
+
+            function confirmDelete(button) {
+                const row = button.closest('.cart-item'); // Tìm hàng chứa sản phẩm
+                const productName = row.querySelector(`.product-details strong`).textContent; // Lấy tên sản phẩm
+
+                // Hiển thị thông báo xác nhận
+                return confirm(`Are you sure you want to remove "` + productName + `" from your cart?`);
+            }
+        </script>
+
+        <c:remove var="notification" scope="session"/>
+        <c:remove var="notificationType" scope="session"/>
     </body>
 </html>
