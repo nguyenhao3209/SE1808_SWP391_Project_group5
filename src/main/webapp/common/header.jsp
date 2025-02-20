@@ -122,7 +122,7 @@
                                 </li>
                                 <li class="menu-item"><a href="searchServlet" class="nav-link">Products</a></li>
                                 <li class="menu-item"><a href="cart" class="nav-link">Cart</a></li>
-                                <li class="menu-item"><a href="#special-offer" class="nav-link">Voucher</a></li>
+                                <li class="menu-item"><a href="VoucherServlet" class="nav-link">Voucher</a></li>
                                 <li class="menu-item"><a href="#latest-blog" class="nav-link">Contact</a></li>
                                 <li class="menu-item"><a href="#download-app" class="nav-link">Articles</a></li>
                             </ul>
