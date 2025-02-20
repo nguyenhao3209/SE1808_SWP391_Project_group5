@@ -221,11 +221,11 @@ public class AddToCartServlet extends HttpServlet {
                 int quantityTotal = proDAO.getQuantityOfItemByUserID(user.getCustomerId());
                 session.setAttribute("quantityTotal", quantityTotal);
 
-                session.setAttribute("notification", "Product added to cart successfully.!");
+                session.setAttribute("notification", pro.getProductName() + " added to cart successfully!");
                 session.setAttribute("notificationType", "success");
                 response.sendRedirect("productDetails?id=" + productID);
             } else {
-                session.setAttribute("notification", "Product not found!");
+                session.setAttribute("notification", "Failed to add item to cart.");
                 session.setAttribute("notificationType", "error");
                 response.sendRedirect("home");
             }

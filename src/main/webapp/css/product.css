@@ -132,10 +132,11 @@ body {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease-in-out;
+    
 }
 
 .qty-btn:hover {
-    background-color: #ccc;
+    background-color: #d0ba8e;
     color: #222;
 }
 
@@ -169,14 +170,13 @@ input, textarea, select, fieldset{
     font-size: 18px;
     font-weight: bold;
     text-align: center;
-    border-radius: 8px;
+    border-radius: 8px !important;
     transition: all 0.3s ease-in-out;
 }
 
-.btn-item{
-    border-radius: 5px;
+.btn.w-100{
+    border-radius: 8px;
 }
-
 .add-to-cart {
     background-color: #542f6d;
     color: white;
@@ -295,5 +295,38 @@ input, textarea, select, fieldset{
     color: #333;
     font-weight: bold;
 }
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    width: 300px;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+.notification.success {
+    background-color: #28a745 !important;
+}
+
+.notification.error {
+    background-color: #dc3545 !important;
+}
+
+.notification.info {
+    background-color: #17a2b8;
+}
+
+.notification.warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
 
 

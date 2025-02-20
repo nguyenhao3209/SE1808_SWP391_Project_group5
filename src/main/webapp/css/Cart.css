@@ -104,7 +104,6 @@ table td img {
 
 .qty-btn {
     border: none;
-    background: #ddd;
     padding: 6px 14px;
     cursor: pointer;
     font-size: 18px;
@@ -113,7 +112,6 @@ table td img {
     margin: 0 5px;
     transition: 0.3s;
 }
-
 .qty-btn:hover {
     background: #ccc;
 }
