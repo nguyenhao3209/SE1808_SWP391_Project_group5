@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package Models;
 
 import java.sql.Date;
@@ -13,6 +12,7 @@ import java.time.DateTimeException;
  * @author HaoNTCE180451
  */
 public class Staffs {
+
     private String staffID;
     private String staffName;
     private String email;
@@ -29,6 +29,17 @@ public class Staffs {
     private Date hireDate;
 
     public Staffs() {
+    }
+
+    public Staffs(String staffName, String email, String password, String phone, String gender, String address, String role, String status) {
+        this.staffName = staffName;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.gender = gender;
+        this.address = address;
+        this.role = role;
+        this.status = status;
     }
 
     public Staffs(String staffID, String staffName, String email, String avatar, Date tolenExpiry, String password, String phone, String gender, String address, String role, Staffs supervisor, String status, String passwordRecoveryToken, Date hireDate) {
@@ -135,7 +146,7 @@ public class Staffs {
     public void setSupervisor(Staffs supervisor) {
         this.supervisor = supervisor;
     }
-    
+
     public String getStatus() {
         return status;
     }
@@ -159,6 +170,5 @@ public class Staffs {
     public void setHireDate(Date hireDate) {
         this.hireDate = hireDate;
     }
-    
-    
+
 }

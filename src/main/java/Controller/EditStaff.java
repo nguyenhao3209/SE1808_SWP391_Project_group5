@@ -17,16 +17,14 @@ import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import utils.PasswordUtils;
 
 /**
  *
  * @author HuyLVQCE180656
  */
-@WebServlet(name = "AddStaff", urlPatterns = {"/addStaff"})
-public class AddStaff extends HttpServlet {
+@WebServlet(name = "EditStaff", urlPatterns = {"/editStaff"})
+public class EditStaff extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,10 +43,10 @@ public class AddStaff extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet StaffController</title>");
+            out.println("<title>Servlet EditStaff</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet StaffController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet EditStaff at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -66,7 +64,25 @@ public class AddStaff extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String staffId = request.getParameter("staffId");
+
+        if (staffId == null || staffId.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Invalid staff ID!");
+            response.sendRedirect("listStaff.jsp");
+            return;
+        }
+
+        StaffsDAO staffDao = new StaffsDAO();
+        Staffs staff = staffDao.getStaffById(staffId);
+
+        if (staff == null) {
+            request.setAttribute("errorMessage", "Staff not found!");
+            request.getRequestDispatcher("listStaff.jsp").forward(request, response);
+            return;
+        }
+
+        request.setAttribute("staff", staff);
+        request.getRequestDispatcher("editStaff.jsp").forward(request, response);
     }
 
     /**
@@ -88,7 +104,8 @@ public class AddStaff extends HttpServlet {
             response.sendRedirect("login.jsp");
             return;
         }
-        
+
+        String staffId = request.getParameter("staffId").trim();
         String staffName = request.getParameter("staffName").trim();
         String passWord = request.getParameter("passWord").trim();
         String phone = request.getParameter("phone").trim();
@@ -106,24 +123,31 @@ public class AddStaff extends HttpServlet {
                 || status == null || status.isEmpty()
                 || address == null || address.isEmpty()) {
 
-            request.setAttribute("errorMessage", "All fields are required!");
-            request.getRequestDispatcher("addStaff.jsp").forward(request, response);
+            request.getSession().setAttribute("errorMessage", "All fields are required!");
+            response.sendRedirect("editStaff.jsp?staffId=" + staffId);
             return;
         }
 
         StaffsDAO staffDAO = new StaffsDAO();
+        Staffs staff = staffDAO.getStaffById(staffId);
 
-        // Kiểm tra xem email đã tồn tại chưa
-        if (staffDAO.isEmailExists(email)) {
-            request.setAttribute("errorMessage", "Email already exists!");
-            request.getRequestDispatcher("addStaff.jsp").forward(request, response);
+
+        if (staff == null) {
+            session.setAttribute("errorMessage", "Staff not found!");
+            response.sendRedirect("listStaff.jsp");
             return;
         }
 
-        // Tạo nhân viên mới
-        Staffs staff = new Staffs();
+        // Kiểm tra email trùng lặp
+        if (!staff.getEmail().equals(email) && staffDAO.isEmailExists(email)) {
+            request.setAttribute("staff", staff);
+            session.setAttribute("errorMessage", "Email already exists!");
+            request.getRequestDispatcher("editStaff.jsp").forward(request, response);
+            return;
+        }
+
         staff.setStaffName(staffName);
-        staff.setPassword(PasswordUtils.hashPassword(passWord)); 
+        staff.setPassword(PasswordUtils.hashPassword(passWord));
         staff.setPhone(phone);
         staff.setRole(role);
         staff.setEmail(email);
@@ -131,15 +155,11 @@ public class AddStaff extends HttpServlet {
         staff.setStatus(status);
         staff.setAddress(address);
 
-        try {
-            staffDAO.addStaff(staff);
-            request.setAttribute("successMessage", "Staff added successfully!");
-            request.getRequestDispatcher("listStaff.jsp").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Database error: " + e.getMessage());
-            request.getRequestDispatcher("addStaff.jsp").forward(request, response);
-        }
+        staffDAO.updateStaff(staff);
+
+        session.setAttribute("successMessage", "Edited successfully!");
+        response.sendRedirect("listStaff.jsp");
+        return;
     }
 
     /**

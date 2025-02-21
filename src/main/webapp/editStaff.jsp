@@ -1,6 +1,6 @@
 <%-- 
-    Document   : addStaff
-    Created on : Feb 18, 2025, 12:01:41 PM
+    Document   : editStaff
+    Created on : Feb 18, 2025, 4:55:56 PM
     Author     : HuyLVQCE180656
 --%>
 
@@ -10,7 +10,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Add new Staff</title>
+        <title>Update Staff Information</title>
         <!-- Th? vi?n Font Awesome ?? s? d?ng c?c icon -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -24,18 +24,18 @@
         <link rel="stylesheet" type="text/css" href="style.css"><!-- comment -->
         <style>
 
-            .container.add-staff {
-                max-width: 1000px;
+            .container.edit-staff {
+                max-width: 1200px;
                 width: 100%;
-                padding: 50px;
+                padding: 30px;
                 background-color: #ffffff;
                 border-radius: 15px;
                 box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
                 transition: all 0.3s ease-in-out;
-                margin-top: 30px;
+                margin-top: 50px;
             }
 
-            .container.add-staff:hover {
+            .container.edit-staff:hover {
                 box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
                 transform: translateY(-5px);
             }
@@ -149,52 +149,53 @@
     <body>
 
         <jsp:include page="common/header.jsp"/>
-        <div class="container add-staff">
-            <h2>Add New Staff</h2>
-
+        <div class="container edit-staff">
+            <h2>Update Staff Information</h2>
             <div class="left-col">
-                <form action="addStaff" method="post" enctype="multipart/form-data">
+                <form action="editStaff" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="staffId" value="${staff.staffId}">
                     <div class="form-group">
                         <label for="staffName">Full Name</label>
-                        <input type="text" name="staffName" required>
+                        <input type="text" name="staffName" value="${staff.staffName}" required>
                     </div>
                     <div class="form-group">
                         <label for="passWord">PassWord</label>
-                        <input type="text" name="passWord" required>
+                        <input type="text" name="passWord" value="${staff.passWord}" required>
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone</label>
-                        <input type="text" name="phone" required>
+                        <input type="text" name="phone" value="${staff.phone}" required>
                     </div>
                     <div class="form-group">
-                        <label for="address">Role</label>
-                        <input type="text" name="role" required>
+                        <label for="role">Role</label>
+                        <input type="text" name="role" value="${staff.role}" required>
                     </div>
-
-            </div><!-- comment -->
+            </div>
 
             <div class="right-col">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" name="email" required="">
+                    <input type="email" name="email" value="${staff.email}" readonly="">
                 </div>
 
                 <div class="form-group">
                     <label for="address">Gender</label>
-                    <input type="text" name="gender" required>
+                    <input type="text" name="gender" value="${staff.gender}" required>
                 </div>
 
                 <div class="form-group">
                     <label for="address">Status</label>
-                    <input type="text" name="status" required>
+                    <input type="text" name="status" value="${staff.status}" required>
                 </div>
+
                 <div class="form-group">
                     <label for="address">Address</label>
-                    <input type="text" name="address" required>
+                    <input type="text" name="address" value="${staff.address}" required>
                 </div>
             </div>
+
             <div class="form-actions">
-                <button type="submit">Save</button>
+                <button type="submit">Update</button>
                 <button type="button" onclick="window.history.back()">Cancel</button>
             </div>
         </form>
