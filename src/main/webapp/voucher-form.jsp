@@ -9,7 +9,8 @@
 <html>
 <head>
     <title><%= isEdit ? "Edit Voucher" : "Add Voucher" %></title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" 
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container mt-5">
@@ -20,9 +21,12 @@
         <% } %>
 
         <form action="VoucherServlet" method="post">
+            <!-- Xác định action để Servlet phân biệt -->
             <input type="hidden" name="action" value="<%= isEdit ? "update" : "insert" %>">
+
+            <!-- Khi Edit, cần voucherID để update -->
             <% if (isEdit) { %>
-                <input type="hidden" name="id" value="<%= voucher.getVoucherID()%>">
+                <input type="hidden" name="voucherID" value="<%= voucher.getVoucherID() %>">
             <% } %>
 
             <!-- Voucher Name -->
@@ -47,7 +51,7 @@
 
             <!-- Max Reducing -->
             <div class="mb-3">
-                <label class="form-label">Max Reducing (VND)</label>
+                <label class="form-label">Max Reducing</label>
                 <input type="number" class="form-control" name="maxReducing" required 
                        value="<%= isEdit ? voucher.getMaxReducing() : "" %>">
             </div>
@@ -74,7 +78,9 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary"><%= isEdit ? "Update" : "Add" %> Voucher</button>
+            <button type="submit" class="btn btn-primary">
+                <%= isEdit ? "Update" : "Add" %> Voucher
+            </button>
             <a href="VoucherServlet?action=list" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
