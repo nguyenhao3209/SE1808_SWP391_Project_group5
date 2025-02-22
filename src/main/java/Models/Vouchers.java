@@ -18,13 +18,13 @@ public class Vouchers {
     private BigDecimal discountPercentage;
     private BigDecimal maxReducing;
     private String code;
-    private String quantity;
+    private int quantity;
     private String expiryDate;
 
-    public Vouchers() {
+     public Vouchers() {
     }
-
-    public Vouchers(int voucherID, String name, String description, BigDecimal discountPercentage, BigDecimal maxReducing, String code, String quantity, String expiryDate) {
+     
+    public Vouchers(int voucherID, String name, String description, BigDecimal discountPercentage, BigDecimal maxReducing, String code, int quantity, String expiryDate) {
         this.voucherID = voucherID;
         this.name = name;
         this.description = description;
@@ -34,6 +34,8 @@ public class Vouchers {
         this.quantity = quantity;
         this.expiryDate = expiryDate;
     }
+
+
 
     public int getVoucherID() {
         return voucherID;
@@ -83,11 +85,11 @@ public class Vouchers {
         this.code = code;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

@@ -14,6 +14,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${product.productName}</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="css/product.css">
     </head>
     <body>
@@ -76,10 +77,10 @@
 
                     <div class="row mt-3">
                         <div class="col-6">
-                            <button type="submit" name="action" value="addToCart" class="btn btn-primary w-100">🛒 Add to Cart</button>
+                            <button type="submit" name="action" value="addToCart" class="btn btn-primary w-100"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
                         </div>
                         <div class="col-6">
-                            <button type="submit" name="action" value="buyNow" class="btn btn-danger w-100">⚡ Buy Now</button>
+                            <button type="submit" name="action" value="buyNow" class="btn btn-danger w-100"><i class="fa-solid fa-cart-shopping"></i> Buy Now</button>
                         </div>
                     </div>
                 </form>
@@ -108,6 +109,7 @@
                 </c:if>
             </div>
         </div>
+        <div id="notification" class="notification"></div>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const quantityInput = document.querySelector(".qty-display");
@@ -144,6 +146,30 @@
             });
 
         </script>
+        <script>
+            function showNotification(message, type) {
+                const notificationElement = document.getElementById('notification');
+                notificationElement.textContent = message;
+                notificationElement.className = `notification` + ` ` + type;
+                notificationElement.style.display = 'block';
+                // Fade out after 3 seconds
+                setTimeout(() => {
+                    notificationElement.style.display = 'none';
+                }, 3000);
+            }
+
+            window.onload = () => {
+                const notification = '<c:out value="${sessionScope.notification}" escapeXml="true" />';
+                const notificationType = '<c:out value="${sessionScope.notificationType}" escapeXml="true" />';
+
+                if (notification && notificationType) {
+                    showNotification(notification, notificationType);
+                }
+            };
+
+        </script>
+        <c:remove var="notification" scope="session" />
+        <c:remove var="notificationType" scope="session" />
         <jsp:include page="feedbacks.jsp"/>
     </body>
 </html>
