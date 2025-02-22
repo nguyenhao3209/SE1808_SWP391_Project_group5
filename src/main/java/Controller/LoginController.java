@@ -120,7 +120,7 @@ public class LoginController extends HttpServlet {
 
                     // Điều hướng dựa vào vai trò người dùng
                     if ("ADMIN".equalsIgnoreCase(user.getRole().toString())) {
-                        response.sendRedirect("admin");
+                        response.sendRedirect("dashboard");
                     } else {
                         response.sendRedirect("home.jsp");
                     }
