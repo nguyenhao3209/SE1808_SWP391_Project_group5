@@ -151,6 +151,15 @@
                     <label for="email">Email</label>
                     <input type="email" name="email" value="${sessionScope.user.email}" readonly="">
                 </div>
+                
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select name="gender" class="form-control">
+                        <option value="MALE" ${sessionScope.user.gender eq 'MALE' ? 'selected' : ''}>Male</option>
+                        <option value="FEMALE" ${sessionScope.user.gender eq 'FEMALE' ? 'selected' : ''}>Female</option>
+                        <option value="OTHER" ${sessionScope.user.gender eq 'OTHER' ? 'selected' : ''}>Other</option>
+                    </select>
+                </div>
 
                 <div class="form-group">
                     <label for="phone">Phone</label>

@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import Models.Customers;
+import Models.Customers.Gender;
 import Models.Customers.Role;
 import Models.Customers.Status;
 import java.util.regex.Matcher;
@@ -53,7 +54,7 @@ public class CustomersDAO extends DBContext {
                     user.setAddress(rs.getString("Address"));
                     user.setRole(Role.valueOf(rs.getString("Role")));
                     user.setStatus(Status.valueOf(rs.getString("Status")));
-
+                    user.setGender(Gender.valueOf(rs.getString("Gender")));
                 }
             }
         } catch (Exception e) {
@@ -173,6 +174,7 @@ public class CustomersDAO extends DBContext {
                 user.setRole(Role.valueOf(rs.getString("Role")));
                 user.setStatus(Status.valueOf(rs.getString("Status")));
                 user.setAvatar(rs.getString("Avatar"));
+                user.setGender(Gender.valueOf(rs.getString("Gender")));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -246,14 +248,15 @@ public class CustomersDAO extends DBContext {
     }
     
     public void updateCustomer(Customers user) {
-        String sql = "UPDATE Customers SET CustomerName = ?, Phone = ?, Address = ?, Avatar = ? WHERE CustomerID = ?";
+        String sql = "UPDATE Customers SET CustomerName = ?, Phone = ?, Address = ?, Avatar = ?, Gender = ? WHERE CustomerID = ?";
         try ( Connection conn = new DBContext().connection;  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, user.getCustomerName());
             ps.setString(2, user.getPhone());
             ps.setString(3, user.getAddress());
             ps.setString(4, user.getAvatar());
-            ps.setString(5, user.getCustomerId());
+            ps.setString(5, user.getGender().name());
+            ps.setString(6, user.getCustomerId());
 
             ps.executeUpdate();
         } catch (Exception e) {

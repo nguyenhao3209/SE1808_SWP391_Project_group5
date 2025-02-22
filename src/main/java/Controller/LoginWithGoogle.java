@@ -66,6 +66,7 @@ public class LoginWithGoogle extends HttpServlet {
                 user.setPassword(PasswordUtils.hashPassword(password));
                 user.setRole(Customers.Role.USER);
                 user.setStatus(Customers.Status.ACTIVE);
+                user.setGender(Customers.Gender.MALE);
                 udao.registerUser(user);
 
                 // Gửi mật khẩu đến email người dùng
