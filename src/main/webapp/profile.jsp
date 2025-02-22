@@ -206,7 +206,7 @@
                 if (message) {
                     message.style.display = 'none';
                 }
-            }, 5000);  // ?n th?ng b?o sau 5 gi?y
+            }, 5000);   // ?n th?ng b?o sau 5 gi?y
         </script>
 
     </body>
