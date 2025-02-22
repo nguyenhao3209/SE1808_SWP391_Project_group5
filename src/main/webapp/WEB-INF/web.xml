@@ -4,6 +4,10 @@
         <servlet-name>VoucherServlet</servlet-name>
         <servlet-class>Controller.VoucherServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewVouchersServlet</servlet-name>
+        <servlet-class>Controller.ViewVouchersServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>VoucherServlet</servlet-name>
         <url-pattern>/VoucherServlet</url-pattern>
@@ -47,6 +51,10 @@
     <servlet-mapping>
         <servlet-name>AdminController</servlet-name>
         <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewVouchersServlet</servlet-name>
+        <url-pattern>/ViewVouchersServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
