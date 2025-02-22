@@ -5,6 +5,7 @@
 package Controller;
 
 import Models.Customers;
+import Models.Customers.Gender;
 import dal.CustomersDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -90,6 +91,7 @@ public class UpdateProfile extends HttpServlet {
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
+        String gender = request.getParameter("gender");
 
         // Lấy session hiện tại (false để không tạo session mới nếu không tồn tại)
         HttpSession session = request.getSession(false);
@@ -108,6 +110,7 @@ public class UpdateProfile extends HttpServlet {
         user.setEmail(email);
         user.setPhone(phone);
         user.setAddress(address);
+        user.setGender(Gender.valueOf(gender));
 
         // Kiểm tra xem người dùng có tải ảnh mới lên không
         Part filePart = request.getPart("avatar");

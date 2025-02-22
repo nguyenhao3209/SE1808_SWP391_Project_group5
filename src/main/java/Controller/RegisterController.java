@@ -83,6 +83,7 @@ public class RegisterController extends HttpServlet {
             user.setAddress(address);
             user.setRole(Customers.Role.USER);
             user.setStatus(Customers.Status.ACTIVE);
+            user.setGender(Customers.Gender.MALE);
 
             CustomersDAO udao = new CustomersDAO();
             // Kiểm tra xem email đã tồn tại chưa

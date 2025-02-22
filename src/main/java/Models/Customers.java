@@ -19,6 +19,7 @@ private String customerId;  // ID người dùng (khóa chính)
     private String email;  // Địa chỉ email
     private String password;  // Mật khẩu người dùng (đã mã hóa)
     private String phone;  // Số điện thoại
+    private Gender gender;
     private String address;  // Địa chỉ
     private Role role;  // Phân quyền người dùng (ENUM)
     private Status status;  // Trạng thái tài khoản (ENUM)
@@ -42,6 +43,21 @@ private String customerId;  // ID người dùng (khóa chính)
         this.tokenExpiry = tokenExpiry;
         this.avatar = avatar;
     }
+    
+    public Customers(String customerId, String customerName, String email, String password, String phone,Gender gender, String address, Role role, Status status, String passwordRecoveryToken, LocalDateTime tokenExpiry, String avatar) {
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.gender = gender;
+        this.address = address;
+        this.role = role;
+        this.status = status;
+        this.passwordRecoveryToken = passwordRecoveryToken;
+        this.tokenExpiry = tokenExpiry;
+        this.avatar = avatar;
+    }
 
     // Enum cho Role (ADMIN, USER)
     public enum Role {
@@ -51,6 +67,10 @@ private String customerId;  // ID người dùng (khóa chính)
     // Enum cho Status (ACTIVE, INACTIVE)
     public enum Status {
         ACTIVE, INACTIVE
+    }
+    
+    public enum Gender {
+        MALE, FEMALE, OTHER
     }
 
 //    public User(int userId, String userName, String email, String password, String phone, String address,
@@ -160,6 +180,14 @@ private String customerId;  // ID người dùng (khóa chính)
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     @Override
