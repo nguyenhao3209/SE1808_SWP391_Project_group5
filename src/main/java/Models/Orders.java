@@ -50,9 +50,12 @@ public class Orders {
         this.paymentMethod = paymentMethod;
         this.totalPrice = totalPrice;
     }
-    
-    
 
+    public Orders(int orderID, String status) {
+        this.orderID = orderID;
+        this.status = status;
+    }
+    
     public int getOrderID() {
         return orderID;
     }
