@@ -27,8 +27,9 @@ public class FeedbacksController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         String action = request.getParameter("action");
-        response.setContentType("text/html;charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        String action = request.getParameter("action");
+
         if (action == null) {
             response.sendRedirect("productDetails?id=" + request.getParameter("productID"));
             return;
@@ -124,5 +125,5 @@ public class FeedbacksController extends HttpServlet {
                 response.sendRedirect("productDetails?id=" + request.getParameter("productID"));
                 break;
         }
-}
+    }
 }
