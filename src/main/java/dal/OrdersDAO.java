@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -82,6 +83,46 @@ public class OrdersDAO extends DBContext {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    public List<Double> getMonthlyRevenueByYear(int year) {
+        List<Double> list = new ArrayList<>();
+        String query = "WITH Months AS (\n"
+                + "    SELECT 1 AS Month\n"
+                + "    UNION ALL SELECT 2\n"
+                + "    UNION ALL SELECT 3\n"
+                + "    UNION ALL SELECT 4\n"
+                + "    UNION ALL SELECT 5\n"
+                + "    UNION ALL SELECT 6\n"
+                + "    UNION ALL SELECT 7\n"
+                + "    UNION ALL SELECT 8\n"
+                + "    UNION ALL SELECT 9\n"
+                + "    UNION ALL SELECT 10\n"
+                + "    UNION ALL SELECT 11\n"
+                + "    UNION ALL SELECT 12\n"
+                + ")\n"
+                + "SELECT \n"
+                + "    m.Month,\n"
+                + "    ISNULL(SUM(o.TotalPrice), 0) AS Revenue\n"
+                + "FROM \n"
+                + "    Months m\n"
+                + "LEFT JOIN \n"
+                + "    Orders o ON MONTH(o.CreatedAt) = m.Month AND YEAR(o.CreatedAt) = ? and o.Status = 'COMPLETED'\n"
+                + "GROUP BY \n"
+                + "    m.Month\n"
+                + "ORDER BY \n"
+                + "    m.Month;";
+        try {
+            ps = connection.prepareStatement(query);//nem cau lenh query sang sql
+            ps.setInt(1, year);
+            rs = ps.executeQuery();//chay cau lenh query, nhan ket qua tra ve
+            while (rs.next()) {
+                list.add(rs.getDouble(2));
+            }
+
+        } catch (Exception e) {
+        }
+        return list;
     }
 
 }
