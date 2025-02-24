@@ -62,6 +62,12 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a href="OrdersServlet" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-comments"></i></span>
+                        <span class="ttr-label">Orders Management</span>
+                    </a>
+                </li>
                 <li class="ttr-seperate"></li>
             </ul>
             <!-- sidebar menu end -->

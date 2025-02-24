@@ -4,7 +4,8 @@
  */
 
 package Models;
-
+import com.nimbusds.oauth2.sdk.Role;
+import java.io.ObjectInputFilter.Status;
 import java.time.DateTimeException;
 
 /**
@@ -47,6 +48,18 @@ public class Staffs {
         this.hireDate = hireDate;
     }
 
+    public enum Role {
+        ADMIN, USER
+    }
+
+    // Enum cho Status (ACTIVE, INACTIVE)
+    public enum Status {
+        ACTIVE, INACTIVE
+    }
+    
+    public enum Gender {
+        MALE, FEMALE, OTHER
+    }
     public String getStaffID() {
         return staffID;
     }
