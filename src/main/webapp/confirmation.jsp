@@ -142,7 +142,7 @@
                     <c:if test="${item.product.discountProduct > 0}">
                         <div class="product-price">
                             <span class="original-price"><fmt:formatNumber value="${item.product.price}" pattern="###,##0.00" />$</span><br/>
-                            <span class="discounted-price text-success fw-bold"><fmt:formatNumber value="${String.format('%f', item.product.price * (1 - item.product.discount / 100))}" pattern="###,##0.00" />$</span>
+                            <span class="discounted-price text-success fw-bold"><fmt:formatNumber value="${String.format('%f', item.product.price * (1 - item.product.discountProduct / 100))}" pattern="###,##0.00" />$</span>
                         </div>
                     </c:if>
                     <c:if test="${item.product.discountProduct le 0}">

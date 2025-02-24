@@ -11,13 +11,265 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Customer Feedback</title>
+        <style>
+            /* Reset CSS */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Poppins', sans-serif;
+                /*        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);*/
+                color: #333;
+                padding: 20px;
+            }
+
+            h1 {
+                text-align: center;
+                color: #333;
+                font-size: 2.5rem;
+                margin-bottom: 30px;
+                font-weight: 600;
+            }
+
+            .filter-section {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .filter-section label {
+                font-size: 1rem;
+                color: #333;
+                margin-right: 10px;
+            }
+
+            .filter-section select {
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #ddd;
+                font-size: 1rem;
+                background-color: #fff;
+                cursor: pointer;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .filter-section select:hover {
+                border-color: #6a11cb;
+                box-shadow: 0 0 8px rgba(106, 17, 203, 0.2);
+            }
+
+            .filter-section select:focus {
+                outline: none;
+                border-color: #6a11cb;
+                box-shadow: 0 0 12px rgba(106, 17, 203, 0.3);
+            }
+
+            .reviews {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+            .review {
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                margin-bottom: 20px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .review:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            }
+
+            .review-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 15px;
+            }
+
+            .username {
+                font-weight: 600;
+                color: #333;
+                font-size: 1.1rem;
+            }
+
+            .rating {
+                color: #FFD700;
+            }
+
+            .rating .fa-star {
+                cursor: pointer;
+                font-size: 18px;
+                color: #ddd;
+                transition: color 0.3s ease;
+            }
+
+            .rating .fa-star.checked {
+                color: #FFD700;
+            }
+
+            .review-body {
+                margin-bottom: 15px;
+            }
+
+            .review-body p {
+                margin: 0;
+                line-height: 1.6;
+                color: #555;
+            }
+
+            .btn-action {
+                background: linear-gradient(135deg, #6a11cb, #2575fc);
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                height: 30px;
+                border-radius: 25px;
+                cursor: pointer;
+                margin-right: 10px;
+                transition: background 0.3s ease, transform 0.3s ease;
+                font-size: 0.9rem;
+            }
+
+            .btn-action:hover {
+                background: linear-gradient(135deg, #2575fc, #6a11cb);
+                transform: scale(1.05);
+            }
+
+            .reply-form {
+                margin-top: 15px;
+            }
+
+            .reply-form textarea {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                resize: vertical;
+                margin-bottom: 10px;
+                font-family: 'Poppins', sans-serif;
+                font-size: 0.9rem;
+            }
+
+            .btn-minhanh {
+                background: linear-gradient(135deg, #6a11cb, #2575fc);
+                color: white;
+                border: none;
+                height: 30px;
+                padding: 8px 16px;
+                border-radius: 25px;
+                cursor: pointer;
+                transition: background 0.3s ease, transform 0.3s ease;
+                font-size: 0.9rem;
+            }
+
+            .btn-minhanh:hover {
+                background: linear-gradient(135deg, #2575fc, #6a11cb);
+                transform: scale(1.05);
+            }
+
+            .review-replies {
+                margin-top: 15px;
+                padding-left: 20px;
+                border-left: 2px solid #6a11cb;
+            }
+
+            .reply {
+                background: #f8f9fa;
+                padding: 10px;
+                border-radius: 8px;
+                margin-bottom: 10px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            }
+
+            .reply p {
+                margin: 0;
+                line-height: 1.6;
+                color: #555;
+            }
+
+            .star-rating {
+                margin-bottom: 15px;
+            }
+
+            .star-rating .fa-star {
+                cursor: pointer;
+                font-size: 24px;
+                color: #ddd;
+                transition: color 0.3s ease;
+            }
+
+            .star-rating .fa-star.checked {
+                color: #FFD700;
+            }
+
+            .review-form {
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                margin-top: 30px;
+            }
+
+            .review-form textarea {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                resize: vertical;
+                margin-bottom: 10px;
+                font-family: 'Poppins', sans-serif;
+                font-size: 0.9rem;
+            }
+
+            /* Thông báo khi không có đánh giá phù hợp */
+            .no-reviews-message {
+                text-align: center;
+                color: #ff4d4d;
+                font-size: 1.2rem;
+                margin-top: 20px;
+                display: none; /* Ẩn ban đầu */
+            }
+
+            .error-message {
+                color: red;
+                font-size: 0.9rem;
+                margin-bottom: 10px;
+                display: none;
+            }
+        </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     </head>
     <body>
         <h1>Customer Feedback</h1>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <label for="rating-filter">Filter by Rating:</label>
+            <select id="rating-filter">
+                <option value="0">All Ratings</option>
+                <option value="1">1 Star</option>
+                <option value="2">2 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="5">5 Stars</option>
+            </select>
+        </div>
+
         <div class="reviews">
+            <!-- Thông báo khi không có đánh giá phù hợp -->
+            <div class="no-reviews-message"></div>
+
             <c:forEach var="feedback" items="${reviews}">
-                <div class="review">
+                <div class="review" data-rating="${feedback.rating}">
                     <div class="review-header">
+                        <strong> <span class="username">${feedback.user.customerName}</span></strong><br/>
                         <strong> <span class="username">${feedback.user.customerName}</span></strong><br/>
                         <span class="rating">
                             <i class="fas fa-star ${feedback.rating >= 1 ? 'checked' : ''}"></i>
@@ -33,9 +285,11 @@
                             <input type="hidden" name="action" value="edit">
                             <input type="hidden" name="feedbackID" value="${feedback.reviewID}">
                             <input type="hidden" name="productID" value="${feedback.productID}">
+                            <input type="hidden" name="productID" value="${feedback.productID}">
                             <textarea name="comment" rows="2" required>${feedback.comment}</textarea>
-                            <button type="submit" class="btn-primary">Save Changes</button>
+                            <button type="submit" class="btn-minhanh">Save Changes</button>
                         </form>
+                        <c:if test="${sessionScope.user != null && feedback.user.customerId == sessionScope.user.customerId}">
                         <c:if test="${sessionScope.user != null && feedback.user.customerId == sessionScope.user.customerId}">
                             <button class="btn-action" onclick="editFeedback('${feedback.reviewID}')">Edit</button>
                             <button class="btn-action" onclick="deleteFeedback('${feedback.reviewID}')">Delete</button>

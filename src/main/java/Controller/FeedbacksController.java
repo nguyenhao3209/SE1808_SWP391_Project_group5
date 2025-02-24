@@ -51,7 +51,9 @@ public class FeedbacksController extends HttpServlet {
     private void addFeedback(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         String productID = request.getParameter("productID");
+        String customerID = request.getParameter("customerId");
         String customerID = request.getParameter("customerId");
         String comment = request.getParameter("comment");
         String rating = request.getParameter("rating");
@@ -66,6 +68,7 @@ public class FeedbacksController extends HttpServlet {
         dao.addReview(newReply);
 
         response.sendRedirect("productDetails?id=" + productID);
+        return;
     }
 
     private void editFeedback(HttpServletRequest request, HttpServletResponse response)
@@ -74,10 +77,15 @@ public class FeedbacksController extends HttpServlet {
 
         String feedbackId = request.getParameter("feedbackID");
         String productId = request.getParameter("productID");
+        response.setContentType("text/html;charset=UTF-8");
+
+        String feedbackId = request.getParameter("feedbackID");
+        String productId = request.getParameter("productID");
         String comment = request.getParameter("comment");
 
         // Kiểm tra feedbackID có hợp lệ không
         if (feedbackId == null || feedbackId.isEmpty()) {
+            response.sendRedirect("productDetails?id=" + productId);
             response.sendRedirect("productDetails?id=" + productId);
             return;
         }
@@ -95,6 +103,7 @@ public class FeedbacksController extends HttpServlet {
 
     private void deleteFeedback(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String feedbackId = request.getParameter("feedbackID");
         String feedbackId = request.getParameter("feedbackID");
 
         if (feedbackId == null || feedbackId.isEmpty()) {

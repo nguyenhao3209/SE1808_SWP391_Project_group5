@@ -12,6 +12,7 @@ import java.sql.Timestamp;
  */
 public class Staffs {
 
+
     private String staffID;
     private String staffName;
     private String email;

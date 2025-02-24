@@ -180,7 +180,11 @@ public class ReviewsDAO extends DBContext {
 
     public static void main(String[] args) {
         Feedback obj = new Feedback();
-        System.out.println("Ngày hiện tại: " + obj.getCreatedAt());
+        ReviewsDAO rdao = new ReviewsDAO();
+        List<Feedback> fb = rdao.getReviewsByProductId(2);
+        for (Feedback feedback : fb) {
+            System.out.println(feedback.getComment());
+        }
     }
 
 }
