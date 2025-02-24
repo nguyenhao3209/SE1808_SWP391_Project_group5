@@ -233,4 +233,71 @@ public class StaffsDAO extends DBContext {
         }
         return null;
     }
+
+    public Staffs loginWithEmailAndPassword(String email, String password) {
+        Staffs staff = null;
+        String query = "SELECT * FROM Staffs WHERE Email = ?";
+        try {
+            connection = new DBContext().connection;
+            ps = connection.prepareStatement(query);
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                String hashedPassword = rs.getString("Password");
+                if (checkPassword(password, hashedPassword)) {
+                    staff = new Staffs();
+                    staff.setStaffID(rs.getString("StaffID"));
+                    staff.setStaffName(rs.getString("StaffName"));
+                    staff.setEmail(rs.getString("Email"));
+                    staff.setAvatar(rs.getString("Avatar"));
+                    staff.setPassword(rs.getString("Password"));
+                    staff.setPhone(rs.getString("Phone"));
+                    staff.setAddress(rs.getString("Address"));
+                    staff.setRole(Staffs.Role.valueOf(rs.getString("Role")));
+                    staff.setStatus(Staffs.Status.valueOf(rs.getString("Status")));
+                    staff.setGender(rs.getString("Gender"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return staff;
+    }
+
+    public static void main(String[] args) {
+        StaffsDAO staffDAO = new StaffsDAO();
+        Staffs s = staffDAO.loginWithEmailAndPassword("nguyenhao6822@gmail.com", "1234567");
+        System.out.println(s.toString());
+    }
+
+    public Staffs getStaffByEmail(String email) {
+        Staffs staff = null;
+        String query = "SELECT * FROM Staffs WHERE Email = ?";
+        try {
+            connection = new DBContext().connection;
+            ps = connection.prepareStatement(query);
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                staff = new Staffs();
+                staff.setStaffID(rs.getString("StaffID"));
+                staff.setStaffName(rs.getString("StaffName"));
+                staff.setEmail(rs.getString("Email"));
+                staff.setAvatar(rs.getString("Avatar"));
+                staff.setTokenExpiry(rs.getTimestamp("TokenExpiry"));
+                staff.setPassword(rs.getString("Password"));
+                staff.setPhone(rs.getString("Phone"));
+                staff.setGender(rs.getString("Gender"));
+                staff.setAddress(rs.getString("Address"));
+                staff.setRole(Staffs.Role.valueOf(rs.getString("Role")));
+                staff.setSupervisor(getStaffByID(rs.getString("SupervisorID")));
+                staff.setStatus(Staffs.Status.valueOf(rs.getString("Status")));
+                staff.setPasswordRecoveryToken(rs.getString("PasswordRecoveryToken"));
+                staff.setHireDate(rs.getTimestamp("HireDate"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return staff;
+    }
 }
