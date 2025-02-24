@@ -21,7 +21,7 @@
 
             body {
                 font-family: 'Poppins', sans-serif;
-                background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+                /*        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);*/
                 color: #333;
                 padding: 20px;
             }
@@ -128,6 +128,7 @@
                 color: white;
                 border: none;
                 padding: 8px 16px;
+                height: 30px;
                 border-radius: 25px;
                 cursor: pointer;
                 margin-right: 10px;
@@ -155,10 +156,11 @@
                 font-size: 0.9rem;
             }
 
-            .btn-primary {
+            .btn-minhanh {
                 background: linear-gradient(135deg, #6a11cb, #2575fc);
                 color: white;
                 border: none;
+                height: 30px;
                 padding: 8px 16px;
                 border-radius: 25px;
                 cursor: pointer;
@@ -166,7 +168,7 @@
                 font-size: 0.9rem;
             }
 
-            .btn-primary:hover {
+            .btn-minhanh:hover {
                 background: linear-gradient(135deg, #2575fc, #6a11cb);
                 transform: scale(1.05);
             }
@@ -233,6 +235,13 @@
                 margin-top: 20px;
                 display: none; /* Ẩn ban đầu */
             }
+
+            .error-message {
+                color: red;
+                font-size: 0.9rem;
+                margin-bottom: 10px;
+                display: none;
+            }
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -260,7 +269,7 @@
             <c:forEach var="feedback" items="${reviews}">
                 <div class="review" data-rating="${feedback.rating}">
                     <div class="review-header">
-                        <span class="username">${feedback.user.customerName}</span>
+                        <strong> <span class="username">${feedback.user.customerName}</span></strong><br/>
                         <span class="rating">
                             <i class="fas fa-star ${feedback.rating >= 1 ? 'checked' : ''}"></i>
                             <i class="fas fa-star ${feedback.rating >= 2 ? 'checked' : ''}"></i>
@@ -274,11 +283,11 @@
                         <form action="feedbacks-controller" method="post" id="editFeedbackForm${feedback.reviewID}" class="reply-form" style="display: none">
                             <input type="hidden" name="action" value="edit">
                             <input type="hidden" name="feedbackID" value="${feedback.reviewID}">
-                            <input type="hidden" name="productID" value="${product.productID}">
+                            <input type="hidden" name="productID" value="${feedback.productID}">
                             <textarea name="comment" rows="2" required>${feedback.comment}</textarea>
-                            <button type="submit" class="btn-primary">Save Changes</button>
+                            <button type="submit" class="btn-minhanh">Save Changes</button>
                         </form>
-                        <c:if test="${sessionScope.user != null && feedback.customerId == sessionScope.user.customerId}">
+                        <c:if test="${sessionScope.user != null && feedback.user.customerId == sessionScope.user.customerId}">
                             <button class="btn-action" onclick="editFeedback('${feedback.reviewID}')">Edit</button>
                             <button class="btn-action" onclick="deleteFeedback('${feedback.reviewID}')">Delete</button>
                         </c:if>
@@ -296,7 +305,7 @@
                                     <input type="hidden" name="replyId" id="editReplyId" value="${reply.replyID}">
                                     <input type="hidden" name="productID" value="${product.productID}">
                                     <textarea name="comment" id="editReplyComment" rows="2" required>${reply.comment}</textarea>
-                                    <button type="submit" class="btn-primary" name="action" value="edit">Save Changes</button>
+                                    <button type="submit" class="btn-minhanh" name="action" value="edit">Save Changes</button>
                                 </form>
 
                                 <!-- Nút chỉnh sửa và xóa reply -->
@@ -314,7 +323,7 @@
                                 <input type="hidden" name="customerID" value="${sessionScope.user.customerId}">
                                 <input type="hidden" name="productID" value="${product.productID}">
                                 <textarea name="comment" rows="2" placeholder="Write your reply here..." required></textarea>
-                                <button type="submit" class="btn-primary" name="action" value="add">Reply</button>
+                                <button type="submit" class="btn-minhanh" name="action" value="add">Reply</button>
                             </form>
                         </c:if>
                     </div>
@@ -323,7 +332,7 @@
 
             <c:if test="${sessionScope.user != null && isBought}">
                 <div class="review-form">
-                    <form action="feedbacks-controller" method="post">
+                    <form action="feedbacks-controller" method="post" onsubmit="return validateRating()">
                         <input type="hidden" name="action" value="add">
                         <input type="hidden" name="productID" value="${product.productID}">
                         <input type="hidden" name="customerId" value="${sessionScope.user.customerId}">
@@ -336,7 +345,8 @@
                             <i class="fas fa-star" data-value="5"></i>
                         </div>
                         <input type="hidden" name="rating" id="rating-value" required>
-                        <button type="submit" class="btn-primary">Submit Feedback</button>
+                        <div class="error-message" style="color: red; display: none;">Please select a rating before submitting your feedback.</div>
+                        <button type="submit" class="btn-minhanh">Submit Feedback</button>
                     </form>
                 </div>
             </c:if>
@@ -409,6 +419,34 @@
                     noReviewsMessage.style.display = 'none';
                 }
             });
+
+            document.querySelectorAll('.star-rating .fa-star').forEach(star => {
+                star.addEventListener('click', () => {
+                    const rating = star.getAttribute('data-value');
+                    document.getElementById('rating-value').value = rating;
+
+                    document.querySelectorAll('.star-rating .fa-star').forEach(s => {
+                        if (s.getAttribute('data-value') <= rating) {
+                            s.classList.add('checked');
+                        } else {
+                            s.classList.remove('checked');
+                        }
+                    });
+                });
+            });
+
+            function validateRating() {
+                const ratingValue = document.getElementById('rating-value').value;
+                const errorMessage = document.querySelector('.error-message');
+
+                if (!ratingValue) {
+                    errorMessage.style.display = 'block';
+                    return false; // Ngăn form được submit
+                } else {
+                    errorMessage.style.display = 'none';
+                    return true; // Cho phép form được submit
+                }
+            }
         </script>
     </body>
 </html>

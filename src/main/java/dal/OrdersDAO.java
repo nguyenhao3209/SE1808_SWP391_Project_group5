@@ -4,13 +4,19 @@
  */
 package dal;
 
+import Models.Customers;
 import Models.OrderDetails;
 import Models.Orders;
+import Models.Products;
+import Models.Staffs;
+import Models.Vouchers;
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.criteria.Order;
 
 /**
  *
@@ -84,7 +90,7 @@ public class OrdersDAO extends DBContext {
             e.printStackTrace();
         }
     }
-    
+
     public List<Double> getMonthlyRevenueByYear(int year) {
         List<Double> list = new ArrayList<>();
         String query = "WITH Months AS (\n"
@@ -125,4 +131,99 @@ public class OrdersDAO extends DBContext {
         return list;
     }
 
+    public List<Orders> getAllOders() {
+        ArrayList<Orders> list = new ArrayList<>();
+        CustomersDAO customersDAO = new CustomersDAO();
+        VoucherDAO voucherDAO = new VoucherDAO();
+        StaffsDAO staffsdao = new StaffsDAO();
+        String sql = "SELECT *FROM [SE1808_SWP391_Group5].[dbo].[Orders] o\n";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Customers customers = customersDAO.getCustomerByID(rs.getString("CustomerID"));
+                Vouchers voucher = voucherDAO.getVoucherById(rs.getInt("VoucherID"));
+                Staffs staff = staffsdao.getStaffByID(rs.getString("StaffID"));
+                list.add(new Orders(rs.getInt("OrderID"), customers, staff, voucher, rs.getString("Status"), rs.getString("PaymentMethod"), rs.getBigDecimal("TotalPrice"), rs.getDate("CreatedAt")));
+
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace(); // Nên in lỗi để dễ dàng debug
+        }
+        return list;
+    }
+    public Orders getOderByID(int id) {
+        Orders order = null;
+        CustomersDAO customersDAO = new CustomersDAO();
+        VoucherDAO voucherDAO = new VoucherDAO();
+        StaffsDAO staffsdao = new StaffsDAO();
+        String sql = "SELECT *FROM [SE1808_SWP391_Group5].[dbo].[Orders] o\n"
+                + "where OrderID= ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Customers customers = customersDAO.getCustomerByID(rs.getString("CustomerID"));
+                Vouchers voucher = voucherDAO.getVoucherById(rs.getInt("VoucherID"));
+                Staffs staff = staffsdao.getStaffByID(rs.getString("StaffID"));
+                order = new Orders();
+                order.setOrderID(rs.getInt("OrderID"));
+                order.setCustomer(customers);
+                order.setStaff(staff);
+                order.setVoucher(voucher);
+                order.setStatus(rs.getString("Status"));
+                order.setPaymentMethod(rs.getString("PaymentMethod"));
+                order.setTotalPrice(rs.getBigDecimal("TotalPrice"));
+                order.setCreateAt(rs.getDate("CreatedAt"));
+                
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace(); // Nên in lỗi để dễ dàng debug
+        }
+        return order;
+    }
+    public List<OrderDetails> getOdersDetailByID(int id) {
+        ArrayList<OrderDetails> list = new ArrayList<>();
+        CustomersDAO customersDAO = new CustomersDAO();
+        ProductsDAO productsDAO = new ProductsDAO();
+        String sql = "SELECT \n"
+                + "    od.[OrderID],\n"
+                + "    od.[OrderDetailID]\n,"
+                + "    od.[ProductID],\n"
+                + "    od.[Price],\n"
+                + "    od.[Quantity],\n"
+                + "    o.[CustomerID],\n"
+                + "    o.[TotalPrice],\n"
+                + "    o.[CreatedAt]\n"
+                + "FROM [SE1808_SWP391_Group5].[dbo].[Orders] o\n"
+                + "JOIN [SE1808_SWP391_Group5].[dbo].[OrderDetails] od\n"
+                + "    ON o.[OrderID] = od.[OrderID]\n"
+                + "	Where o.[OrderID] = ?\n"
+                + "ORDER BY o.[CreatedAt] DESC;";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Customers customers = customersDAO.getCustomerByID(rs.getString("CustomerID"));
+                Products products = productsDAO.getProductByID(rs.getInt("ProductID"));
+                Orders order = getOderByID(rs.getInt("OrderID"));
+
+                list.add(new OrderDetails(rs.getInt("OrderDetailID"), order, products, rs.getBigDecimal("Price"), rs.getInt("Quantity")));
+
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace(); // Nên in lỗi để dễ dàng debug
+        }
+        return list;
+    }
 }
