@@ -54,7 +54,6 @@ public class FeedbacksController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String productID = request.getParameter("productID");
         String customerID = request.getParameter("customerId");
-        String customerID = request.getParameter("customerId");
         String comment = request.getParameter("comment");
         String rating = request.getParameter("rating");
 
@@ -79,8 +78,6 @@ public class FeedbacksController extends HttpServlet {
         String productId = request.getParameter("productID");
         response.setContentType("text/html;charset=UTF-8");
 
-        String feedbackId = request.getParameter("feedbackID");
-        String productId = request.getParameter("productID");
         String comment = request.getParameter("comment");
 
         // Kiểm tra feedbackID có hợp lệ không
@@ -103,7 +100,6 @@ public class FeedbacksController extends HttpServlet {
 
     private void deleteFeedback(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String feedbackId = request.getParameter("feedbackID");
         String feedbackId = request.getParameter("feedbackID");
 
         if (feedbackId == null || feedbackId.isEmpty()) {
