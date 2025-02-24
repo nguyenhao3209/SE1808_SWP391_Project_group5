@@ -4,73 +4,185 @@
  */
 package dal;
 
-import Models.Staffs.Status;
-import Models.Staffs.Role;
-import Models.Staffs;
-import Models.Staffs.Gender;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import Models.Staffs;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
- * @author tien
+ * @author HuyLVQCE180656
  */
 public class StaffsDAO extends DBContext {
 
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-
-    public StaffsDAO() {
-        super();
-    }
+    private PreparedStatement ps = null;
+    private ResultSet rs = null;
 
     public List<Staffs> getAllStaffs() {
-//        ArrayList<Staffs> list = new ArrayList<>();
-//        String sql = "select * "
-//                + "  FROM Staffs";
-//        try {
-//            PreparedStatement ps = connection.prepareStatement(sql);
-//            ResultSet rs = ps.executeQuery();
-//            while (rs.next()) {
-//                list.add(new Staffs(rs.getInt(0), rs.getString(1), rs.getString(2), rs.getString(3), tolenExpiry, rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), supervisor, rs.getString(11), rs.getString(12), hireDate));
-//            }
-//            rs.close();
-//            ps.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace(); // Nên in lỗi để dễ dàng debug
-//        }
-//        return list;
+        List<Staffs> staffs = new ArrayList<>();
+        String sql = "SELECT StaffID, StaffName, Email, Phone, Gender, Status, Address FROM Staffs Where [Status] != 'DELETED'";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Staffs staff = new Staffs();
+                staff.setStaffID(rs.getString("StaffID"));
+                staff.setStaffName(rs.getString("StaffName"));
+                staff.setEmail(rs.getString("Email"));
+                staff.setPhone(rs.getString("Phone"));
+                staff.setGender(rs.getString("Gender"));
+                staff.setStatus(rs.getString("Status"));
+                staff.setAddress(rs.getString("Address"));
+
+                staffs.add(staff);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return staffs;
+    }
+
+    public String createStaffID() {
+        try {
+            String sql = "SELECT StaffID FROM Staffs";
+            try ( PreparedStatement stmt = connection.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
+                int maxNumber = 0;
+                while (rs.next()) {
+                    String id = rs.getString(1);
+                    if (id != null) {
+                        int number = extractStaffNumber(id);
+                        if (number > maxNumber) {
+                            maxNumber = number;
+                        }
+                    }
+                }
+                return String.format("ST%04d", maxNumber + 1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in createStaffID: " + e.getMessage());
+        }
         return null;
     }
 
-    public Staffs getStaffByID(String id) {
-//        Staffs staffs = null;
-//        String query = "SELECT * FROM Customers WHERE Email = ?";
-//        try {
-//            connection = new DBContext().connection;
-//            ps = connection.prepareStatement(query);
-//            ps.setString(1, id);
-//            rs = ps.executeQuery();
-//            while (rs.next()) {
-//                staffs = new Staffs();
-//                staffs.setStaffID(rs.getString("StaffID"));
-//                staffs.setStaffName(rs.getString("CustomerName"));
-//                staffs.setEmail(rs.getString("Email"));
-//                staffs.setPhone(rs.getString("Phone"));
-//                staffs.setAddress(rs.getString("Address"));
-//                staffs.setRole(Role.valueOf(rs.getString("Role")));
-//                staffs.setStatus(Status.valueOf(rs.getString("Status")));
-//                staffs.setAvatar(rs.getString("Avatar"));
-//                staffs.setGender(Gender.valueOf(rs.getString("Gender")));
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return staffs;
-        return null;
+    private int extractStaffNumber(String id) {
+        Pattern pattern = Pattern.compile("ST(\\d+)");
+        Matcher matcher = pattern.matcher(id);
+        if (matcher.matches()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        throw new IllegalArgumentException("Invalid StaffID format: " + id);
     }
 
+    public void addStaff(Staffs staff) {
+
+        // Gọi method để tạo StaffID
+        String staffID = createStaffID();
+        staff.setStaffID(staffID);
+
+        String sql = "INSERT INTO Staffs (StaffID, StaffName, Password, Phone, Role, Email, Gender, Status, Address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, staff.getStaffID());
+            ps.setString(2, staff.getStaffName());
+            ps.setString(3, staff.getPassword());
+            ps.setString(4, staff.getPhone());
+            ps.setString(5, staff.getRole());
+            ps.setString(6, staff.getEmail());
+            ps.setString(7, staff.getGender());
+            ps.setString(8, staff.getStatus());
+            ps.setString(9, staff.getAddress());
+
+            int rowsInserted = ps.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("Staff added successfully with ID: " + staffID);
+            } else {
+                System.out.println("Failed to add staff.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while adding staff: " + e.getMessage());
+        }
+    }
+
+    public boolean isEmailExists(String email) {
+
+        String sql = "SELECT COUNT(*) FROM Staffs WHERE Email = ?";
+
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next() && rs.getInt(1) > 0) {
+                return true; // Email already exists
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Staffs getStaffById(String staffId) {
+        Staffs staff = null;
+        String sql = "SELECT StaffID, StaffName, Email, Phone, Gender, Status, Address FROM Staffs WHERE StaffID = ?";
+
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, staffId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                staff = new Staffs();
+                staff.setStaffID(rs.getString("StaffID"));
+                staff.setStaffName(rs.getString("StaffName"));
+                staff.setEmail(rs.getString("Email"));
+                staff.setPhone(rs.getString("Phone"));
+                staff.setGender(rs.getString("Gender"));
+                staff.setStatus(rs.getString("Status"));
+                staff.setAddress(rs.getString("Address"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return staff;
+    }
+
+    public boolean updateStaff(Staffs staff) {
+        String sql = "UPDATE Staffs SET StaffName=?, Password=?, Phone=?, Role=?, Email=?, Gender=?, Status=?, Address=? WHERE StaffId=?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, staff.getStaffName());
+            ps.setString(2, staff.getPassword());
+            ps.setString(3, staff.getPhone());
+            ps.setString(4, staff.getRole());
+            ps.setString(5, staff.getEmail());
+            ps.setString(6, staff.getGender());
+            ps.setString(7, staff.getStatus());
+            ps.setString(8, staff.getAddress());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean deleteStaffById(String staffId) {
+        String sql = "UPDATE [dbo].[Staffs]\n"
+                + "   SET [Status] = 'DELETED'\n"
+                + " WHERE [StaffID] = ?";
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, staffId);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0; // Trả về true nếu xóa thành công
+        } catch (SQLException e) {
+            e.printStackTrace(); // In lỗi SQL ra console để debug
+            return false; // Trả về false nếu có lỗi xảy ra
+        }
+    }
 }
