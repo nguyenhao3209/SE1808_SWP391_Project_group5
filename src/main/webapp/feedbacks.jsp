@@ -22,6 +22,7 @@
             body {
                 font-family: 'Poppins', sans-serif;
                 /*        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);*/
+                /*        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);*/
                 color: #333;
                 padding: 20px;
             }
@@ -129,6 +130,7 @@
                 border: none;
                 padding: 8px 16px;
                 height: 30px;
+                height: 30px;
                 border-radius: 25px;
                 cursor: pointer;
                 margin-right: 10px;
@@ -157,9 +159,11 @@
             }
 
             .btn-minhanh {
+            .btn-minhanh {
                 background: linear-gradient(135deg, #6a11cb, #2575fc);
                 color: white;
                 border: none;
+                height: 30px;
                 height: 30px;
                 padding: 8px 16px;
                 border-radius: 25px;
@@ -168,6 +172,7 @@
                 font-size: 0.9rem;
             }
 
+            .btn-minhanh:hover {
             .btn-minhanh:hover {
                 background: linear-gradient(135deg, #2575fc, #6a11cb);
                 transform: scale(1.05);
@@ -242,6 +247,13 @@
                 margin-bottom: 10px;
                 display: none;
             }
+
+            .error-message {
+                color: red;
+                font-size: 0.9rem;
+                margin-bottom: 10px;
+                display: none;
+            }
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -278,7 +290,7 @@
                             <i class="fas fa-star ${feedback.rating >= 5 ? 'checked' : ''}"></i>
                         </span>
                     </div>
-                    <div class="review-body">
+                    <div class="review-body">                            
                         <p>${feedback.comment}</p>
                         <form action="feedbacks-controller" method="post" id="editFeedbackForm${feedback.reviewID}" class="reply-form" style="display: none">
                             <input type="hidden" name="action" value="edit">
@@ -286,18 +298,20 @@
                             <input type="hidden" name="productID" value="${feedback.productID}">
                             <textarea name="comment" rows="2" required>${feedback.comment}</textarea>
                             <button type="submit" class="btn-minhanh">Save Changes</button>
+                            <button type="submit" class="btn-minhanh">Save Changes</button>
                         </form>
                         <c:if test="${sessionScope.user != null && feedback.user.customerId == sessionScope.user.customerId}">
                             <button class="btn-action" onclick="editFeedback('${feedback.reviewID}')">Edit</button>
                             <button class="btn-action" onclick="deleteFeedback('${feedback.reviewID}')">Delete</button>
                         </c:if>
                     </div>
+                </div>
 
-                    <!-- Hiển thị danh sách reply -->
-                    <div class="review-replies">
-                        <c:forEach var="reply" items="${feedback.replies}">
-                            <div class="reply">
-                                <p><strong>${reply.user.customerName}:</strong> ${reply.comment}</p>
+                <!-- Hiển thị danh sách reply -->
+                <div class="review-replies">
+                    <c:forEach var="reply" items="${feedback.replies}">
+                        <div class="reply">
+                            <p><strong>${reply.user.customerName}:</strong> ${reply.comment}</p>
 
                                 <!-- Form chỉnh sửa reply -->
                                 <form action="replyServlet" method="post" id="editReplyForm${reply.replyID}" class="reply-form" style="display: none">
@@ -308,13 +322,13 @@
                                     <button type="submit" class="btn-minhanh" name="action" value="edit">Save Changes</button>
                                 </form>
 
-                                <!-- Nút chỉnh sửa và xóa reply -->
-                                <c:if test="${sessionScope.user != null && reply.user.customerId == sessionScope.user.customerId}">
-                                    <button class="btn-action" onclick="editReply(${reply.replyID}, `${reply.comment}`)">Edit</button>
-                                    <button class="btn-action" onclick="deleteReply(${reply.replyID})">Delete</button>
-                                </c:if>
-                            </div>
-                        </c:forEach>
+                            <!-- Nút chỉnh sửa và xóa reply -->
+                            <c:if test="${sessionScope.user != null && reply.user.customerId == sessionScope.user.customerId}">
+                                <button class="btn-action" onclick="editReply(${reply.replyID}, `${reply.comment}`)">Edit</button>
+                                <button class="btn-action" onclick="deleteReply(${reply.replyID})">Delete</button>
+                            </c:if>
+                        </div>
+                    </c:forEach>
 
                         <!-- Form để thêm reply -->
                         <c:if test="${sessionScope.user != null}">
@@ -352,40 +366,20 @@
             </c:if>
         </div>
 
-        <script>
-            // Xử lý đổi màu sao khi click
-            document.querySelectorAll('.star-rating .fa-star').forEach(star => {
-                star.addEventListener('click', () => {
-                    const rating = star.getAttribute('data-value'); // Lấy giá trị rating
-                    document.getElementById('rating-value').value = rating; // Cập nhật giá trị rating vào input ẩn
-
-                    // Đổi màu sao được chọn
-                    document.querySelectorAll('.star-rating .fa-star').forEach(s => {
-                        if (s.getAttribute('data-value') <= rating) {
-                            s.classList.add('checked'); // Thêm class checked cho sao được chọn
-                        } else {
-                            s.classList.remove('checked'); // Xóa class checked cho sao không được chọn
-                        }
-                    });
-                });
-            });
-
-            // Hàm chỉnh sửa feedback
-            function editFeedback(id) {
-                document.getElementById('editFeedbackForm' + id).style.display = 'block';
+    <script>
+        function editFeedback(id) {
+            document.getElementById('editFeedbackForm' + id).style.display = 'block';
+        }
+        function deleteFeedback(id) {
+            if (confirm("Are you sure you want to delete this feedback?")) {
+                window.location.href = "feedbacks-controller?action=delete&feedbackID=" + id + "&productID=${product.productID}";
             }
-
-            // Hàm xóa feedback
-            function deleteFeedback(id) {
-                if (confirm("Are you sure you want to delete this feedback?")) {
-                    window.location.href = "feedbacks-controller?action=delete&feedbackID=" + id + "&productID=${product.productID}";
-                }
-            }
-
-            // Hàm chỉnh sửa reply
-            function editReply(id, comment) {
-                document.getElementById('editReplyForm' + id).style.display = 'block';
-            }
+        }
+        function editReply(id, comment) {
+//                            document.getElementById('editReplyId').value = id;
+//                            document.getElementById('editReplyComment').value = comment;
+            document.getElementById('editReplyForm' + id).style.display = 'block';
+        }
 
             // Hàm xóa reply
             function deleteReply(id) {

@@ -9,7 +9,9 @@ import Models.Category;
 import Models.Customers;
 import Models.ProductSizes;
 import Models.Products;
+import Models.Slider;
 import Models.Specifications;
+import Models.StockImport;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,8 +41,6 @@ public class ProductsDAO extends DBContext {
 //        }
 //        return list;
 //    }
-    
-    
     public ProductsDAO() {
         super();
     }
@@ -665,6 +665,103 @@ public class ProductsDAO extends DBContext {
         } catch (SQLException e) {
         }
         return null;
+    }
+
+    public ArrayList<Slider> getAllSliders() {
+        ArrayList<Slider> sliders = new ArrayList<>();
+        String query = "SELECT SliderID, ProductID, ImageURL FROM Sliders";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int sliderID = rs.getInt("SliderID");
+                int productID = rs.getInt("ProductID");
+                String imageURL = rs.getString("ImageURL");
+
+                Products product = getProductByID(productID);
+
+                sliders.add(new Slider(sliderID, product, imageURL));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sliders;
+    }
+
+    public ArrayList<StockImport> getAllStockImports() {
+        StaffsDAO staffDAO = new StaffsDAO();
+        ArrayList<StockImport> stockList = new ArrayList<>();
+        String sql = "SELECT ImportID, StaffID, Supplier, ImportDate, TotalCost FROM StockImport";
+
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                StockImport stock = new StockImport();
+                stock.setImportID(rs.getInt("ImportID"));
+                stock.setStaff(staffDAO.getStaffByID(rs.getString("StaffID")));
+                stock.setSupplier(rs.getString("Supplier"));
+                stock.setImportDate(rs.getTimestamp("ImportDate"));
+                stock.setTotalCost(rs.getBigDecimal("TotalCost"));
+                stockList.add(stock);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stockList;
+    }
+
+    public ArrayList<StockImport> getFilteredStock(String fromDate, String toDate, String supplier, String staffName) {
+        ArrayList<StockImport> stockList = new ArrayList<>();
+        StaffsDAO staffDAO = new StaffsDAO();
+        String sql = "SELECT si.ImportID, si.ImportDate, si.TotalCost, si.Supplier, s.StaffID, s.StaffName "
+                + "FROM StockImport si "
+                + "JOIN Staffs s ON si.StaffID = s.StaffID "
+                + "WHERE 1=1";
+
+        List<String> params = new ArrayList<>();
+
+        if (fromDate != null && !fromDate.isEmpty()) {
+            sql += " AND si.ImportDate >= ?";
+            params.add(fromDate);
+        }
+        if (toDate != null && !toDate.isEmpty()) {
+            sql += " AND si.ImportDate <= ?";
+            params.add(toDate);
+        }
+        if (supplier != null && !supplier.isEmpty()) {
+            sql += " AND si.Supplier LIKE ?";
+            params.add("%" + supplier + "%");
+        }
+        if (staffName != null && !staffName.isEmpty()) {
+            sql += " AND s.StaffName LIKE ?";
+            params.add("%" + staffName + "%");
+        }
+
+        try ( PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            for (int i = 0; i < params.size(); i++) {
+                pstmt.setString(i + 1, params.get(i));
+            }
+
+            try ( ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    StockImport stock = new StockImport();
+                    stock.setImportID(rs.getInt("ImportID"));
+                    stock.setImportDate(rs.getTimestamp("ImportDate"));
+                    stock.setTotalCost(rs.getBigDecimal("TotalCost"));
+                    stock.setSupplier(rs.getString("Supplier"));
+                    stock.setStaff(staffDAO.getStaffByID(rs.getString("StaffID")));
+
+                    stockList.add(stock);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching filtered stock: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return stockList;
     }
 
 }
