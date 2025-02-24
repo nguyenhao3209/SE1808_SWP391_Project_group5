@@ -50,8 +50,9 @@ public class FeedbacksController extends HttpServlet {
 
     private void addFeedback(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         String productID = request.getParameter("productID");
-        String customerID = request.getParameter("userID");
+        String customerID = request.getParameter("customerId");
         String comment = request.getParameter("comment");
         String rating = request.getParameter("rating");
 
@@ -69,11 +70,15 @@ public class FeedbacksController extends HttpServlet {
 
     private void editFeedback(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String feedbackId = request.getParameter("feedbackId");
+        response.setContentType("text/html;charset=UTF-8");
+
+        String feedbackId = request.getParameter("feedbackID");
+        String productId = request.getParameter("productID");
         String comment = request.getParameter("comment");
 
+        // Kiểm tra feedbackID có hợp lệ không
         if (feedbackId == null || feedbackId.isEmpty()) {
-            response.sendRedirect("productDetails?id=" + request.getParameter("productID"));
+            response.sendRedirect("productDetails?id=" + productId);
             return;
         }
 
@@ -85,12 +90,12 @@ public class FeedbacksController extends HttpServlet {
             dao.updateFeedback(reply);
         }
 
-        response.sendRedirect("productDetails?id=" + request.getParameter("productID"));
+        response.sendRedirect("productDetails?id=" + productId);
     }
 
     private void deleteFeedback(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String feedbackId = request.getParameter("feedbackId");
+        String feedbackId = request.getParameter("feedbackID");
 
         if (feedbackId == null || feedbackId.isEmpty()) {
             response.sendRedirect("productDetails?id=" + request.getParameter("productID"));

@@ -72,13 +72,13 @@ public class ReviewsDAO extends DBContext {
     // Lấy tên người dùng từ userID
     public String getUsernameById(String customerID) {
         String username = null;
-        String query = "SELECT uustomerName FROM Customers WHERE CustomerID = ?"; // Câu lệnh SQL để lấy tên người dùng
+        String query = "SELECT CustomerName FROM Customers WHERE CustomerID = ?"; // Câu lệnh SQL để lấy tên người dùng
         try (
                 PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, customerID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                username = rs.getString("username");
+                username = rs.getString("CustomerName");
             }
         } catch (Exception e) {
             e.printStackTrace();
