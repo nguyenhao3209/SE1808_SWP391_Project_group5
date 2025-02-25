@@ -62,6 +62,42 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a href="OrdersServlet" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-comments"></i></span>
+                        <span class="ttr-label">Orders Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-user"></i></span>
+                        <span class="ttr-label">Staffs Management</span>
+                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="admin/addStaff.jsp" class="ttr-material-button"><span class="ttr-label">Add Staff</span></a>
+                        </li>
+                        <li>
+                            <a href="admin/listStaffs" class="ttr-material-button"><span class="ttr-label">Staffs List</span></a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-user"></i></span>
+                        <span class="ttr-label">Stock Management</span>
+                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="admin/viewImported.jsp" class="ttr-material-button"><span class="ttr-label">Imported Invoices</span></a>
+                        </li>
+                        <li>
+                            <a href="admin/stock_import.jsp" class="ttr-material-button"><span class="ttr-label">Stock In</span></a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="ttr-seperate"></li>
             </ul>
             <!-- sidebar menu end -->

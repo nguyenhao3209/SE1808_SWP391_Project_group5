@@ -135,7 +135,7 @@
                         const productName = item.querySelector(".product-details strong").textContent;
                         const discountedPrice = price - (price * discount / 100);
                         const totalPrice = quantity * discountedPrice;
-                        totalElement.textContent = `$${totalPrice.toFixed(2)}`;
+                        totalElement.textContent = `$` + totalPrice.toFixed(2);
                         ;
 
                         if (checkbox.checked) {

@@ -1,0 +1,29 @@
+<c:forEach var="order" items="${order}">
+    <p><strong>Order ID:</strong> ${order.orderID}</p>
+    <p><strong>Customer Name:</strong> ${order.customer.customerName}</p>
+    <p><strong>Phone:</strong> ${order.customer.phone}</p>
+    <p><strong>Date:</strong> ${order.createAt}</p>
+    <p><strong>Total Amount:</strong> $${order.totalPrice}</p>
+</c:forEach> 
+
+<h5>Products</h5>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        <c:forEach var="Details" items="${orderDetails}">
+            <tr>
+                <td>${Details.product.productID}</td>
+                <td>${Details.product.productName}</td>
+                <td>${Details.quantity}</td>
+                <td>${Details.product.price}</td>
+            </tr>
+        </c:forEach>                                
+    </tbody>
+</table>
