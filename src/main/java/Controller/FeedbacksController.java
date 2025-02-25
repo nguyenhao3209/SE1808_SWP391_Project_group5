@@ -76,7 +76,7 @@ public class FeedbacksController extends HttpServlet {
         String feedbackId = request.getParameter("feedbackID");
         String productId = request.getParameter("productID");
         String comment = request.getParameter("comment");
-// Kiểm tra feedbackID có hợp lệ không
+
         if (feedbackId == null || feedbackId.isEmpty()) {
             response.sendRedirect("productDetails?id=" + productId);
             return;

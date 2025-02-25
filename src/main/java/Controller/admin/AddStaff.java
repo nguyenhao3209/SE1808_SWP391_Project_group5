@@ -125,10 +125,10 @@ public class AddStaff extends HttpServlet {
         staff.setStaffName(staffName);
         staff.setPassword(PasswordUtils.hashPassword(passWord)); 
         staff.setPhone(phone);
-        staff.setRole(role);
+        staff.setRole(Staffs.Role.valueOf(role));
         staff.setEmail(email);
         staff.setGender(gender);
-        staff.setStatus(status);
+        staff.setStatus(Staffs.Status.valueOf(status));
         staff.setAddress(address);
 
         try {

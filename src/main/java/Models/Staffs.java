@@ -4,8 +4,7 @@
  */
 package Models;
 
-import java.sql.Date;
-import java.time.DateTimeException;
+import java.sql.Timestamp;
 
 /**
  *
@@ -13,41 +12,39 @@ import java.time.DateTimeException;
  */
 public class Staffs {
 
+
     private String staffID;
     private String staffName;
     private String email;
     private String avatar;
-    private Date tolenExpiry;
+    private Timestamp tokenExpiry;
     private String password;
     private String phone;
     private String gender;
     private String address;
-    private String role;
+    private Role role;
     private Staffs supervisor;
-    private String status;
+    private Status status;
     private String passwordRecoveryToken;
-    private Date hireDate;
+    private Timestamp hireDate;
 
     public Staffs() {
     }
 
-    public Staffs(String staffName, String email, String password, String phone, String gender, String address, String role, String status) {
-        this.staffName = staffName;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.gender = gender;
-        this.address = address;
-        this.role = role;
-        this.status = status;
+    public enum Role {
+        ADMIN, STAFF
     }
 
-    public Staffs(String staffID, String staffName, String email, String avatar, Date tolenExpiry, String password, String phone, String gender, String address, String role, Staffs supervisor, String status, String passwordRecoveryToken, Date hireDate) {
+    public enum Status {
+        ACTIVE, INACTIVE, DELETED
+    }
+
+    public Staffs(String staffID, String staffName, String email, String avatar, Timestamp tokenExpiry, String password, String phone, String gender, String address, Role role, Staffs supervisor, Status status, String passwordRecoveryToken, Timestamp hireDate) {
         this.staffID = staffID;
         this.staffName = staffName;
         this.email = email;
         this.avatar = avatar;
-        this.tolenExpiry = tolenExpiry;
+        this.tokenExpiry = tokenExpiry;
         this.password = password;
         this.phone = phone;
         this.gender = gender;
@@ -91,12 +88,12 @@ public class Staffs {
         this.avatar = avatar;
     }
 
-    public Date getTolenExpiry() {
-        return tolenExpiry;
+    public Timestamp getTokenExpiry() {
+        return tokenExpiry;
     }
 
-    public void setTolenExpiry(Date tolenExpiry) {
-        this.tolenExpiry = tolenExpiry;
+    public void setTokenExpiry(Timestamp tokenExpiry) {
+        this.tokenExpiry = tokenExpiry;
     }
 
     public String getPassword() {
@@ -131,11 +128,11 @@ public class Staffs {
         this.address = address;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -147,11 +144,11 @@ public class Staffs {
         this.supervisor = supervisor;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -163,11 +160,17 @@ public class Staffs {
         this.passwordRecoveryToken = passwordRecoveryToken;
     }
 
-    public Date getHireDate() {
+    public Timestamp getHireDate() {
         return hireDate;
     }
 
-    public void setHireDate(Date hireDate) {
+    public void setHireDate(Timestamp hireDate) {
         this.hireDate = hireDate;
     }
+
+    @Override
+    public String toString() {
+        return "Staffs{" + "staffID=" + staffID + ", staffName=" + staffName + ", email=" + email + ", avatar=" + avatar + ", tokenExpiry=" + tokenExpiry + ", password=" + password + ", phone=" + phone + ", gender=" + gender + ", address=" + address + ", role=" + role + ", supervisor=" + supervisor + ", status=" + status + ", passwordRecoveryToken=" + passwordRecoveryToken + ", hireDate=" + hireDate + '}';
+    }
+
 }

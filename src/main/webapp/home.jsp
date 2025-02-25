@@ -1,3 +1,8 @@
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,64 +25,65 @@
         <link rel="stylesheet" type="text/css" href="icomoon/icomoon.css">
         <link rel="stylesheet" type="text/css" href="css/vendor.css">
         <link rel="stylesheet" type="text/css" href="css/style.css">
-  
+
 
     </head>
 
     <body data-bs-spy="scroll" data-bs-target="#header" tabindex="0">
 
- <jsp:include page="common/header.jsp"/>
+        <jsp:include page="common/header.jsp"/>
+
+        <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+        <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
         <section id="billboard">
-
             <div class="container">
                 <div class="row">
-                    <div class="col-md-12">
-
+                    <div class="col-md-12 position-relative">
                         <button class="prev slick-arrow">
                             <i class="icon icon-arrow-left"></i>
                         </button>
 
                         <div class="main-slider pattern-overlay">
-                            <div class="slider-item">
-                                <div class="banner-content">
-                                    <h2 class="banner-title">Life of the Wild</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu feugiat amet, libero
-                                        ipsum enim pharetra hac. Urna commodo, lacus ut magna velit eleifend. Amet, quis
-                                        urna, a eu.</p>
-                                    <div class="btn-wrap">
-                                        <a href="#" class="btn btn-outline-accent btn-accent-arrow">Read More<i
-                                                class="icon icon-ns-arrow-right"></i></a>
-                                    </div>
-                                </div><!--banner-content-->
-                                <img src="images/main-banner1.jpg" alt="banner" class="banner-image">
-                            </div><!--slider-item-->
+                            <c:forEach var="slide" items="${sessionScope.slides}">
+                                <div class="slider-item position-relative">
+                                    <img src="img/Slider/${slide.imageURL}" alt="banner" class="banner-image" 
+                                         style="height: 60vh; width: 100%; object-fit: cover; border-radius: 10px;">
 
-                            <div class="slider-item">
-                                <div class="banner-content">
-                                    <h2 class="banner-title">Birds gonna be Happy</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu feugiat amet, libero
-                                        ipsum enim pharetra hac. Urna commodo, lacus ut magna velit eleifend. Amet, quis
-                                        urna, a eu.</p>
-                                    <div class="btn-wrap">
-                                        <a href="#" class="btn btn-outline-accent btn-accent-arrow">Read More<i
-                                                class="icon icon-ns-arrow-right"></i></a>
-                                    </div>
-                                </div><!--banner-content-->
-                                <img src="images/main-banner2.jpg" alt="banner" class="banner-image">
-                            </div><!--slider-item-->
 
-                        </div><!--slider-->
+                                    <div class="banner-content position-absolute top-50 start-50 translate-middle text-center text-white p-3"
+                                         style="background: rgba(0, 0, 0, 0.5); border-radius: 10px; width: 80%; height: 75vh;">
+                                        <h2 style="color: #00FFFFFF" class="banner-title">${slide.product.productName}</h2>
+
+                                        <p>
+                                            <c:choose>
+                                                <c:when test="${fn:length(slide.product.description) > 100}">
+                                                    ${fn:substring(slide.product.description, 0, 500)}...
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${slide.product.description}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
+
+                                        <div class="btn-wrap">
+                                            <a href="productDetails?id=${slide.product.productID}" class="btn btn-outline-light border-light">
+                                                Read More <i class="icon icon-ns-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                    </div><!-- banner-content -->
+                                </div><!-- slider-item -->
+                            </c:forEach>
+                        </div><!-- slider -->
 
                         <button class="next slick-arrow">
                             <i class="icon icon-arrow-right"></i>
                         </button>
-
                     </div>
                 </div>
             </div>
-
         </section>
+
 
         <section id="client-holder" data-aos="fade-up">
             <div class="container">
