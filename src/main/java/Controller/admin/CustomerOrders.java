@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+
 package Controller.admin;
 
-import Models.OrderDetails;
 import Models.Orders;
 import dal.OrdersDAO;
 import jakarta.servlet.RequestDispatcher;
@@ -15,46 +15,42 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
  *
  * @author tien
  */
-@WebServlet(name = "OrderDetailServlet", urlPatterns = {"/OrderDetailServlet"})
-public class OrderDetailServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
+@WebServlet(name="CustomerOrders", urlPatterns={"/CustomerOrders"})
+public class CustomerOrders extends HttpServlet {
+   
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet OrderDetailServlet</title>");
+            out.println("<title>Servlet CustomerOrders</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet OrderDetailServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CustomerOrders at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    }
+    } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -62,40 +58,19 @@ public class OrderDetailServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        //HttpSession session = request.getSession();
-        String id = request.getParameter("orderID");
-        int orderID = Integer.parseInt(id);
-        OrdersDAO ordersDAO = new OrdersDAO();
-        Orders order = ordersDAO.getOderByID(orderID);
-        List<OrderDetails> orderDetails = ordersDAO.getOdersDetailByID(orderID);
+    throws ServletException, IOException {
+        String customerId = request.getParameter("customerId");
+        OrdersDAO odao = new OrdersDAO();
+        List<Orders> listorders = odao.getOrdersByCustomerID(customerId);
+        request.setAttribute("listorders", listorders);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("admin/UserOrders.jsp");
+    dispatcher.forward(request, response);
         
-        request.setAttribute("orderDetails", orderDetails);
-        //session.setAttribute("orderDetails", orderDetails);
-        request.setAttribute("order", order);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("order_detail_partial.jsp");
-        dispatcher.forward(request, response);
+    } 
 
-    }
 
-    public static void main(String[] args) {
-        OrdersDAO ordersDAO = new OrdersDAO();
-        Orders order = ordersDAO.getOderByID(1006);
-        List<OrderDetails> orderDetails = ordersDAO.getOdersDetailByID(1006);
-        for (OrderDetails orderDetail : orderDetails) {
-            System.out.println(orderDetail.getPrice());
-        }
-        for (OrderDetails od : orderDetails) {
-    System.out.println("Product ID: " + od.getProduct().getProductID());
-    System.out.println("Product Name: " + od.getProduct().getProductName());
-    System.out.println("Quantity: " + od.getQuantity());
-    System.out.println("Price: " + od.getPrice());
-}
-    }
-
-    /**
+    /** 
      * Handles the HTTP <code>POST</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -103,13 +78,12 @@ public class OrderDetailServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
-     *
      * @return a String containing servlet description
      */
     @Override

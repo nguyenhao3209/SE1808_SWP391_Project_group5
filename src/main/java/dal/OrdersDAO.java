@@ -164,7 +164,7 @@ public class OrdersDAO extends DBContext {
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, id);
-            ps.executeUpdate();
+            ps.executeQuery();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Customers customers = customersDAO.getCustomerByID(rs.getString("CustomerID"));
@@ -190,11 +190,11 @@ public class OrdersDAO extends DBContext {
     }
     public List<OrderDetails> getOdersDetailByID(int id) {
         ArrayList<OrderDetails> list = new ArrayList<>();
-        CustomersDAO customersDAO = new CustomersDAO();
+        
         ProductsDAO productsDAO = new ProductsDAO();
         String sql = "SELECT \n"
                 + "    od.[OrderID],\n"
-                + "    od.[OrderDetailID]\n,"
+                + "    od.[OrderDetailID],\n"
                 + "    od.[ProductID],\n"
                 + "    od.[Price],\n"
                 + "    od.[Quantity],\n"
@@ -207,12 +207,12 @@ public class OrdersDAO extends DBContext {
                 + "	Where o.[OrderID] = ?\n"
                 + "ORDER BY o.[CreatedAt] DESC;";
         try {
-            ps = connection.prepareStatement(sql);
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, id);
-            ps.executeUpdate();
+            ps.executeQuery();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Customers customers = customersDAO.getCustomerByID(rs.getString("CustomerID"));
+
                 Products products = productsDAO.getProductByID(rs.getInt("ProductID"));
                 Orders order = getOderByID(rs.getInt("OrderID"));
 
@@ -226,4 +226,38 @@ public class OrdersDAO extends DBContext {
         }
         return list;
     }
+    public static void main(String[] args) {
+        OrdersDAO odao = new OrdersDAO();
+        List<OrderDetails> list = odao.getOdersDetailByID(1006);
+        for (OrderDetails orderDetails : list) {
+            System.out.println(orderDetails.getProduct().getProductID());
+        }
+    }
+
+     public List<Orders> getOrdersByCustomerID(String id) {
+        ArrayList<Orders> list = new ArrayList<>();
+        CustomersDAO customersDAO = new CustomersDAO();
+        VoucherDAO voucherDAO = new VoucherDAO();
+        StaffsDAO staffsdao = new StaffsDAO();
+        String sql = "SELECT *FROM [SE1808_SWP391_Group5].[dbo].[Orders] where [CustomerID] = ? \n";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, id);
+            ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Customers customers = customersDAO.getCustomerByID(rs.getString("CustomerID"));
+                Vouchers voucher = voucherDAO.getVoucherById(rs.getInt("VoucherID"));
+                Staffs staff = staffsdao.getStaffByID(rs.getString("StaffID"));
+                list.add(new Orders(rs.getInt("OrderID"), customers, staff, voucher, rs.getString("Status"), rs.getString("PaymentMethod"), rs.getBigDecimal("TotalPrice"), rs.getDate("CreatedAt")));
+
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace(); // Nên in lỗi để dễ dàng debug
+        }
+        return list;
+    }
+
 }
