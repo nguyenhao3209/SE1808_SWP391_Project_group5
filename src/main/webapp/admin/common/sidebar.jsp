@@ -69,6 +69,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="admin" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-comments"></i></span>
+                        <span class="ttr-label">Customers Management</span>
+                    </a>
+                </li>
+                <li>
                     <a href="#" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
                         <span class="ttr-label">Staffs Management</span>

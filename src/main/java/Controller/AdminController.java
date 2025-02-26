@@ -64,7 +64,7 @@ public class AdminController extends HttpServlet {
 
         ArrayList<Customers> listUser = userDao.getAllCustomer();
         session.setAttribute("listUser", listUser);
-        request.getRequestDispatcher("AdminPage.jsp").forward(request, response);
+        request.getRequestDispatcher("admin/Users.jsp").forward(request, response);
     } 
 
     /** 
