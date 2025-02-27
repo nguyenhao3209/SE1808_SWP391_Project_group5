@@ -6,6 +6,7 @@ package Controller.admin;
 
 import Models.Staffs;
 import dal.StaffsDAO;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -82,30 +83,21 @@ public class AddStaff extends HttpServlet {
             throws ServletException, IOException {
 
         // Kiểm tra session và quyền admin
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("userRole") == null
-                || !"ADMIN".equals(session.getAttribute("userRole"))) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-        
-        String staffName = request.getParameter("staffName").trim();
-        String passWord = request.getParameter("passWord").trim();
-        String phone = request.getParameter("phone").trim();
-        String role = request.getParameter("role").trim();
-        String email = request.getParameter("email").trim();
-        String gender = request.getParameter("gender").trim();
-        String status = request.getParameter("status").trim();
-        String address = request.getParameter("address").trim();
+        HttpSession session = request.getSession();
 
-        if (staffName == null || staffName.isEmpty()
-                || passWord == null || passWord.isEmpty()
-                || phone == null || phone.isEmpty()
-                || role == null || role.isEmpty()
-                || gender == null || gender.isEmpty()
-                || status == null || status.isEmpty()
-                || address == null || address.isEmpty()) {
+        // Lấy dữ liệu từ form
+        String staffName = request.getParameter("staffName");
+        String password = request.getParameter("password");
+        String phone = request.getParameter("phone");
+        String role = request.getParameter("role");
+        String email = request.getParameter("email");
+        String gender = request.getParameter("gender");
+        String status = request.getParameter("status");
+        String address = request.getParameter("address");
 
+        // Kiểm tra dữ liệu rỗng
+        if (staffName.isEmpty() || password.isEmpty() || phone.isEmpty() || role.isEmpty()
+                || email.isEmpty() || gender.isEmpty() || status.isEmpty() || address.isEmpty()) {
             request.setAttribute("errorMessage", "All fields are required!");
             request.getRequestDispatcher("addStaff.jsp").forward(request, response);
             return;
@@ -113,7 +105,7 @@ public class AddStaff extends HttpServlet {
 
         StaffsDAO staffDAO = new StaffsDAO();
 
-        // Kiểm tra xem email đã tồn tại chưa
+        // Kiểm tra email đã tồn tại chưa
         if (staffDAO.isEmailExists(email)) {
             request.setAttribute("errorMessage", "Email already exists!");
             request.getRequestDispatcher("addStaff.jsp").forward(request, response);
@@ -123,23 +115,20 @@ public class AddStaff extends HttpServlet {
         // Tạo nhân viên mới
         Staffs staff = new Staffs();
         staff.setStaffName(staffName);
-        staff.setPassword(PasswordUtils.hashPassword(passWord)); 
+        if (password != null && !password.isEmpty()) {
+            staff.setPassword(PasswordUtils.hashPassword(password));
+        }
         staff.setPhone(phone);
         staff.setRole(Staffs.Role.valueOf(role));
         staff.setEmail(email);
         staff.setGender(gender);
         staff.setStatus(Staffs.Status.valueOf(status));
         staff.setAddress(address);
+        System.out.println(staff.toString());
+        // Lưu nhân viên vào database
+        staffDAO.addStaff(staff);
 
-        try {
-            staffDAO.addStaff(staff);
-            request.setAttribute("successMessage", "Staff added successfully!");
-            request.getRequestDispatcher("listStaffs.jsp").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Database error: " + e.getMessage());
-            request.getRequestDispatcher("addStaff.jsp").forward(request, response);
-        }
+        response.sendRedirect("listStaffs");
     }
 
     /**
@@ -151,5 +140,4 @@ public class AddStaff extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

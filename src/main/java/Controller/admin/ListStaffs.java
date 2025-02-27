@@ -63,15 +63,14 @@ public class ListStaffs extends HttpServlet {
             throws ServletException, IOException {
         StaffsDAO staffDAO = new StaffsDAO();
         List<Staffs> staffList = null;
-        
+
         try {
             staffList = staffDAO.getAllStaffs();
         } catch (Exception e) {
-            // Xử lý lỗi nếu có sự cố trong việc lấy dữ liệu
             e.printStackTrace();
             request.setAttribute("errorMessage", "Error retrieving voucher data.");
         }
-        
+
         request.setAttribute("staffList", staffList);
         RequestDispatcher dispatcher = request.getRequestDispatcher("admin/listStaffs.jsp");
         dispatcher.forward(request, response);
