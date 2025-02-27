@@ -60,13 +60,8 @@ public class DeleteStaff extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("userRole") == null
-                || !"ADMIN".equals(session.getAttribute("userRole"))) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
+
+        HttpSession session = request.getSession();
 
         String staffId = request.getParameter("staffId");
         if (staffId == null || staffId.trim().isEmpty()) {
@@ -84,7 +79,7 @@ public class DeleteStaff extends HttpServlet {
             session.setAttribute("errorMessage", "Failed to delete staff. Staff may not exist.");
         }
 
-        response.sendRedirect("listStaff");
+        response.sendRedirect("listStaffs");
     }
 
     /**

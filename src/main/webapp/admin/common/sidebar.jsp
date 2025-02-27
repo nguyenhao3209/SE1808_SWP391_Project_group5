@@ -85,7 +85,7 @@
                             <a href="admin/addStaff.jsp" class="ttr-material-button"><span class="ttr-label">Add Staff</span></a>
                         </li>
                         <li>
-                            <a href="admin/listStaffs" class="ttr-material-button"><span class="ttr-label">Staffs List</span></a>
+                            <a href="listStaffs" class="ttr-material-button"><span class="ttr-label">Staffs List</span></a>
                         </li>
                     </ul>
                 </li>

@@ -164,36 +164,26 @@
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
                     const searchInput = document.getElementById("searchInput");
-                    const genderFilter = document.getElementById("genderFilter");
-                    const statusFilter = document.getElementById("statusFilter");
                     const tableRows = document.querySelectorAll("#staffTable tbody tr");
 
                     function updateTableVisibility() {
                         tableRows.forEach(row => {
                             const staffID = row.cells[0].textContent.toLowerCase();
                             const staffName = row.cells[1].textContent.toLowerCase();
-                            const gender = row.cells[4].textContent.trim().toLowerCase();
-                            const status = row.cells[5].textContent.trim().toLowerCase();
 
                             // Lấy giá trị từ input và dropdown
                             const selectedInput = searchInput.value.toLowerCase();
-                            const selectedGender = genderFilter.value.toLowerCase();
-                            const selectedStatus = statusFilter.value.toLowerCase();
 
                             // Điều kiện lọc
                             const matchSearch = (selectedInput === "" || staffID.includes(selectedInput) || staffName.includes(selectedInput));
-                            const matchGender = (selectedGender === "" || gender === selectedGender);
-                            const matchStatus = (selectedStatus === "" || status === selectedStatus);
 
                             // Hiển thị hoặc ẩn hàng
-                            row.style.display = (matchSearch && matchGender && matchStatus) ? "" : "none";
+                            row.style.display = (matchSearch) ? "" : "none";
                         });
                     }
 
                     // Gán sự kiện lắng nghe
                     searchInput.addEventListener("input", updateTableVisibility);
-                    genderFilter.addEventListener("change", updateTableVisibility);
-                    statusFilter.addEventListener("change", updateTableVisibility);
                 });
             </script>
         </main>

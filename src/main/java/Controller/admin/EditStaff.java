@@ -69,9 +69,6 @@ public class EditStaff extends HttpServlet {
             StaffsDAO staffDAO = new StaffsDAO();
             Staffs staff = staffDAO.getStaffById(staffId);
 
-            // Debug xem staff có null không
-            System.out.println("Editing Staff: " + (staff != null ? staff.getStaffName() : "null"));
-
             if (staff != null) {
                 request.setAttribute("staff", staff);
                 request.getRequestDispatcher("admin/editStaff.jsp").forward(request, response);
@@ -93,33 +90,18 @@ public class EditStaff extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Kiểm tra session và quyền admin
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("userRole") == null
-                || !"ADMIN".equals(session.getAttribute("userRole"))) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
+        HttpSession session = request.getSession();
 
         String staffId = request.getParameter("staffId").trim();
         String staffName = request.getParameter("staffName").trim();
-        String passWord = request.getParameter("passWord").trim();
+        String password = request.getParameter("password").trim();
         String phone = request.getParameter("phone").trim();
         String role = request.getParameter("role").trim();
-        String email = request.getParameter("email").trim();
         String gender = request.getParameter("gender").trim();
         String status = request.getParameter("status").trim();
         String address = request.getParameter("address").trim();
 
-        if (staffName == null || staffName.isEmpty()
-                || passWord == null || passWord.isEmpty()
-                || phone == null || phone.isEmpty()
-                || role == null || role.isEmpty()
-                || gender == null || gender.isEmpty()
-                || status == null || status.isEmpty()
-                || address == null || address.isEmpty()) {
-
-            request.getSession().setAttribute("errorMessage", "All fields are required!");
+        if (staffName.isEmpty() || phone.isEmpty() || role.isEmpty() || gender.isEmpty() || status.isEmpty() || address.isEmpty()) {
             response.sendRedirect("editStaff.jsp?staffId=" + staffId);
             return;
         }
@@ -129,34 +111,26 @@ public class EditStaff extends HttpServlet {
 
         if (staff == null) {
             session.setAttribute("errorMessage", "Staff not found!");
-            response.sendRedirect("listStaffs.jsp");
+            response.sendRedirect("listStaffs");
             return;
         }
 
-        // Kiểm tra email trùng lặp
-        if (!staff.getEmail().equals(email) && staffDAO.isEmailExists(email)) {
-            request.setAttribute("staff", staff);
-            session.setAttribute("errorMessage", "Email already exists!");
-            request.getRequestDispatcher("editStaff.jsp").forward(request, response);
-            return;
-        }
-
+        // Cập nhật thông tin nhân viên
         staff.setStaffName(staffName);
-        if (passWord != null && !passWord.isEmpty()) {
-            staff.setPassword(PasswordUtils.hashPassword(passWord));
+        if (!password.isEmpty()) {
+            staff.setPassword(PasswordUtils.hashPassword(password));
         }
         staff.setPhone(phone);
         staff.setRole(Staffs.Role.valueOf(role));
-        staff.setEmail(email);
         staff.setGender(gender);
         staff.setStatus(Staffs.Status.valueOf(status));
         staff.setAddress(address);
 
+        // Gọi phương thức update (không kiểm tra kết quả)
         staffDAO.updateStaff(staff);
 
-        session.setAttribute("successMessage", "Edited successfully!");
-        response.sendRedirect("listStaffs.jsp");
-        return;
+        session.setAttribute("successMessage", "Staff updated successfully!");
+        response.sendRedirect("listStaffs");
     }
 
     /**
