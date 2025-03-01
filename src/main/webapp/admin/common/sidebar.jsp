@@ -4,6 +4,7 @@
     Author     : Admin
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 
@@ -66,6 +67,7 @@
                         <span class="ttr-label">Customers Management</span>
                     </a>
                 </li>
+                <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                 <li>
                     <a href="#" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
@@ -81,6 +83,7 @@
                         </li>
                     </ul>
                 </li>
+                </c:if>
                 <li>
                     <a href="#" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
