@@ -21,18 +21,22 @@
         <!-- sidebar menu start -->
         <nav class="ttr-sidebar-navi">
             <ul>
+                <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                 <li>
                     <a href="dashboard" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-home"></i></span>
                         <span class="ttr-label">Dashboard</span>
                     </a>
                 </li>
+                </c:if>
+                <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                  <li>
                     <a href="contact-list" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-email"></i></span>
                         <span class="ttr-label">Contact</span>
                     </a>
                 </li>
+                </c:if>
                 <li>
                     <a href="admin/review.jsp" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-comments"></i></span>
@@ -84,6 +88,7 @@
                     </ul>
                 </li>
                 </c:if>
+                <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                 <li>
                     <a href="#" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
@@ -101,6 +106,7 @@
                 </li>
 
                 <li class="ttr-seperate"></li>
+                </c:if>
             </ul>
             <!-- sidebar menu end -->
         </nav>
