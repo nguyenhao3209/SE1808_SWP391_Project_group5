@@ -4,7 +4,6 @@
  */
 package Controller.admin;
 
-
 import dal.OrdersDAO;
 
 import java.io.IOException;
@@ -18,6 +17,7 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -44,7 +44,7 @@ public class DashboardController extends HttpServlet {
         OrdersDAO odao = new OrdersDAO();
         int currentYear = LocalDate.now().getYear();
         int yearSelectInt = currentYear;
-        if(yearSelect != null){
+        if (yearSelect != null) {
             yearSelectInt = Integer.parseInt(yearSelect);
         }
         List<Double> revenue = odao.getMonthlyRevenueByYear(yearSelectInt);
@@ -56,6 +56,11 @@ public class DashboardController extends HttpServlet {
         }
         request.setAttribute("years", years);
         request.setAttribute("yearSelect", yearSelectInt);
+
+        List<Integer> numberOfOrdersList = odao.getMonthlyOrderCountByYear(yearSelectInt);
+        request.setAttribute("numberOfOrdersList", numberOfOrdersList);
+        List<Map<String, Object>> topStaffs = odao.getTop10StaffByOrderCount();
+        request.setAttribute("topStaffs", topStaffs);
         request.getRequestDispatcher("admin/dashboard.jsp").forward(request, response);
     }
 

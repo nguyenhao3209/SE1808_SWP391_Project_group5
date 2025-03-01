@@ -184,8 +184,8 @@
                         <div class="col-lg-8 m-b30">
                             <div class="widget-box">
                                 <div class="wc-title" style="display: flex; align-items: center">
-                                    <h4 style="margin-right: 16px">Revenue</h4>
-                                    <select class="form-control" id="yearSelect" onchange="changeYear(this)">
+                                    <h4 style="margin-right: 16px; width: 200px">Revenue ${yearSelect}</h4>
+                                <select class="form-control" id="yearSelect" onchange="changeYear(this)">
                                     <c:forEach items="${years}" var="o">
                                         <option value="${o}" ${yearSelect == o ? 'selected' : ''}>${o}</option>
                                     </c:forEach>
@@ -272,147 +272,150 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 m-b30">
+                    <div class="col-lg-4 m-b30">
                         <div class="widget-box">
                             <div class="wc-title">
-                                <h4>New Users</h4>
+                                <h4>Number of orders sold ${yearSelect}</h4>
                             </div>
                             <div class="widget-inner">
-                                <div class="new-user-list">
-                                    <ul>
-                                        <li>
-                                            <span class="new-users-pic">
-                                                <img src="admin/assets/images/testimonials/pic1.jpg" alt=""/>
-                                            </span>
-                                            <span class="new-users-text">
-                                                <a href="#" class="new-users-name">Anna Strong </a>
-                                                <span class="new-users-info">Visual Designer,Google Inc </span>
-                                            </span>
-                                            <span class="new-users-btn">
-                                                <a href="#" class="btn button-sm outline">Follow</a>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="new-users-pic">
-                                                <img src="admin/assets/images/testimonials/pic2.jpg" alt=""/>
-                                            </span>
-                                            <span class="new-users-text">
-                                                <a href="#" class="new-users-name"> Milano Esco </a>
-                                                <span class="new-users-info">Product Designer, Apple Inc </span>
-                                            </span>
-                                            <span class="new-users-btn">
-                                                <a href="#" class="btn button-sm outline">Follow</a>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="new-users-pic">
-                                                <img src="admin/assets/images/testimonials/pic1.jpg" alt=""/>
-                                            </span>
-                                            <span class="new-users-text">
-                                                <a href="#" class="new-users-name">Nick Bold  </a>
-                                                <span class="new-users-info">Web Developer, Facebook Inc </span>
-                                            </span>
-                                            <span class="new-users-btn">
-                                                <a href="#" class="btn button-sm outline">Follow</a>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="new-users-pic">
-                                                <img src="admin/assets/images/testimonials/pic2.jpg" alt=""/>
-                                            </span>
-                                            <span class="new-users-text">
-                                                <a href="#" class="new-users-name">Wiltor Delton </a>
-                                                <span class="new-users-info">Project Manager, Amazon Inc </span>
-                                            </span>
-                                            <span class="new-users-btn">
-                                                <a href="#" class="btn button-sm outline">Follow</a>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="new-users-pic">
-                                                <img src="admin/assets/images/testimonials/pic3.jpg" alt=""/>
-                                            </span>
-                                            <span class="new-users-text">
-                                                <a href="#" class="new-users-name">Nick Stone </a>
-                                                <span class="new-users-info">Project Manager, Amazon Inc  </span>
-                                            </span>
-                                            <span class="new-users-btn">
-                                                <a href="#" class="btn button-sm outline">Follow</a>
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <!--                                <div class="new-user-list">
+                                                                    <ul>
+                                                                        <li>
+                                                                            <span class="new-users-pic">
+                                                                                <img src="admin/assets/images/testimonials/pic1.jpg" alt=""/>
+                                                                            </span>
+                                                                            <span class="new-users-text">
+                                                                                <a href="#" class="new-users-name">Anna Strong </a>
+                                                                                <span class="new-users-info">Visual Designer,Google Inc </span>
+                                                                            </span>
+                                                                            <span class="new-users-btn">
+                                                                                <a href="#" class="btn button-sm outline">Follow</a>
+                                                                            </span>
+                                                                        </li>
+                                                                        <li>
+                                                                            <span class="new-users-pic">
+                                                                                <img src="admin/assets/images/testimonials/pic2.jpg" alt=""/>
+                                                                            </span>
+                                                                            <span class="new-users-text">
+                                                                                <a href="#" class="new-users-name"> Milano Esco </a>
+                                                                                <span class="new-users-info">Product Designer, Apple Inc </span>
+                                                                            </span>
+                                                                            <span class="new-users-btn">
+                                                                                <a href="#" class="btn button-sm outline">Follow</a>
+                                                                            </span>
+                                                                        </li>
+                                                                        <li>
+                                                                            <span class="new-users-pic">
+                                                                                <img src="admin/assets/images/testimonials/pic1.jpg" alt=""/>
+                                                                            </span>
+                                                                            <span class="new-users-text">
+                                                                                <a href="#" class="new-users-name">Nick Bold  </a>
+                                                                                <span class="new-users-info">Web Developer, Facebook Inc </span>
+                                                                            </span>
+                                                                            <span class="new-users-btn">
+                                                                                <a href="#" class="btn button-sm outline">Follow</a>
+                                                                            </span>
+                                                                        </li>
+                                                                        <li>
+                                                                            <span class="new-users-pic">
+                                                                                <img src="admin/assets/images/testimonials/pic2.jpg" alt=""/>
+                                                                            </span>
+                                                                            <span class="new-users-text">
+                                                                                <a href="#" class="new-users-name">Wiltor Delton </a>
+                                                                                <span class="new-users-info">Project Manager, Amazon Inc </span>
+                                                                            </span>
+                                                                            <span class="new-users-btn">
+                                                                                <a href="#" class="btn button-sm outline">Follow</a>
+                                                                            </span>
+                                                                        </li>
+                                                                        <li>
+                                                                            <span class="new-users-pic">
+                                                                                <img src="admin/assets/images/testimonials/pic3.jpg" alt=""/>
+                                                                            </span>
+                                                                            <span class="new-users-text">
+                                                                                <a href="#" class="new-users-name">Nick Stone </a>
+                                                                                <span class="new-users-info">Project Manager, Amazon Inc  </span>
+                                                                            </span>
+                                                                            <span class="new-users-btn">
+                                                                                <a href="#" class="btn button-sm outline">Follow</a>
+                                                                            </span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>-->
+                                <canvas id="myPieChart" width="400" height="400"></canvas>
+
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 m-b30">
+                    <div class="col-lg-8 m-b30">
                         <div class="widget-box">
                             <div class="wc-title">
-                                <h4>Orders</h4>
+                                <h4>Top 10 employees with the most sales ${yearSelect}</h4>
                             </div>
                             <div class="widget-inner">
-                                <div class="orders-list">
-                                    <ul>
-                                        <li>
-                                            <span class="orders-title">
-                                                <a href="#" class="orders-title-name">Anna Strong </a>
-                                                <span class="orders-info">Order #02357 | Date 12/08/2019</span>
-                                            </span>
-                                            <span class="orders-btn">
-                                                <a href="#" class="btn button-sm red">Unpaid</a>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="orders-title">
-                                                <a href="#" class="orders-title-name">Revenue</a>
-                                                <span class="orders-info">Order #02357 | Date 12/08/2019</span>
-                                            </span>
-                                            <span class="orders-btn">
-                                                <a href="#" class="btn button-sm red">Unpaid</a>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="orders-title">
-                                                <a href="#" class="orders-title-name">Anna Strong </a>
-                                                <span class="orders-info">Order #02357 | Date 12/08/2019</span>
-                                            </span>
-                                            <span class="orders-btn">
-                                                <a href="#" class="btn button-sm green">Paid</a>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="orders-title">
-                                                <a href="#" class="orders-title-name">Revenue</a>
-                                                <span class="orders-info">Order #02357 | Date 12/08/2019</span>
-                                            </span>
-                                            <span class="orders-btn">
-                                                <a href="#" class="btn button-sm green">Paid</a>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="orders-title">
-                                                <a href="#" class="orders-title-name">Anna Strong </a>
-                                                <span class="orders-info">Order #02357 | Date 12/08/2019</span>
-                                            </span>
-                                            <span class="orders-btn">
-                                                <a href="#" class="btn button-sm green">Paid</a>
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <!--                                <div class="orders-list">
+                                                                    <ul>
+                                                                        <li>
+                                                                            <span class="orders-title">
+                                                                                <a href="#" class="orders-title-name">Anna Strong </a>
+                                                                                <span class="orders-info">Order #02357 | Date 12/08/2019</span>
+                                                                            </span>
+                                                                            <span class="orders-btn">
+                                                                                <a href="#" class="btn button-sm red">Unpaid</a>
+                                                                            </span>
+                                                                        </li>
+                                                                        <li>
+                                                                            <span class="orders-title">
+                                                                                <a href="#" class="orders-title-name">Revenue</a>
+                                                                                <span class="orders-info">Order #02357 | Date 12/08/2019</span>
+                                                                            </span>
+                                                                            <span class="orders-btn">
+                                                                                <a href="#" class="btn button-sm red">Unpaid</a>
+                                                                            </span>
+                                                                        </li>
+                                                                        <li>
+                                                                            <span class="orders-title">
+                                                                                <a href="#" class="orders-title-name">Anna Strong </a>
+                                                                                <span class="orders-info">Order #02357 | Date 12/08/2019</span>
+                                                                            </span>
+                                                                            <span class="orders-btn">
+                                                                                <a href="#" class="btn button-sm green">Paid</a>
+                                                                            </span>
+                                                                        </li>
+                                                                        <li>
+                                                                            <span class="orders-title">
+                                                                                <a href="#" class="orders-title-name">Revenue</a>
+                                                                                <span class="orders-info">Order #02357 | Date 12/08/2019</span>
+                                                                            </span>
+                                                                            <span class="orders-btn">
+                                                                                <a href="#" class="btn button-sm green">Paid</a>
+                                                                            </span>
+                                                                        </li>
+                                                                        <li>
+                                                                            <span class="orders-title">
+                                                                                <a href="#" class="orders-title-name">Anna Strong </a>
+                                                                                <span class="orders-info">Order #02357 | Date 12/08/2019</span>
+                                                                            </span>
+                                                                            <span class="orders-btn">
+                                                                                <a href="#" class="btn button-sm green">Paid</a>
+                                                                            </span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>-->
+                                <canvas id="myBarChart" width="100" height="45"></canvas>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-12 m-b30">
-                        <div class="widget-box">
-                            <div class="wc-title">
-                                <h4>Basic Calendar</h4>
-                            </div>
-                            <div class="widget-inner">
-                                <div id="calendar"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <!--                    <div class="col-lg-12 m-b30">
+                                            <div class="widget-box">
+                                                <div class="wc-title">
+                                                    <h4>Basic Calendar</h4>
+                                                </div>
+                                                <div class="widget-inner">
+                                                    <div id="calendar"></div>
+                                                </div>
+                                            </div>
+                                        </div>-->
                 </div>
             </div>
         </main>
@@ -438,158 +441,257 @@
         <script src="admin/assets/vendors/calendar/moment.min.js"></script>
         <script src="admin/assets/vendors/calendar/fullcalendar.js"></script>
         <script src="admin/assets/vendors/switcher/switcher.js"></script>
-        <script>
-
-
-                                        $(document).ready(function () {
-
-                                            $('#calendar').fullCalendar({
-                                                header: {
-                                                    left: 'prev,next today',
-                                                    center: 'title',
-                                                    right: 'month,agendaWeek,agendaDay,listWeek'
-                                                },
-                                                defaultDate: '2019-03-12',
-                                                navLinks: true, // can click day/week names to navigate views
-
-                                                weekNumbers: true,
-                                                weekNumbersWithinDays: true,
-                                                weekNumberCalculation: 'ISO',
-
-                                                editable: true,
-                                                eventLimit: true, // allow "more" link when too many events
-                                                events: [
-                                                    {
-                                                        title: 'All Day Event',
-                                                        start: '2019-03-01'
-                                                    },
-                                                    {
-                                                        title: 'Long Event',
-                                                        start: '2019-03-07',
-                                                        end: '2019-03-10'
-                                                    },
-                                                    {
-                                                        id: 999,
-                                                        title: 'Repeating Event',
-                                                        start: '2019-03-09T16:00:00'
-                                                    },
-                                                    {
-                                                        id: 999,
-                                                        title: 'Repeating Event',
-                                                        start: '2019-03-16T16:00:00'
-                                                    },
-                                                    {
-                                                        title: 'Conference',
-                                                        start: '2019-03-11',
-                                                        end: '2019-03-13'
-                                                    },
-                                                    {
-                                                        title: 'Meeting',
-                                                        start: '2019-03-12T10:30:00',
-                                                        end: '2019-03-12T12:30:00'
-                                                    },
-                                                    {
-                                                        title: 'Lunch',
-                                                        start: '2019-03-12T12:00:00'
-                                                    },
-                                                    {
-                                                        title: 'Meeting',
-                                                        start: '2019-03-12T14:30:00'
-                                                    },
-                                                    {
-                                                        title: 'Happy Hour',
-                                                        start: '2019-03-12T17:30:00'
-                                                    },
-                                                    {
-                                                        title: 'Dinner',
-                                                        start: '2019-03-12T20:00:00'
-                                                    },
-                                                    {
-                                                        title: 'Birthday Party',
-                                                        start: '2019-03-13T07:00:00'
-                                                    },
-                                                    {
-                                                        title: 'Click for Google',
-                                                        url: 'http://google.com/',
-                                                        start: '2019-03-28'
-                                                    }
-                                                ]
-                                            });
-
-                                        });
-
-        </script>
+        <!--        <script>
+        
+        
+                                                $(document).ready(function () {
+        
+                                                    $('#calendar').fullCalendar({
+                                                        header: {
+                                                            left: 'prev,next today',
+                                                            center: 'title',
+                                                            right: 'month,agendaWeek,agendaDay,listWeek'
+                                                        },
+                                                        defaultDate: '2019-03-12',
+                                                        navLinks: true, // can click day/week names to navigate views
+        
+                                                        weekNumbers: true,
+                                                        weekNumbersWithinDays: true,
+                                                        weekNumberCalculation: 'ISO',
+        
+                                                        editable: true,
+                                                        eventLimit: true, // allow "more" link when too many events
+                                                        events: [
+                                                            {
+                                                                title: 'All Day Event',
+                                                                start: '2019-03-01'
+                                                            },
+                                                            {
+                                                                title: 'Long Event',
+                                                                start: '2019-03-07',
+                                                                end: '2019-03-10'
+                                                            },
+                                                            {
+                                                                id: 999,
+                                                                title: 'Repeating Event',
+                                                                start: '2019-03-09T16:00:00'
+                                                            },
+                                                            {
+                                                                id: 999,
+                                                                title: 'Repeating Event',
+                                                                start: '2019-03-16T16:00:00'
+                                                            },
+                                                            {
+                                                                title: 'Conference',
+                                                                start: '2019-03-11',
+                                                                end: '2019-03-13'
+                                                            },
+                                                            {
+                                                                title: 'Meeting',
+                                                                start: '2019-03-12T10:30:00',
+                                                                end: '2019-03-12T12:30:00'
+                                                            },
+                                                            {
+                                                                title: 'Lunch',
+                                                                start: '2019-03-12T12:00:00'
+                                                            },
+                                                            {
+                                                                title: 'Meeting',
+                                                                start: '2019-03-12T14:30:00'
+                                                            },
+                                                            {
+                                                                title: 'Happy Hour',
+                                                                start: '2019-03-12T17:30:00'
+                                                            },
+                                                            {
+                                                                title: 'Dinner',
+                                                                start: '2019-03-12T20:00:00'
+                                                            },
+                                                            {
+                                                                title: 'Birthday Party',
+                                                                start: '2019-03-13T07:00:00'
+                                                            },
+                                                            {
+                                                                title: 'Click for Google',
+                                                                url: 'http://google.com/',
+                                                                start: '2019-03-28'
+                                                            }
+                                                        ]
+                                                    });
+        
+                                                });
+        
+                </script>-->
         <script type="text/javascript">
-            var data = [];
+                                        var data = [];
             <c:forEach items="${revenue}" var="t">
-            data.push(`${t}`);
+                                        data.push(`${t}`);
             </c:forEach>
-            var areaData = {
-                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                datasets: [{
-                        label: 'Revenue',
-                        data: data,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)',
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255,99,132,1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(255,99,132,1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1,
-                        fill: true, // 3: no fill
-                    }]
-            };
+                                        var areaData = {
+                                            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                                            datasets: [{
+                                                    label: 'Revenue',
+                                                    data: data,
+                                                    backgroundColor: [
+                                                        "rgba(255, 99, 132, 0.5)", // ??
+                                                        "rgba(54, 162, 235, 0.5)", // Xanh d??ng
+                                                        "rgba(255, 206, 86, 0.5)", // Vàng
+                                                        "rgba(75, 192, 192, 0.5)", // Xanh ng?c
+                                                        "rgba(153, 102, 255, 0.5)", // Tím
+                                                        "rgba(255, 159, 64, 0.5)", // Cam
+                                                        "rgba(231, 76, 60, 0.5)", // ?? ??m
+                                                        "rgba(46, 204, 113, 0.5)", // Xanh lá
+                                                        "rgba(241, 196, 15, 0.5)", // Vàng sáng
+                                                        "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
+                                                        "rgba(155, 89, 182, 0.5)", // Tím ??m
+                                                        "rgba(243, 156, 18, 0.5)"   // Cam ??m
+                                                    ],
+                                                    borderColor: [
+                                                        "rgba(255, 99, 132, 0.5)", // ??
+                                                        "rgba(54, 162, 235, 0.5)", // Xanh d??ng
+                                                        "rgba(255, 206, 86, 0.5)", // Vàng
+                                                        "rgba(75, 192, 192, 0.5)", // Xanh ng?c
+                                                        "rgba(153, 102, 255, 0.5)", // Tím
+                                                        "rgba(255, 159, 64, 0.5)", // Cam
+                                                        "rgba(231, 76, 60, 0.5)", // ?? ??m
+                                                        "rgba(46, 204, 113, 0.5)", // Xanh lá
+                                                        "rgba(241, 196, 15, 0.5)", // Vàng sáng
+                                                        "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
+                                                        "rgba(155, 89, 182, 0.5)", // Tím ??m
+                                                        "rgba(243, 156, 18, 0.5)"   // Cam ??m
+                                                    ],
+                                                    borderWidth: 1,
+                                                    fill: true, // 3: no fill
+                                                }]
+                                        };
 
-            var areaOptions = {
-                plugins: {
-                    filler: {
-                        propagate: true
-                    }
-                },
-                scales: {
-                    yAxes: [{
-                            gridLines: {
-                                color: "rgba(204, 204, 204,0.1)"
-                            }
-                        }],
-                    xAxes: [{
-                            gridLines: {
-                                color: "rgba(204, 204, 204,0.1)"
-                            }
-                        }]
-                }
-            }
+                                        var areaOptions = {
+                                            plugins: {
+                                                filler: {
+                                                    propagate: true
+                                                }
+                                            },
+                                            scales: {
+                                                yAxes: [{
+                                                        gridLines: {
+                                                            color: "rgba(204, 204, 204,0.1)"
+                                                        }
+                                                    }],
+                                                xAxes: [{
+                                                        gridLines: {
+                                                            color: "rgba(204, 204, 204,0.1)"
+                                                        }
+                                                    }]
+                                            }
+                                        }
 
-            if ($("#lineChart").length) {
-                var lineChartCanvas = $("#lineChart").get(0).getContext("2d");
-                var lineChart = new Chart(lineChartCanvas, {
-                    type: 'line',
-                    data: areaData,
-                    options: areaOptions
-                });
-            }
+                                        if ($("#lineChart").length) {
+                                            var lineChartCanvas = $("#lineChart").get(0).getContext("2d");
+                                            var lineChart = new Chart(lineChartCanvas, {
+                                                type: 'line',
+                                                data: areaData,
+                                                options: areaOptions
+                                            });
+                                        }
+                                        var dataPieChart = [];
+            <c:forEach items="${numberOfOrdersList}" var="t">
+                                        dataPieChart.push(`${t}`);
+            </c:forEach>
+                                        var areaData1 = {
+                                            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                                            datasets: [{
+                                                    label: 'Number of orders',
+                                                    data: dataPieChart,
+                                                    backgroundColor: [
+                                                        "rgba(255, 99, 132, 0.5)", // ??
+                                                        "rgba(54, 162, 235, 0.5)", // Xanh d??ng
+                                                        "rgba(255, 206, 86, 0.5)", // Vàng
+                                                        "rgba(75, 192, 192, 0.5)", // Xanh ng?c
+                                                        "rgba(153, 102, 255, 0.5)", // Tím
+                                                        "rgba(255, 159, 64, 0.5)", // Cam
+                                                        "rgba(231, 76, 60, 0.5)", // ?? ??m
+                                                        "rgba(46, 204, 113, 0.5)", // Xanh lá
+                                                        "rgba(241, 196, 15, 0.5)", // Vàng sáng
+                                                        "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
+                                                        "rgba(155, 89, 182, 0.5)", // Tím ??m
+                                                        "rgba(243, 156, 18, 0.5)"   // Cam ??m
+                                                    ],
+                                                    borderColor: [
+                                                        "rgba(255, 99, 132, 0.5)", // ??
+                                                        "rgba(54, 162, 235, 0.5)", // Xanh d??ng
+                                                        "rgba(255, 206, 86, 0.5)", // Vàng
+                                                        "rgba(75, 192, 192, 0.5)", // Xanh ng?c
+                                                        "rgba(153, 102, 255, 0.5)", // Tím
+                                                        "rgba(255, 159, 64, 0.5)", // Cam
+                                                        "rgba(231, 76, 60, 0.5)", // ?? ??m
+                                                        "rgba(46, 204, 113, 0.5)", // Xanh lá
+                                                        "rgba(241, 196, 15, 0.5)", // Vàng sáng
+                                                        "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
+                                                        "rgba(155, 89, 182, 0.5)", // Tím ??m
+                                                        "rgba(243, 156, 18, 0.5)"   // Cam ??m
+                                                    ],
+                                                    borderWidth: 1,
+                                                    fill: true, // 3: no fill
+                                                }]
+                                        };
+                                        if ($("#myPieChart").length) {
+                                            var lineChartCanvas = $("#myPieChart").get(0).getContext("2d");
+                                            var lineChart = new Chart(lineChartCanvas, {
+                                                type: 'pie',
+                                                data: areaData1
+                                            });
+                                        }
+                                        var staffNames = [];
+                                        var orderCounts = [];
+
+            <c:forEach items="${topStaffs}" var="staff">
+                                        staffNames.push("${staff['StaffID']} - ${staff['StaffName']}");
+                                            orderCounts.push(${staff['OrderCount']});
+            </c:forEach>;
+                                            var areaData2 = {
+                                                labels: staffNames,
+                                                datasets: [{
+                                                        label: 'Number of orders',
+                                                        data: orderCounts,
+                                                        backgroundColor: [
+                                                            "rgba(255, 99, 132, 0.5)", // ??
+                                                            "rgba(54, 162, 235, 0.5)", // Xanh d??ng
+                                                            "rgba(255, 206, 86, 0.5)", // Vàng
+                                                            "rgba(75, 192, 192, 0.5)", // Xanh ng?c
+                                                            "rgba(153, 102, 255, 0.5)", // Tím
+                                                            "rgba(255, 159, 64, 0.5)", // Cam
+                                                            "rgba(231, 76, 60, 0.5)", // ?? ??m
+                                                            "rgba(46, 204, 113, 0.5)", // Xanh lá
+                                                            "rgba(241, 196, 15, 0.5)", // Vàng sáng
+                                                            "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
+                                                            "rgba(155, 89, 182, 0.5)", // Tím ??m
+                                                            "rgba(243, 156, 18, 0.5)"   // Cam ??m
+                                                        ],
+                                                        borderColor: [
+                                                            "rgba(255, 99, 132, 0.5)", // ??
+                                                            "rgba(54, 162, 235, 0.5)", // Xanh d??ng
+                                                            "rgba(255, 206, 86, 0.5)", // Vàng
+                                                            "rgba(75, 192, 192, 0.5)", // Xanh ng?c
+                                                            "rgba(153, 102, 255, 0.5)", // Tím
+                                                            "rgba(255, 159, 64, 0.5)", // Cam
+                                                            "rgba(231, 76, 60, 0.5)", // ?? ??m
+                                                            "rgba(46, 204, 113, 0.5)", // Xanh lá
+                                                            "rgba(241, 196, 15, 0.5)", // Vàng sáng
+                                                            "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
+                                                            "rgba(155, 89, 182, 0.5)", // Tím ??m
+                                                            "rgba(243, 156, 18, 0.5)"   // Cam ??m
+                                                        ],
+                                                        borderWidth: 1,
+                                                        fill: true, // 3: no fill
+                                                    }]
+                                            };
+                                            if ($("#myBarChart").length) {
+                                                var lineChartCanvas = $("#myBarChart").get(0).getContext("2d");
+                                                var lineChart = new Chart(lineChartCanvas, {
+                                                    type: 'bar',
+                                                    data: areaData2
+                                                });
+                                            }
         </script>
         <script>
             function changeYear(selectElement) {
