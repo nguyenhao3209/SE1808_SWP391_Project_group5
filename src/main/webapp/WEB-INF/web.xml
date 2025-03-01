@@ -8,6 +8,10 @@
         <servlet-name>ViewVouchersServlet</servlet-name>
         <servlet-class>Controller.ViewVouchersServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FilterFeedbackServlet</servlet-name>
+        <servlet-class>Controller.FilterFeedbackServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>VoucherServlet</servlet-name>
         <url-pattern>/VoucherServlet</url-pattern>
@@ -55,6 +59,10 @@
     <servlet-mapping>
         <servlet-name>ViewVouchersServlet</servlet-name>
         <url-pattern>/ViewVouchersServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterFeedbackServlet</servlet-name>
+        <url-pattern>/filter-feedback</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
