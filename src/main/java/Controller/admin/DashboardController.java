@@ -59,7 +59,7 @@ public class DashboardController extends HttpServlet {
 
         List<Integer> numberOfOrdersList = odao.getMonthlyOrderCountByYear(yearSelectInt);
         request.setAttribute("numberOfOrdersList", numberOfOrdersList);
-        List<Map<String, Object>> topStaffs = odao.getTop10StaffByOrderCount();
+        List<Map<String, Object>> topStaffs = odao.getTop10StaffByOrderCount(yearSelectInt);
         request.setAttribute("topStaffs", topStaffs);
         request.getRequestDispatcher("admin/dashboard.jsp").forward(request, response);
     }

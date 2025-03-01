@@ -306,7 +306,7 @@ public class OrdersDAO extends DBContext {
         return list;
     }
 
-    public List<Map<String, Object>> getTop10StaffByOrderCount() {
+    public List<Map<String, Object>> getTop10StaffByOrderCount(int year) {
         List<Map<String, Object>> list = new ArrayList<>();
         String query = "SELECT TOP 10 \n"
                 + "    s.StaffID, \n"
@@ -317,7 +317,7 @@ public class OrdersDAO extends DBContext {
                 + "JOIN \n"
                 + "    Staffs s ON o.StaffID = s.StaffID\n"
                 + "WHERE \n"
-                + "    o.Status = 'COMPLETED'\n"
+                + "    o.Status = 'COMPLETED' and YEAR(o.CreatedAt) = ?\n"
                 + "GROUP BY \n"
                 + "    s.StaffID, s.StaffName\n"
                 + "ORDER BY \n"
@@ -325,6 +325,7 @@ public class OrdersDAO extends DBContext {
 
         try {
             ps = connection.prepareStatement(query);
+            ps.setInt(1, year);
             rs = ps.executeQuery();
             while (rs.next()) {
                 Map<String, Object> map = new HashMap<>();
