@@ -2,40 +2,49 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package Models;
 
-import java.time.DateTimeException;
+import java.sql.Timestamp;
 
 /**
  *
  * @author HaoNTCE180451
  */
 public class Staffs {
+
+
     private String staffID;
     private String staffName;
     private String email;
     private String avatar;
-    private DateTimeException tolenExpiry;
+    private Timestamp tokenExpiry;
     private String password;
     private String phone;
     private String gender;
     private String address;
-    private String role;
+    private Role role;
     private Staffs supervisor;
-    private String status;
+    private Status status;
     private String passwordRecoveryToken;
-    private DateTimeException hireDate;
+    private Timestamp hireDate;
 
     public Staffs() {
     }
 
-    public Staffs(String staffID, String staffName, String email, String avatar, DateTimeException tolenExpiry, String password, String phone, String gender, String address, String role, Staffs supervisor, String status, String passwordRecoveryToken, DateTimeException hireDate) {
+    public enum Role {
+        ADMIN, STAFF
+    }
+
+    public enum Status {
+        ACTIVE, INACTIVE, DELETED
+    }
+
+    public Staffs(String staffID, String staffName, String email, String avatar, Timestamp tokenExpiry, String password, String phone, String gender, String address, Role role, Staffs supervisor, Status status, String passwordRecoveryToken, Timestamp hireDate) {
         this.staffID = staffID;
         this.staffName = staffName;
         this.email = email;
         this.avatar = avatar;
-        this.tolenExpiry = tolenExpiry;
+        this.tokenExpiry = tokenExpiry;
         this.password = password;
         this.phone = phone;
         this.gender = gender;
@@ -79,12 +88,12 @@ public class Staffs {
         this.avatar = avatar;
     }
 
-    public DateTimeException getTolenExpiry() {
-        return tolenExpiry;
+    public Timestamp getTokenExpiry() {
+        return tokenExpiry;
     }
 
-    public void setTolenExpiry(DateTimeException tolenExpiry) {
-        this.tolenExpiry = tolenExpiry;
+    public void setTokenExpiry(Timestamp tokenExpiry) {
+        this.tokenExpiry = tokenExpiry;
     }
 
     public String getPassword() {
@@ -119,11 +128,11 @@ public class Staffs {
         this.address = address;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -134,12 +143,12 @@ public class Staffs {
     public void setSupervisor(Staffs supervisor) {
         this.supervisor = supervisor;
     }
-    
-    public String getStatus() {
+
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -151,13 +160,17 @@ public class Staffs {
         this.passwordRecoveryToken = passwordRecoveryToken;
     }
 
-    public DateTimeException getHireDate() {
+    public Timestamp getHireDate() {
         return hireDate;
     }
 
-    public void setHireDate(DateTimeException hireDate) {
+    public void setHireDate(Timestamp hireDate) {
         this.hireDate = hireDate;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "Staffs{" + "staffID=" + staffID + ", staffName=" + staffName + ", email=" + email + ", avatar=" + avatar + ", tokenExpiry=" + tokenExpiry + ", password=" + password + ", phone=" + phone + ", gender=" + gender + ", address=" + address + ", role=" + role + ", supervisor=" + supervisor + ", status=" + status + ", passwordRecoveryToken=" + passwordRecoveryToken + ", hireDate=" + hireDate + '}';
+    }
+
 }

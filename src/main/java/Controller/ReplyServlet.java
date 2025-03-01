@@ -103,6 +103,7 @@ public class ReplyServlet extends HttpServlet {
 
     private void addReply(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         String feedbackID = request.getParameter("reviewId");
         String customerID = request.getParameter("customerID");
         String comment = request.getParameter("comment");
@@ -125,6 +126,7 @@ public class ReplyServlet extends HttpServlet {
 
     private void editReply(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         String replyId = request.getParameter("replyId");
         String comment = request.getParameter("comment");
 
@@ -146,6 +148,7 @@ public class ReplyServlet extends HttpServlet {
 
     private void deleteReply(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         String replyId = request.getParameter("replyId");
 
         if (replyId == null || replyId.isEmpty()) {

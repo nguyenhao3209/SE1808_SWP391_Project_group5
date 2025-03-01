@@ -2,30 +2,30 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package Models;
 
 import java.math.BigDecimal;
-import java.time.DateTimeException;
+import java.sql.Timestamp;
 
 /**
  *
  * @author HaoNTCE180451
  */
 public class StockImport {
+
     private int importID;
     private Staffs staff;
-    private String spplier;
-    private DateTimeException importDate;
+    private String supplier;
+    private Timestamp importDate;
     private BigDecimal totalCost;
 
     public StockImport() {
     }
 
-    public StockImport(int importID, Staffs staff, String spplier, DateTimeException importDate, BigDecimal totalCost) {
+    public StockImport(int importID, Staffs staff, String supplier, Timestamp importDate, BigDecimal totalCost) {
         this.importID = importID;
         this.staff = staff;
-        this.spplier = spplier;
+        this.supplier = supplier;
         this.importDate = importDate;
         this.totalCost = totalCost;
     }
@@ -46,19 +46,19 @@ public class StockImport {
         this.staff = staff;
     }
 
-    public String getSpplier() {
-        return spplier;
+    public String getSupplier() {
+        return supplier;
     }
 
-    public void setSpplier(String spplier) {
-        this.spplier = spplier;
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
     }
 
-    public DateTimeException getImportDate() {
+    public Timestamp getImportDate() {
         return importDate;
     }
 
-    public void setImportDate(DateTimeException importDate) {
+    public void setImportDate(Timestamp importDate) {
         this.importDate = importDate;
     }
 
@@ -70,5 +70,4 @@ public class StockImport {
         this.totalCost = totalCost;
     }
 
- 
 }

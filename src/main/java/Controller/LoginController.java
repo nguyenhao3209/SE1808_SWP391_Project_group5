@@ -16,6 +16,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import Models.Customers;
+import Models.Staffs;
+import dal.StaffsDAO;
 
 /**
  *
@@ -74,46 +76,44 @@ public class LoginController extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
+
         try {
-            // Lấy thông tin đăng nhập từ form
             String email = request.getParameter("email");
             String password = request.getParameter("password");
             String rememberMe = request.getParameter("rememberMe");
 
-            // Kiểm tra thông tin người dùng trong database
-            CustomersDAO udao = new CustomersDAO();
-            Customers user = udao.loginWithEmailAndPassword(email, password);
+            CustomersDAO customersDAO = new CustomersDAO();
+            StaffsDAO staffsDAO = new StaffsDAO();
 
-            if (user != null) {
-                // Kiểm tra trạng thái tài khoản
-                if (user.getStatus() == Customers.Status.ACTIVE) {
-                    // Tạo session và lưu thông tin người dùng
+            Customers user = customersDAO.loginWithEmailAndPassword(email, password);
+            Staffs staff = staffsDAO.loginWithEmailAndPassword(email, password);
+
+            // Kiểm tra nếu có user hoặc staff hợp lệ
+            if (user != null || staff != null) {
+                boolean isActive = (user != null && user.getStatus() == Customers.Status.ACTIVE)
+                        || (staff != null && staff.getStatus() == Staffs.Status.ACTIVE);
+
+                if (isActive) {
                     HttpSession session = request.getSession();
-                    session.setAttribute("user", user);
 
-                    // Đăng nhập thành công, kiểm tra "Remember me"
+                    // Xử lý "Remember Me"
                     if ("on".equals(rememberMe)) {
-                        // Tạo cookie cho email và password
                         Cookie emailCookie = new Cookie("email", email);
                         Cookie passwordCookie = new Cookie("password", password);
 
-                        // Đặt thời gian sống cho cookie (7 ngày)
                         emailCookie.setMaxAge(7 * 24 * 60 * 60);
-                        passwordCookie.setMaxAge(7 * 24 * 60 * 60);
                         emailCookie.setPath("/");
+                        passwordCookie.setMaxAge(7 * 24 * 60 * 60);
                         passwordCookie.setPath("/");
-
-                        // Gửi cookie về trình duyệt
                         response.addCookie(emailCookie);
                         response.addCookie(passwordCookie);
                     } else {
-                        // Nếu không chọn "Remember me", xóa cookie nếu tồn tại
                         Cookie emailCookie = new Cookie("email", "");
                         Cookie passwordCookie = new Cookie("password", "");
-                        emailCookie.setMaxAge(0);
                         passwordCookie.setMaxAge(0);
-                        emailCookie.setPath("/");
                         passwordCookie.setPath("/");
+                        emailCookie.setMaxAge(0);
+                        emailCookie.setPath("/");
                         response.addCookie(emailCookie);
                         response.addCookie(passwordCookie);
                     }
@@ -123,14 +123,16 @@ public class LoginController extends HttpServlet {
                         response.sendRedirect("dashboard");
                     } else {
                         response.sendRedirect("home.jsp");
+                    } else {
+                        session.setAttribute("user", staff);
+                        response.sendRedirect("dashboard");
                     }
+
                 } else {
-                    // Nếu tài khoản bị khóa (INACTIVE)
                     request.setAttribute("errorMessage", "Your account has been locked.");
                     request.getRequestDispatcher("login.jsp").forward(request, response);
                 }
             } else {
-                // Sai email hoặc mật khẩu
                 request.setAttribute("errorMessage", "Incorrect email or password.");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
@@ -150,4 +152,3 @@ public class LoginController extends HttpServlet {
     }// </editor-fold>
 
 }
-

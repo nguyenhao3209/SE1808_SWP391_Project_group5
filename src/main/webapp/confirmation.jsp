@@ -100,7 +100,7 @@
                 <tbody>
                     <tr>
                         <th>Customer Name</th>
-                        <td>${sessionScope.user.userName}</td>
+                        <td>${sessionScope.user.customerName}</td>
                     </tr>
                     <tr>
                         <th>Email</th>
@@ -108,7 +108,7 @@
                     </tr>
                     <tr>
                         <th>Phone</th>
-                        <td>${sessionScope.user.phoneNumber}</td>
+                        <td>${sessionScope.user.phone}</td>
                     </tr>
                     <tr>
                         <th>Address</th>
@@ -116,7 +116,7 @@
                     </tr>
                     <tr>
                         <th>Payment Method</th>
-                        <td>${param.paymentMethod}</td>
+                        <td>${paymentMethod}</td>
                     </tr>
                 </tbody>
             </table>
@@ -128,35 +128,35 @@
                     <tr>
                         <th>#</th>
                         <th>Product Name</th>
-                        <th>Price (VND)</th>
+                        <th>Price ($)</th>
                         <th>Quantity</th>
-                        <th>Subtotal (VND)</th>
+                        <th>Subtotal ($)</th>
                     </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="item" items="${sessionScope.currentCart}" varStatus="status">
+                <c:forEach var="item" items="${sessionScope.cartList}" varStatus="status">
                     <tr>
                         <td>${status.index + 1}</td>
-                        <td>${item.product.name}</td>
+                        <td>${item.product.productName}</td>
                         <td>
-                    <c:if test="${item.product.discount > 0}">
+                    <c:if test="${item.product.discountProduct > 0}">
                         <div class="product-price">
-                            <span class="original-price"><fmt:formatNumber value="${item.product.price}" pattern="###,##0.00" /> VND</span><br/>
-                            <span class="discounted-price text-success fw-bold"><fmt:formatNumber value="${String.format('%f', item.product.price * (1 - item.product.discount / 100))}" pattern="###,##0.00" /> VND</span>
+                            <span class="original-price"><fmt:formatNumber value="${item.product.price}" pattern="###,##0.00" />$</span><br/>
+                            <span class="discounted-price text-success fw-bold"><fmt:formatNumber value="${String.format('%f', item.product.price * (1 - item.product.discountProduct / 100))}" pattern="###,##0.00" />$</span>
                         </div>
                     </c:if>
-                    <c:if test="${item.product.discount le 0}">
-                        <div class="product-price"><fmt:formatNumber value="${item.product.price}" pattern="###,##0.00" />VND</div>
+                    <c:if test="${item.product.discountProduct le 0}">
+                        <div class="product-price"><fmt:formatNumber value="${item.product.price}" pattern="###,##0.00" />$</div>
                     </c:if>
                     </td>
                     <td>
                         ${item.quantity}
                     </td>
                     <td>
-                    <c:if test="${item.product.discount > 0}">
-                        <fmt:formatNumber value="${item.quantity * item.product.price * (1 - item.product.discount / 100)}" pattern="###,##0.00" />
+                    <c:if test="${item.product.discountProduct > 0}">
+                        <fmt:formatNumber value="${item.quantity * item.product.price * (1 - item.product.discountProduct / 100)}" pattern="###,##0.00" />
                     </c:if>
-                    <c:if test="${item.product.discount le 0}">
+                    <c:if test="${item.product.discountProduct le 0}">
                         <fmt:formatNumber value="${item.quantity * item.product.price}" pattern="###,##0.00" />
                     </c:if>
                     </td>

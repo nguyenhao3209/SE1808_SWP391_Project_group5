@@ -113,7 +113,7 @@
                                     <td>
                                     <c:if test="${item.product.discountProduct > 0}">
                                         <div class="product-price">
-                                            <span class="original-price"><fmt:formatNumber value="${item.product.price}" pattern="###,##0.00" /> VND</span><br/>
+                                            <span class="original-price"><fmt:formatNumber value="${item.product.price}" pattern="###,##0.00" />$</span><br/>
                                             <span class="product-price discounted-price text-success fw-bold">$<fmt:formatNumber value="${String.format('%f', item.product.price * (1 - item.product.discountProduct / 100))}" pattern="###,##0.00" /></span>
                                         </div>
                                     </c:if>
@@ -185,16 +185,12 @@
 
                     <h2 class="payment-method-title mt-4">Choose Payment Method</h2>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="paymentMethod" id="creditCard" value="Credit_Card" required>
-                        <label class="form-check-label" for="creditCard">Credit Card</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="paymentMethod" id="paypal" value="MoMo">
-                        <label class="form-check-label" for="paypal">VNpay</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="paymentMethod" id="cashOnDelivery" value="Cash_On_Delivery">
+                        <input class="form-check-input" type="radio" name="paymentMethod" id="cashOnDelivery" value="Cash_On_Delivery" checked="">
                         <label class="form-check-label" for="cashOnDelivery">Cash on Delivery</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="paymentMethod" id="paypal" value="VNPay">
+                        <label class="form-check-label" for="paypal">VNPay</label>
                     </div>
 
                     <!-- Submit Button -->

@@ -1,6 +1,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <div class="row" id="productList">
     <c:forEach var="product" items="${requestScope.productsList}">
         <div class="col-md-6 col-lg-4 col-sm-6 m-b30">
@@ -8,10 +9,10 @@
                 <div class="action-box">
                     <c:choose>
                         <c:when test="${product.category.getCategoryName() ne 'Accessory'}">
-                            <img src="./img/${product.category.getCategoryName()}/${product.brand}/${product.imageURL}" alt="${product.productName}" />
+                            <img src="./img/${product.category.getCategoryName()}/${product.brand}/${product.imageURL}" alt="${product.productName}" style="height: 300px"/>
                         </c:when>
                         <c:otherwise>
-                            <img src="./img/${product.category.getCategoryName()}/${product.imageURL}" alt="${product.productName}" />
+                            <img src="./img/${product.category.getCategoryName()}/${product.imageURL}" alt="${product.productName}" style="height: 300px"/>
                         </c:otherwise>
                     </c:choose>
 
@@ -19,7 +20,15 @@
                 </div>
                 <div class="info-bx text-center">
 
-                    <h5><a href="productsDetail?id=${product.productID}">${product.productName}</a></h5>
+                    <h5><a href="productsDetail?id=${product.productID}"><c:choose>
+                                <c:when test="${fn:length(product.productName) > 40}">
+                                    ${fn:substring(product.productName, 0, 40)}...
+                                </c:when>
+                                <c:otherwise>
+                                    ${product.productName}
+                                </c:otherwise>
+                            </c:choose>
+                        </a></h5>
                     <span>${product.category.getCategoryName()} - ${product.brand}</span>
                 </div>
                 <div class="cours-more-info">
