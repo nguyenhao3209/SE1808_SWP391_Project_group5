@@ -26,20 +26,11 @@
                         <span class="ttr-label">Dashboard</span>
                     </a>
                 </li>
-                <li>
-                    <a href="admin/contact-list.jsp" class="ttr-material-button">
+                 <li>
+                    <a href="contact-list" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-email"></i></span>
                         <span class="ttr-label">Contact</span>
-                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
                     </a>
-                    <ul>
-                        <li>
-                            <a href="admin/contact-list.jsp" class="ttr-material-button"><span class="ttr-label">Contact List</span></a>
-                        </li>
-                        <li>
-                            <a href="admin/contact-detail.jsp" class="ttr-material-button"><span class="ttr-label">Contact Detail</span></a>
-                        </li>
-                    </ul>
                 </li>
                 <li>
                     <a href="admin/review.jsp" class="ttr-material-button">

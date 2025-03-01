@@ -119,10 +119,13 @@ public class LoginController extends HttpServlet {
                     }
 
                     // Điều hướng dựa vào vai trò người dùng
-                    if ("ADMIN".equalsIgnoreCase(user.getRole().toString())) {
-                        response.sendRedirect("dashboard");
-                    } else {
-                        response.sendRedirect("home.jsp");
+                    if (user != null) {
+                        session.setAttribute("user", user);
+                        if ("ADMIN".equalsIgnoreCase(user.getRole().toString())) {
+                            response.sendRedirect("dashboard");
+                        } else {
+                            response.sendRedirect("home.jsp");
+                        }
                     } else {
                         session.setAttribute("user", staff);
                         response.sendRedirect("dashboard");
