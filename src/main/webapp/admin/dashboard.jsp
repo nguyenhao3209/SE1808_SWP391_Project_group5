@@ -1,3 +1,4 @@
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -193,6 +194,7 @@
                             <div class="widget-inner">
                                 <!--<canvas id="chart" width="100" height="45"></canvas>-->
                                 <canvas id="lineChart" width="100" height="45"></canvas>
+
                             </div>
                         </div>
                     </div>
@@ -437,6 +439,8 @@
         <script src="admin/assets/vendors/calendar/fullcalendar.js"></script>
         <script src="admin/assets/vendors/switcher/switcher.js"></script>
         <script>
+
+
                                         $(document).ready(function () {
 
                                             $('#calendar').fullCalendar({
@@ -590,12 +594,10 @@
         <script>
             function changeYear(selectElement) {
                 let selectedYear = selectElement.value;
-                console.log("Selected year:", selectedYear); // Ki?m tra giá tr? ???c ch?n
+                console.log("Selected year:", selectedYear); // Ki?m tra giï¿½ tr? ???c ch?n
                 window.location.href = "dashboard?year=" + selectedYear; // Chuy?n h??ng ??n servlet/dashboard v?i tham s? year
             }
         </script>
-
-
 
     </body>
 
