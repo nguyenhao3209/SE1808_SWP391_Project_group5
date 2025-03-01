@@ -192,10 +192,6 @@
                         <input class="form-check-input" type="radio" name="paymentMethod" id="paypal" value="VNPay">
                         <label class="form-check-label" for="paypal">VNPay</label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="paymentMethod" id="creditCard" value="Credit_Card" required>
-                        <label class="form-check-label" for="creditCard">Credit Card</label>
-                    </div>
 
                     <!-- Submit Button -->
                     <div class="text-end mt-3">

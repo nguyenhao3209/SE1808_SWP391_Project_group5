@@ -11,6 +11,22 @@
     <servlet>
         <servlet-name>FilterFeedbackServlet</servlet-name>
         <servlet-class>Controller.FilterFeedbackServlet</servlet-class>
+         </servlet>
+    <servlet>
+        <servlet-name>ImportStockServlet</servlet-name>
+        <servlet-class>Controller.admin.ImportStockServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewStockServlet</servlet-name>
+        <servlet-class>Controller.admin.ViewStockServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewImportedServlet</servlet-name>
+        <servlet-class>Controller.admin.ViewImportedServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>Controller.HomeServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>VoucherServlet</servlet-name>
@@ -63,6 +79,22 @@
     <servlet-mapping>
         <servlet-name>FilterFeedbackServlet</servlet-name>
         <url-pattern>/filter-feedback</url-pattern>
+        </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportStockServlet</servlet-name>
+        <url-pattern>/importStock</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewStockServlet</servlet-name>
+        <url-pattern>/viewStock</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewImportedServlet</servlet-name>
+        <url-pattern>/viewImported</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern>/home</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

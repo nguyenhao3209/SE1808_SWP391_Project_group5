@@ -6,6 +6,7 @@
 package Models;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.DateTimeException;
 
 /**
@@ -20,12 +21,16 @@ public class Orders {
     private String status;
     private String paymentMethod;
     private BigDecimal totalPrice;
-    private DateTimeException createAt;
+    private Date createAt;
 
+            
     public Orders() {
     }
 
-    public Orders(int orderID, Customers customer, Staffs staff, Vouchers voucher, String status, String paymentMethod, BigDecimal totalPrice, DateTimeException createAt) {
+
+    
+    
+    public Orders(int orderID, Customers customer, Staffs staff, Vouchers voucher, String status, String paymentMethod, BigDecimal totalPrice, Date createAt) {
         this.orderID = orderID;
         this.customer = customer;
         this.staff = staff;
@@ -112,13 +117,14 @@ public class Orders {
         this.totalPrice = totalPrice;
     }
 
-    public DateTimeException getCreateAt() {
+    public Date getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(DateTimeException createAt) {
+    public void setCreateAt(Date createAt) {
         this.createAt = createAt;
     }
-    
+
+
     
 }

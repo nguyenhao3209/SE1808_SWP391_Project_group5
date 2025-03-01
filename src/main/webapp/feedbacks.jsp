@@ -338,6 +338,7 @@
             <c:if test="${sessionScope.user != null && isBought}">
                 <div class="review-form">
                     <form action="feedbacks-controller" method="post" onsubmit="return validateRating()">
+                    <form action="feedbacks-controller" method="post" onsubmit="return validateRating()">
                         <input type="hidden" name="action" value="add">
                         <input type="hidden" name="productID" value="${product.productID}">
                         <input type="hidden" name="customerId" value="${sessionScope.user.customerId}">
@@ -352,45 +353,27 @@
                         <input type="hidden" name="rating" id="rating-value" required>
                         <div class="error-message" style="color: red; display: none;">Please select a rating before submitting your feedback.</div>
                         <button type="submit" class="btn-minhanh">Submit Feedback</button>
+                        <div class="error-message" style="color: red; display: none;">Please select a rating before submitting your feedback.</div>
+                        <button type="submit" class="btn-minhanh">Submit Feedback</button>
                     </form>
                 </div>
             </c:if>
         </div>
 
-        <script>
-            // Xử lý đổi màu sao khi click
-            document.querySelectorAll('.star-rating .fa-star').forEach(star => {
-                star.addEventListener('click', () => {
-                    const rating = star.getAttribute('data-value'); // Lấy giá trị rating
-                    document.getElementById('rating-value').value = rating; // Cập nhật giá trị rating vào input ẩn
-
-                    // Đổi màu sao được chọn
-                    document.querySelectorAll('.star-rating .fa-star').forEach(s => {
-                        if (s.getAttribute('data-value') <= rating) {
-                            s.classList.add('checked'); // Thêm class checked cho sao được chọn
-                        } else {
-                            s.classList.remove('checked'); // Xóa class checked cho sao không được chọn
-                        }
-                    });
-                });
-            });
-
-            // Hàm chỉnh sửa feedback
-            function editFeedback(id) {
-                document.getElementById('editFeedbackForm' + id).style.display = 'block';
+    <script>
+        function editFeedback(id) {
+            document.getElementById('editFeedbackForm' + id).style.display = 'block';
+        }
+        function deleteFeedback(id) {
+            if (confirm("Are you sure you want to delete this feedback?")) {
+                window.location.href = "feedbacks-controller?action=delete&feedbackID=" + id + "&productID=${product.productID}";
             }
-
-            // Hàm xóa feedback
-            function deleteFeedback(id) {
-                if (confirm("Are you sure you want to delete this feedback?")) {
-                    window.location.href = "feedbacks-controller?action=delete&feedbackID=" + id + "&productID=${product.productID}";
-                }
-            }
-
-            // Hàm chỉnh sửa reply
-            function editReply(id, comment) {
-                document.getElementById('editReplyForm' + id).style.display = 'block';
-            }
+        }
+        function editReply(id, comment) {
+//                            document.getElementById('editReplyId').value = id;
+//                            document.getElementById('editReplyComment').value = comment;
+            document.getElementById('editReplyForm' + id).style.display = 'block';
+        }
 
             // Hàm xóa reply
             function deleteReply(id) {
