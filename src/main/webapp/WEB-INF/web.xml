@@ -9,6 +9,10 @@
         <servlet-class>Controller.ViewVouchersServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>FilterFeedbackServlet</servlet-name>
+        <servlet-class>Controller.FilterFeedbackServlet</servlet-class>
+         </servlet>
+    <servlet>
         <servlet-name>ImportStockServlet</servlet-name>
         <servlet-class>Controller.admin.ImportStockServlet</servlet-class>
     </servlet>
@@ -72,6 +76,10 @@
         <servlet-name>ViewVouchersServlet</servlet-name>
         <url-pattern>/ViewVouchersServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterFeedbackServlet</servlet-name>
+        <url-pattern>/filter-feedback</url-pattern>
+        </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ImportStockServlet</servlet-name>
         <url-pattern>/importStock</url-pattern>

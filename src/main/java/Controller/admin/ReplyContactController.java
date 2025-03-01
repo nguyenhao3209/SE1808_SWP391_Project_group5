@@ -4,10 +4,8 @@
  */
 package Controller.admin;
 
-import Models.OrderDetails;
-import Models.Orders;
-import dal.OrdersDAO;
-import jakarta.servlet.RequestDispatcher;
+import Models.Contact;
+import dal.ContactDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,15 +13,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.List;
+import utils.MailService;
 
 /**
  *
- * @author tien
+ * @author Admin
  */
-@WebServlet(name = "OrderDetailServlet", urlPatterns = {"/OrderDetailServlet"})
-public class OrderDetailServlet extends HttpServlet {
+@WebServlet(name = "ReplyContactController", urlPatterns = {"/reply-contact"})
+public class ReplyContactController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,17 +34,20 @@ public class OrderDetailServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet OrderDetailServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet OrderDetailServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        String id = request.getParameter("contactId");
+        try {
+            String replyMessage = request.getParameter("replyMessage");
+            ContactDAO dao = new ContactDAO();
+            Contact c = dao.getContactById(id);
+            MailService.sendMail(c.getCustomer().getEmail(), "REPLY: " + c.getSubject(), replyMessage);
+            //update status
+            c.setStatus(Contact.Status.ANSWERED);
+            dao.updateContact(c);
+            request.setAttribute("message", "Reply success");
+            request.getRequestDispatcher("contact-detail?id="+id).forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("errorMessage", "Reply fail: " + e.getMessage());
+            request.getRequestDispatcher("contact-detail?id="+id).forward(request, response);
         }
     }
 
@@ -63,34 +63,7 @@ public class OrderDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //HttpSession session = request.getSession();
-        String id = request.getParameter("orderID");
-        int orderID = Integer.parseInt(id);
-        OrdersDAO ordersDAO = new OrdersDAO();
-        Orders order = ordersDAO.getOderByID(orderID);
-        List<OrderDetails> orderDetails = ordersDAO.getOdersDetailByID(orderID);
-        
-        request.setAttribute("orderDetails", orderDetails);
-        //session.setAttribute("orderDetails", orderDetails);
-        request.setAttribute("order", order);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("order_detail_partial.jsp");
-        dispatcher.forward(request, response);
-
-    }
-
-    public static void main(String[] args) {
-        OrdersDAO ordersDAO = new OrdersDAO();
-        Orders order = ordersDAO.getOderByID(1006);
-        List<OrderDetails> orderDetails = ordersDAO.getOdersDetailByID(1006);
-        for (OrderDetails orderDetail : orderDetails) {
-            System.out.println(orderDetail.getPrice());
-        }
-        for (OrderDetails od : orderDetails) {
-    System.out.println("Product ID: " + od.getProduct().getProductID());
-    System.out.println("Product Name: " + od.getProduct().getProductName());
-    System.out.println("Quantity: " + od.getQuantity());
-    System.out.println("Price: " + od.getPrice());
-}
+        processRequest(request, response);
     }
 
     /**

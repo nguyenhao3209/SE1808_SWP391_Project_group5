@@ -3,6 +3,7 @@
 
 <html lang="en">
     <head>
+
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Order Management</title>
@@ -53,6 +54,8 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
+
+
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
         <!-- Sidebar -->
@@ -67,58 +70,48 @@
             <main class="ttr-wrapper">
                 <div class="container-fluid">
                     <div class="db-breadcrumb">
-                        <h4 class="breadcrumb-title">Orders Management</h4>
+                        <h4 class="breadcrumb-title">>Customers Management</h4>
                         <ul class="db-breadcrumb-list">
                             <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                            <li>Orders Management</li>
+                            <li>>Customers Management</li>
                         </ul>
                     </div>
                     <div class="content-wrapper">
                         <div class="content-header">
-                            <h3>Orders Management</h3>
+                            <h3>Customers Management</h3>
 
                         </div>
 
                         <div class="content-body">
                             <div class="filter-section">
                                 <input type="text" class="form-control" id="searchInput" placeholder="Search by Customer Name...">
-                                <select id="statusFilter" class="form-select" placeholder="Status">
-                                    <option value="">All</option> <!-- Chọn tất cả -->
-                                    <option value="Pending">Pending</option>
-                                    <option value="Completed">Completed</option>
-                                </select>
 
-                                <input type="number" class="form-control" placeholder="Min Price">
-                                <input type="number" class="form-control" placeholder="Max Price">
-                                <input type="date" class="form-control" placeholder="Start Day">
-                                <input type="date" class="form-control" placeholder="End Day">
+
+
                             </div>
 
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Order ID</th>
+                                        <th>Customers ID</th>
                                         <th>Customer Name</th>
-                                        <th>Phone</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th>Total Amount</th>
-                                        <th>Actions</th>
+                                        <th>View Profile</th>
+                                        <th>View Orders</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach var="orders" items="${orders}">
+                                <c:forEach var="user" items="${sessionScope.listUser}">
                                     <tr>
-                                        <td>${orders.orderID}</td>
-                                        <td>${orders.customer.customerName}</td>
-                                        <td>${orders.customer.phone}</td>
-                                        <td>${orders.createAt}</td>
-                                        <td class="order-status">${orders.status.trim()}</td>
-                                        <td>$${orders.totalPrice}</td>
+                                        <td>${user.customerId}</td>
+                                        <td>${user.customerName}</td>
+
                                         <td>
-                                            <button class="btn btn-primary view-order-btn" data-orderid="${orders.orderID}">
-                                                View
-                                            </button>
+                                            <button class="btn btn-primary view-order-btn" data-orderid="${user.customerId}">
+                                                View                                           
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary view-orders-btn" data-orderid="${user.customerId}">
+                                                View                                           
                                         </td>
 
                                     </tr>
@@ -131,7 +124,7 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="orderDetailModalLabel">Order Details</h5>
+                                <h5 class="modal-title" id="orderDetailModalLabel">Customers Management</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body" id="orderDetailModalBody">
@@ -143,90 +136,71 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <script>
+                <script>
 
 
-                document.addEventListener("DOMContentLoaded", function () {
-                    const searchInput = document.getElementById("searchInput");
-                    //const statusFilter = document.getElementById("statusFilter");
-                    const statusFilter = document.querySelector(".filter-section select[placeholder='Status']");
-                    const minPriceInput = document.querySelector(".filter-section input[placeholder='Min Price']");
-                    const maxPriceInput = document.querySelector(".filter-section input[placeholder='Max Price']");
-                    const startDateInput = document.querySelector(".filter-section input[placeholder='Start Day']");
-                    const endDateInput = document.querySelector(".filter-section input[placeholder='End Day']");
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const searchInput = document.getElementById("searchInput");
 
-                    function parseDate(dateString) {
-                        // Chuyển từ định dạng dd/MM/yyyy hoặc yyyy-MM-dd thành Date object
-                        let parts = dateString.split("/");
-                        if (parts.length === 3) {
-                            return new Date(parts[2], parts[1] - 1, parts[0]); // dd/MM/yyyy
+                        function filterOrders() {
+                            const searchText = searchInput.value.trim().toLowerCase();
+
+                            const tableRows = document.querySelectorAll("tbody tr");
+
+                            tableRows.forEach(row => {
+                                const customerName = row.cells[1].textContent.trim().toLowerCase();
+
+
+                                const matchesSearch = searchText === "" || customerName.includes(searchText);
+
+                                row.style.display = (matchesSearch) ? "" : "none";
+                            });
                         }
-                        return new Date(dateString); // yyyy-MM-dd
-                    }
 
-                    function filterOrders() {
-                        const searchText = searchInput.value.trim().toLowerCase();
-                        const selectedStatus = statusFilter.value.trim().toLowerCase();
-                        const minPrice = minPriceInput.value ? parseFloat(minPriceInput.value) : 0;
-                        const maxPrice = maxPriceInput.value ? parseFloat(maxPriceInput.value) : Infinity;
-                        const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
-                        const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
-
-                        const tableRows = document.querySelectorAll("tbody tr");
-
-                        tableRows.forEach(row => {
-                            const customerName = row.cells[1].textContent.trim().toLowerCase();
-                            const status = row.cells[4].textContent.trim().toLowerCase();
-                            const totalPrice = parseFloat(row.cells[5].textContent.replace("$", "")) || 0;
-
-                            // Chuyển đổi ngày trong bảng thành Date object
-                            const orderDateText = row.cells[3].textContent.trim();
-                            const orderDate = parseDate(orderDateText);
-                            const validOrderDate = !isNaN(orderDate.getTime());
-
-                            const matchesSearch = searchText === "" || customerName.includes(searchText);
-                            const matchesStatus = selectedStatus === "" || status === selectedStatus;
-                            const matchesPrice = totalPrice >= minPrice && totalPrice <= maxPrice;
-                            const matchesDate = (!startDate || (validOrderDate && orderDate >= startDate)) &&
-                                    (!endDate || (validOrderDate && orderDate <= endDate));
-
-                            row.style.display = (matchesSearch && matchesStatus && matchesPrice && matchesDate) ? "" : "none";
-                        });
-                    }
-
-                    searchInput.addEventListener("input", filterOrders);
-                    statusFilter.addEventListener("change", filterOrders);
-                    minPriceInput.addEventListener("input", filterOrders);
-                    maxPriceInput.addEventListener("input", filterOrders);
-                    startDateInput.addEventListener("change", filterOrders);
-                    endDateInput.addEventListener("change", filterOrders);
-
-                    filterOrders();
-                });
+                        searchInput.addEventListener("input", filterOrders);
 
 
-                document.addEventListener("DOMContentLoaded", function () {
-                    document.querySelectorAll(".view-order-btn").forEach(button => {
-                        button.addEventListener("click", function () {
-                            let orderID = this.getAttribute("data-orderid");
+                    });
 
-                            fetch("OrderDetailServlet?orderID=" + orderID)
-                                    .then(response => response.text()) // Đảm bảo response là HTML
-                                    .then(data => {
-                                        document.getElementById("orderDetailModalBody").innerHTML = data;
-                                        let orderDetailModal = new bootstrap.Modal(document.getElementById("orderDetailModal"));
-                                        orderDetailModal.show();
-                                    })
-                                    .catch(error => console.error("Error:", error));
+
+                    document.addEventListener("DOMContentLoaded", function () {
+                        document.querySelectorAll(".view-order-btn").forEach(button => {
+                            button.addEventListener("click", function () {
+                                let customerId = this.getAttribute("data-orderid");
+
+                                fetch("CustomerProfile?customerId=" + customerId)
+                                        .then(response => response.text()) // Đảm bảo response là HTML
+                                        .then(data => {
+                                            document.getElementById("orderDetailModalBody").innerHTML = data;
+                                            let orderDetailModal = new bootstrap.Modal(document.getElementById("orderDetailModal"));
+                                            orderDetailModal.show();
+                                        })
+                                        .catch(error => console.error("Error:", error));
+                            });
                         });
                     });
-                });
+
+                    document.addEventListener("DOMContentLoaded", function () {
+                        document.querySelectorAll(".view-orders-btn").forEach(button => {
+                            button.addEventListener("click", function () {
+                                let customerId = this.getAttribute("data-orderid");
+
+                                fetch("CustomerOrders?customerId=" + customerId)
+                                        .then(response => response.text()) // Đảm bảo response là HTML
+                                        .then(data => {
+                                            document.getElementById("orderDetailModalBody").innerHTML = data;
+                                            let orderDetailModal = new bootstrap.Modal(document.getElementById("orderDetailModal"));
+                                            orderDetailModal.show();
+                                        })
+                                        .catch(error => console.error("Error:", error));
+                            });
+                        });
+                    });
 
 
 
-            </script>
+                </script>
 
 
         </main>
