@@ -131,7 +131,7 @@ public class StaffsDAO extends DBContext {
 
     public Staffs getStaffById(String staffId) {
         Staffs staff = null;
-        String sql = "SELECT StaffID, StaffName, Password, Phone, Role, Email, Gender, Status, Address FROM Staffs WHERE StaffId = ?";
+        String sql = "SELECT StaffID, StaffName, Password, Phone, Role, Email, Gender, Status, Address FROM Staffs WHERE StaffID = ?";
 
         try {
             ps = connection.prepareStatement(sql);
