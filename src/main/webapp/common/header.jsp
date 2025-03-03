@@ -124,7 +124,7 @@
                                 <li class="menu-item"><a href="cart" class="nav-link">Cart</a></li>
                                 <li class="menu-item"><a href="ViewVouchersServlet" class="nav-link">Voucher</a></li>
                                 <li class="menu-item"><a href="contact.jsp" class="nav-link">Contact</a></li>
-                                <li class="menu-item"><a href="#download-app" class="nav-link">Articles</a></li>
+                                <li class="menu-item"><a href="news-list" class="nav-link">Articles</a></li>
                             </ul>
 
                             <div class="hamburger">

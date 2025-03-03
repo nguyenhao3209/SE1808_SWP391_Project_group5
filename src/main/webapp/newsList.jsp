@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
+    <jsp:include page="./common/header.jsp"/>
     <head>
         <title>News List</title>
         <!-- Bootstrap CSS -->
@@ -153,11 +154,7 @@
                                 <img src="${news.image}" alt="${news.title}" class="img-fluid rounded">
 
                                 <!-- Check if the user is ADMIN -->
-                                <c:if test="${user.role eq 'ADMIN'}">
-                                    <a href="DeleteArticleServlet?id=${news.newsID}" class="btn delete-btn">
-                                        <i class="bi bi-trash-fill"></i> Delete
-                                    </a>
-                                </c:if>
+                                
 
                                 <!-- Read More link with icon -->
                                 <a href="news-list?action=view&id=${news.newsID}" class="btn read-more-btn">

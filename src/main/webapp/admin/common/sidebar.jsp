@@ -96,6 +96,18 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a href="#" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-user"></i></span>
+                        <span class="ttr-label">News Management</span>
+                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="news-management" class="ttr-material-button"><span class="ttr-label">List News</span></a>
+                        </li>
+                    </ul>
+                </li>
 
                 <li class="ttr-seperate"></li>
             </ul>
