@@ -75,7 +75,7 @@ public class EditStaff extends HttpServlet {
                 return;
             }
         }
-        response.sendRedirect("listStaffs.jsp"); // Nếu staffId không hợp lệ, quay về danh sách
+        response.sendRedirect("listStaffs"); // Nếu staffId không hợp lệ, quay về danh sách
     }
 
     /**

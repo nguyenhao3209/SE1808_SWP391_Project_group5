@@ -12,6 +12,7 @@ import Models.Products;
 import Models.Slider;
 import Models.Specifications;
 import Models.StockImport;
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,6 +46,136 @@ public class ProductsDAO extends DBContext {
         super();
     }
 
+    public List<Products> getAllProducts(int page_number) {
+        List<Products> productList = new ArrayList<>();
+//        String sql = "SELECT p.ProductID, p.ImageURL, p.ProductName, s.Size, p.Brand, p.Price, p.StockQuantity FROM Products p\n"
+//                + "JOIN ProductSizes s ON p.ProductID = s.ProductID;";
+        String sql = "select *from Products p  order by p.ProductID ASC OFFSET " + page_number + " ROWS\n"
+                + "FETCH NEXT 20 ROWS ONLY;";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Products product = new Products(
+                        rs.getInt("ProductID"),
+                        rs.getString("ProductName"),
+                        rs.getBigDecimal("Price"),
+                        rs.getInt("StockQuantity"),
+                        rs.getString("Brand"),
+                        getCategoryByID(rs.getInt("CategoryID")), 
+                        null, 
+                        rs.getString("ImageURL"),
+                        null,
+                        null,
+                        null
+                );
+                productList.add(product);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return productList;
+    }
+
+    public void addProduct(Products product) {
+        String sql = "INSERT INTO Products (ProductName, Description, StockQuantity, Brand, CategoryID, Price, DiscountPercent, ImageURL) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, product.getProductName());
+            ps.setString(2, product.getDescription());
+            ps.setInt(3, product.getStockQuantity());
+            ps.setString(4, product.getBrand());
+            ps.setInt(5, product.getCategory().getCategoryID());
+            ps.setBigDecimal(6, product.getPrice());
+            ps.setBigDecimal(7, product.getDiscountProduct() != null ? product.getDiscountProduct() : BigDecimal.ZERO);
+            ps.setString(8, product.getImageURL());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateProduct(Products product) {
+        String sql = "UPDATE Products SET ProductName = ?, Description = ?, Brand = ?, CategoryID = ?, Price = ?, DiscountPercent = ?, ImageURL = ? WHERE ProductID = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, product.getProductName());
+            ps.setString(2, product.getDescription());
+            ps.setString(3, product.getBrand());
+            ps.setInt(4, product.getCategory().getCategoryID());
+            ps.setBigDecimal(5, product.getPrice());
+            ps.setBigDecimal(6, product.getDiscountProduct() != null ? product.getDiscountProduct() : BigDecimal.ZERO);
+            ps.setString(7, product.getImageURL());
+            ps.setInt(8, product.getProductID());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteProductById(String productId) {
+        String sql = "DELETE FROM [dbo].[Products] WHERE [ProductID] = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, productId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+//    public ArrayList<Products> getTop8() {
+//        ArrayList<Products> productList = new ArrayList<>();
+//        String sql = "SELECT p.* FROM Category c\n"
+//                + "OUTER APPLY (\n"
+//                + "    SELECT TOP 8 * \n"
+//                + "    FROM Products p\n"
+//                + "    WHERE p.CategoryID = c.CategoryID\n"
+//                + "    ORDER BY p.DiscountPercent DESC\n"
+//                + ") p\n"
+//                + "WHERE p.DiscountPercent > 0\n"
+//                + "ORDER BY c.CategoryID, p.DiscountPercent DESC;";
+//
+//        try ( PreparedStatement ps = connection.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+//            while (rs.next()) {
+//                Products p = new Products();
+//                p.setProductID(rs.getInt("ProductID"));
+//                p.setProductName(rs.getString("ProductName"));
+//                p.setPrice(rs.getBigDecimal("Price"));
+//                p.setBrand(rs.getString("Brand"));
+//                p.setImageURL(rs.getString("ImageURL"));
+//                p.setDiscountProduct(rs.getBigDecimal("DiscountPercent"));
+//                productList.add(p);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            System.out.println("error: " + e);
+//        }
+//        return productList;
+//    }
+
+    public int count_product() {
+        String sql = "select count(*) from Products";
+        int count = 0;
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
     public List<Category> getAllCategory() {
         ArrayList<Category> list = new ArrayList<>();
         String sql = "select * "
@@ -58,7 +189,7 @@ public class ProductsDAO extends DBContext {
             rs.close();
             ps.close();
         } catch (SQLException e) {
-            e.printStackTrace(); // Nên in lỗi để dễ dàng debug
+            e.printStackTrace();
         }
         return list;
     }
@@ -462,6 +593,37 @@ public class ProductsDAO extends DBContext {
             System.out.println(e);
         }
         return false;
+    }
+
+    public Products getProductById(int productId) {
+        Products product = null; // Khai báo product trước try
+        String sql = "SELECT ProductID, ProductName, Description, Brand, CategoryID, Price, DiscountPercent, ImageURL FROM Products WHERE ProductID = ?";
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    product = new Products(); // Khởi tạo đối tượng nếu có dữ liệu
+                    product.setProductID(rs.getInt("ProductID"));
+                    product.setProductName(rs.getString("ProductName"));
+                    product.setDescription(rs.getString("Description"));
+                    product.setBrand(rs.getString("Brand"));
+
+                    Category category = new Category();
+                    category.setCategoryID(rs.getInt("CategoryID"));
+
+                    // Gán category vào product
+                    product.setCategory(category);
+
+                    product.setPrice(rs.getBigDecimal("Price"));
+                    product.setDiscountProduct(rs.getBigDecimal("DiscountPercent"));
+                    product.setImageURL(rs.getString("ImageURL"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return product;
     }
 
     public Products getProductByID(int productId) {
