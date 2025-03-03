@@ -1,11 +1,13 @@
 <%-- 
-    Document   : listStaffs.jsp
-    Created on : Feb 24, 2025, 1:38:14 PM
+    Document   : listProducts.jsp
+    Created on : Feb 26, 2025, 10:02:07 PM
     Author     : HuyLVQCE180656
 --%>
 
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -66,82 +68,60 @@
         <main class="ttr-wrapper">
             <div class="container-fluid">
                 <div class="db-breadcrumb">
-                    <h4 class="breadcrumb-title">Staff Management</h4>
+                    <h4 class="breadcrumb-title">Products Management</h4>
                     <ul class="db-breadcrumb-list">
                         <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                        <li>Staff Management</li>
+                        <li>Products Management</li>
                     </ul>
                 </div>
                 <div class="row">
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="wc-title">
-                                <h4>Staff Management</h4>
+                                <h4>Products Management</h4>
                             </div>
                             <div class="widget-inner">
                                 <div class="container">
-                                    <h2>Staffs Management</h2>
-
-                                    <!-- Search Input -->
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="searchInput" placeholder="Search...">
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label for="genderFilter"></label>
-                                                <select id="genderFilter" class="form-control">
-                                                    <option value="">All Genders</option>
-                                                    <option value="Male">Male</option>
-                                                    <option value="Female">Female</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="statusFilter"></label>
-                                                <select id="statusFilter" class="form-control">
-                                                    <option value="">All Status</option>
-                                                    <option value="Active">Active</option>
-                                                    <option value="Inactive">Inactive</option>
-                                                </select>
-                                            </div>
-                                        </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h2>Products Management</h2>
                                     </div>
-
-                                    <!-- Staffs Table -->
                                     <div class="table-responsive">
-                                        <table id="staffTable" class="table table-striped table-bordered">
+                                        <table id="productTable" class="table table-striped table-bordered">
                                             <thead class="thead-dark">
                                                 <tr>
-                                                    <th>Staff ID</th>
-                                                    <th>Staff Name</th>
-                                                    <th>Email</th>
-                                                    <th>Phone</th>
-                                                    <th>Gender</th>
-                                                    <th>Status</th>
-                                                    <th>Address</th>
-                                                    <th>Actions</th>
+                                                    <th>ID</th>
+                                                    <th style="width: 15%;">Image</th>
+                                                    <th>Product Name</th>
+                                                    <th style="width: 10%;">Brand</th>
+                                                    <th style="width: 10%;">Price</th>
+                                                    <th style="width: 18%;">Actions</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="staffTableBody">
+                                            <tbody id="productTableBody">
                                                 <c:choose>
-                                                    <c:when test="${empty staffList}">
+                                                    <c:when test="${empty productList}">
                                                         <tr>
                                                             <td colspan="8" class="text-center">List is empty.</td>
                                                         </tr>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <c:forEach var="staff" items="${staffList}">
+                                                        <c:forEach var="product" items="${productList}">
                                                             <tr>
-                                                                <td>${staff.staffID}</td>
-                                                                <td>${staff.staffName}</td>
-                                                                <td>${staff.email}</td>
-                                                                <td>${staff.phone}</td>
-                                                                <td>${staff.gender}</td>
-                                                                <td>${staff.status}</td>
-                                                                <td>${staff.address}</td>
+                                                                <td>${product.productID}</td>
                                                                 <td>
-                                                                    <a href="editStaff?staffId=${staff.staffID}" class="btn btn-warning btn-sm">Edit</a>
-                                                                    <a href="deleteStaff?staffId=${staff.staffID}" class="btn btn-danger btn-sm"
+                                                                    <c:if test="${product.category.categoryName eq 'Accessory'}">
+                                                                        <img src="./img/${product.category.categoryName}/${product.getImageURL()}" alt="${product.productName}">
+                                                                    </c:if>
+                                                                    <c:if test="${product.category.categoryName ne 'Accessory'}">
+                                                                        <img src="./img/${product.category.categoryName}/${product.brand}/${product.getImageURL()}" alt="${product.productName}">
+                                                                    </c:if>
+                                                                </td>
+                                                                <td>${product.productName}</td>
+                                                                <td>${product.brand}</td>
+                                                                <td>${product.price} $</td>
+                                                                <td>
+                                                                    <a href="editProduct?productId=${product.productID}" class="btn btn-warning btn-sm">Edit</a>
+                                                                    <a href="deleteProduct?productId=${product.productID}" class="btn btn-danger btn-sm"
                                                                        onclick="return confirm('Are you sure you want to delete?');">Delete</a>
                                                                 </td>
                                                             </tr>
@@ -151,41 +131,38 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <div class="pagination-bx rounded-sm gray">
+                                        <ul class="pagination mb-0">
+                                            <!-- Nút Quay Lại -->
+                                            <c:if test="${startPage > 1}">
+                                                <li class="page-item">
+                                                    <a href="listProducts?page=${startPage - 1}" class="page-link">&laquo;</a>
+                                                </li>
+                                            </c:if>
 
-                                    <!-- Add new staff button -->
-                                    <a href="admin/addStaff.jsp" class="btn btn-primary">Add new Staff</a>
+                                            <!-- Hiển thị các số trang -->
+                                            <c:forEach var="page" begin="${startPage}" end="${endPage}">
+                                                <li class="page-item ${page == currentPage ? 'active' : ''}">
+                                                    <a href="listProducts?page=${page}" class="page-link">${page}</a>
+                                                </li>
+                                            </c:forEach>
+
+                                            <!-- Nút Tiếp Theo -->
+                                            <c:if test="${endPage < totalPages}">
+                                                <li class="page-item">
+                                                    <a href="listProducts?page=${endPage + 1}" class="page-link">&raquo;</a>
+                                                </li>
+                                            </c:if>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    const searchInput = document.getElementById("searchInput");
-                    const tableRows = document.querySelectorAll("#staffTable tbody tr");
-
-                    function updateTableVisibility() {
-                        tableRows.forEach(row => {
-                            const staffID = row.cells[0].textContent.toLowerCase();
-                            const staffName = row.cells[1].textContent.toLowerCase();
-
-                            // Lấy giá trị từ input và dropdown
-                            const selectedInput = searchInput.value.toLowerCase();
-
-                            // Điều kiện lọc
-                            const matchSearch = (selectedInput === "" || staffID.includes(selectedInput) || staffName.includes(selectedInput));
-
-                            // Hiển thị hoặc ẩn hàng
-                            row.style.display = (matchSearch) ? "" : "none";
-                        });
-                    }
-
-                    // Gán sự kiện lắng nghe
-                    searchInput.addEventListener("input", updateTableVisibility);
-                });
-            </script>
         </main>
 
         <div class="ttr-overlay"></div>

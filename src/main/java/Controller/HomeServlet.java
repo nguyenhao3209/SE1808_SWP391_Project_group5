@@ -5,6 +5,7 @@
 
 package Controller;
 
+import Models.Products;
 import Models.Slider;
 import dal.ProductsDAO;
 import java.io.IOException;
@@ -60,8 +61,11 @@ public class HomeServlet extends HttpServlet {
         HttpSession session = request.getSession();
         ProductsDAO productDAO = new ProductsDAO();
         ArrayList<Slider> slide = productDAO.getAllSliders();
-        
+//        ArrayList<Products> saleList = productDAO.getTop8();
+
         session.setAttribute("slides", slide);
+//        session.setAttribute("saleList", saleList);
+        
         request.getRequestDispatcher("home.jsp").forward(request, response);
     } 
 

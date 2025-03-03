@@ -4,8 +4,7 @@
  */
 package Controller.admin;
 
-import Models.Staffs;
-import dal.StaffsDAO;
+import dal.ProductsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,14 +12,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 /**
  *
  * @author HuyLVQCE180656
  */
-@WebServlet(name = "DeleteStaff", urlPatterns = {"/deleteStaff"})
-public class DeleteStaff extends HttpServlet {
+@WebServlet(name = "DeleteProduct", urlPatterns = {"/deleteProduct"})
+public class DeleteProduct extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +37,10 @@ public class DeleteStaff extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DeleteStaff</title>");
+            out.println("<title>Servlet DeleteProduct</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DeleteStaff at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DeleteProduct at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,26 +58,7 @@ public class DeleteStaff extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        HttpSession session = request.getSession();
-
-        String staffId = request.getParameter("staffId");
-        if (staffId == null || staffId.trim().isEmpty()) {
-            session.setAttribute("errorMessage", "Invalid staff ID!");
-            response.sendRedirect("listStaffs.jsp");
-            return;
-        }
-
-        StaffsDAO staffDao = new StaffsDAO();
-        boolean isDeleted = staffDao.deleteStaffById(staffId);
-
-        if (isDeleted) {
-            session.setAttribute("successMessage", "Staff deleted successfully!");
-        } else {
-            session.setAttribute("errorMessage", "Failed to delete staff. Staff may not exist.");
-        }
-
-        response.sendRedirect("listStaffs");
+        processRequest(request, response);
     }
 
     /**
@@ -93,7 +72,13 @@ public class DeleteStaff extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String productId = request.getParameter("productId");
+        ProductsDAO productDAO = new ProductsDAO();
+        productDAO.deleteProductById(productId);
+
+        request.getSession().setAttribute("successMessage", "Product deleted successfully!");
+        response.sendRedirect("listProducts.jsp");
+
     }
 
     /**

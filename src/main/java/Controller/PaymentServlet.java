@@ -132,7 +132,7 @@ public class PaymentServlet extends HttpServlet {
         // Lưu đơn hàng và danh sách OrderItems vào cơ sở dữ liệu
         int orderId = 0;
         if (!orderItemsList.isEmpty()) {
-            Orders order = new Orders(customer, "pending", paymentMethod, totalPrice); // Tạo đối tượng Orders
+            Orders order = new Orders(customer, "PENDING", paymentMethod, totalPrice); // Tạo đối tượng Orders
             OrdersDAO orderDAO = new OrdersDAO();
             orderId = orderDAO.insertOrder(order, orderItemsList); // Lưu Orders và OrderItems
         }
