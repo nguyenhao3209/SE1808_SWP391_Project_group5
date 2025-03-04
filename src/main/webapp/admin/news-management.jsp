@@ -8,6 +8,8 @@
         <title>News Management</title>
         <link rel="stylesheet" href="assets/css/style.css"> <!-- Thay thế CSS của template -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <!-- Font Awesome Icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <!-- META ============================================= -->
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -84,11 +86,12 @@
                 background-color: #ffffff;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
+                position: relative;
             }
 
             .news-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                transform: translateY(-10px);
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
             }
 
             .news-card img {
@@ -99,7 +102,7 @@
             }
 
             .news-card img:hover {
-                transform: scale(1.05);
+                transform: scale(1.1);
             }
 
             .news-card h2 {
@@ -143,19 +146,19 @@
             }
 
             .read-more-btn {
-                background-color: #007BFF;
+                background-color: #28a745; /* Green */
                 color: white;
                 border: none;
                 cursor: pointer;
             }
 
             .read-more-btn:hover {
-                background-color: #0056b3;
+                background-color: #218838;
                 transform: translateY(-2px);
             }
 
             .delete-btn {
-                background-color: #dc3545;
+                background-color: #dc3545; /* Red */
                 color: white;
                 border: none;
                 cursor: pointer;
@@ -167,15 +170,35 @@
             }
 
             .edit-btn {
-                background-color: #28a745;
+                background-color: #ffc107; /* Yellow */
                 color: white;
                 border: none;
                 cursor: pointer;
             }
 
             .edit-btn:hover {
-                background-color: #218838;
+                background-color: #e0a800;
                 transform: translateY(-2px);
+            }
+
+            .btn-primary {
+                background-color: #007bff; /* Blue */
+                color: white;
+                border: none;
+                cursor: pointer;
+            }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                transform: translateY(-2px);
+            }
+
+            .sport-icon {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                font-size: 24px;
+                color: #ff5722; /* Màu cam thể thao */
             }
 
             /* Responsive Design */
@@ -192,10 +215,29 @@
                     font-size: 0.9em;
                 }
             }
+
+            /* Pagination Styles */
+            .pagination {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+
+            .pagination button {
+                margin: 0 5px;
+                padding: 5px 10px;
+                border: 1px solid #ddd;
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+            .pagination button.active {
+                background-color: #007bff;
+                color: #fff;
+                border-color: #007bff;
+            }
         </style>
-
     </head>
-
 
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
         <jsp:include page="../admin/common/header.jsp"></jsp:include>
@@ -217,32 +259,33 @@
                     <!-- Add News Button -->
                     <div class="text-end mb-3">
                         <a href="add-news" class="btn btn-primary" onclick="return confirmAdd()">
-                            <i class="bi bi-plus-circle"></i> Add News
+                            <i class="fas fa-plus-circle"></i> Add News
                         </a>
                     </div>
                     <div class="news-grid">
                     <c:if test="${not empty newsList}">
-                        <c:forEach var="news" items="${newsList}">
-                            <div class="news-card">
+                        <c:forEach var="news" items="${newsList}" varStatus="loop">
+                            <div class="news-card" data-page="${Math.floor(loop.index / 6) + 1}">
                                 <div class="news-card-content">
                                     <h2>${news.title}</h2>
-                                    <span class="news-date"><i class="bi bi-calendar3"></i> ${news.publishedDate}</span>
+                                    <span class="news-date"><i class="fas fa-calendar-alt"></i> ${news.publishedDate}</span>
                                     <p><strong>Author:</strong> ${news.author}</p>
                                     <p><strong>Email:</strong> ${news.staff.email}</p>
                                     <p>${news.content}</p>
                                     <img src="${news.image}" alt="${news.title}" class="img-fluid rounded">
+                                    <i class="fas fa-futbol sport-icon"></i> <!-- Biểu tượng thể thao -->
 
                                     <!-- Action Buttons -->
                                     <div class="d-flex gap-2">
                                         <a href="news-management?action=view&id=${news.newsID}" class="btn read-more-btn">
-                                            <i class="bi bi-book"></i> Read More
+                                            <i class="fas fa-book-open"></i> Read More
                                         </a>
                                         <c:if test="${user.role eq 'STAFF'}">
                                             <a href="update-news?id=${news.newsID}" class="btn edit-btn">
-                                                <i class="bi bi-pencil"></i> Edit
+                                                <i class="fas fa-edit"></i> Edit
                                             </a>
                                             <a href="delete-news?id=${news.newsID}" class="btn delete-btn" onclick="return confirmDelete()">
-                                                <i class="bi bi-trash"></i> Delete
+                                                <i class="fas fa-trash-alt"></i> Delete
                                             </a>
                                         </c:if>
                                     </div>
@@ -254,6 +297,8 @@
                         <p>No news available.</p>
                     </c:if>
                 </div>
+                <!-- Pagination -->
+                <div class="pagination" id="pagination"></div>
             </div>
         </main>
         <!-- Bootstrap JS -->
@@ -290,6 +335,48 @@
                                                 function confirmUpdate() {
                                                     return confirm("Do you want to update this news?");
                                                 }
+
+                                                // Pagination Script
+                                                document.addEventListener("DOMContentLoaded", function () {
+                                                    const newsCards = document.querySelectorAll('.news-card');
+                                                    const itemsPerPage = 6;
+                                                    const totalPages = Math.ceil(newsCards.length / itemsPerPage);
+                                                    const paginationContainer = document.getElementById('pagination');
+
+                                                    function showPage(page) {
+                                                        newsCards.forEach((card, index) => {
+                                                            const cardPage = Math.floor(index / itemsPerPage) + 1;
+                                                            if (cardPage === page) {
+                                                                card.style.display = 'block';
+                                                            } else {
+                                                                card.style.display = 'none';
+                                                            }
+                                                        });
+                                                    }
+
+                                                    function createPaginationButtons() {
+                                                        paginationContainer.innerHTML = '';
+                                                        for (let i = 1; i <= totalPages; i++) {
+                                                            const button = document.createElement('button');
+                                                            button.innerText = i;
+                                                            button.addEventListener('click', () => {
+                                                                showPage(i);
+                                                                setActiveButton(button);
+                                                            });
+                                                            paginationContainer.appendChild(button);
+                                                        }
+                                                        setActiveButton(paginationContainer.firstChild);
+                                                    }
+
+                                                    function setActiveButton(button) {
+                                                        const buttons = paginationContainer.querySelectorAll('button');
+                                                        buttons.forEach(btn => btn.classList.remove('active'));
+                                                        button.classList.add('active');
+                                                    }
+
+                                                    showPage(1);
+                                                    createPaginationButtons();
+                                                });
         </script>
     </body>
 </html>
