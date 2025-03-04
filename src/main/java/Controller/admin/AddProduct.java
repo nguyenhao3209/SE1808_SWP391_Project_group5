@@ -140,7 +140,7 @@ public class AddProduct extends HttpServlet {
             product.setCategory(category);
             product.setPrice(price);
             product.setDiscountProduct(discountProduct);
-            product.setImageURL(path_file_img + "/" + fileName); // Lưu đường dẫn ảnh
+            product.setImageURL(fileName); // Lưu đường dẫn ảnh
 
             // Thêm sản phẩm vào database
             ProductsDAO productDAO = new ProductsDAO();

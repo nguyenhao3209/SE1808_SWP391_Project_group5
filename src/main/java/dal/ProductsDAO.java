@@ -62,8 +62,8 @@ public class ProductsDAO extends DBContext {
                         rs.getBigDecimal("Price"),
                         rs.getInt("StockQuantity"),
                         rs.getString("Brand"),
-                        getCategoryByID(rs.getInt("CategoryID")), 
-                        null, 
+                        getCategoryByID(rs.getInt("CategoryID")),
+                        null,
                         rs.getString("ImageURL"),
                         null,
                         null,
@@ -131,35 +131,43 @@ public class ProductsDAO extends DBContext {
         }
     }
 
-//    public ArrayList<Products> getTop8() {
-//        ArrayList<Products> productList = new ArrayList<>();
-//        String sql = "SELECT p.* FROM Category c\n"
-//                + "OUTER APPLY (\n"
-//                + "    SELECT TOP 8 * \n"
-//                + "    FROM Products p\n"
-//                + "    WHERE p.CategoryID = c.CategoryID\n"
-//                + "    ORDER BY p.DiscountPercent DESC\n"
-//                + ") p\n"
-//                + "WHERE p.DiscountPercent > 0\n"
-//                + "ORDER BY c.CategoryID, p.DiscountPercent DESC;";
-//
-//        try ( PreparedStatement ps = connection.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
-//            while (rs.next()) {
-//                Products p = new Products();
-//                p.setProductID(rs.getInt("ProductID"));
-//                p.setProductName(rs.getString("ProductName"));
-//                p.setPrice(rs.getBigDecimal("Price"));
-//                p.setBrand(rs.getString("Brand"));
-//                p.setImageURL(rs.getString("ImageURL"));
-//                p.setDiscountProduct(rs.getBigDecimal("DiscountPercent"));
-//                productList.add(p);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            System.out.println("error: " + e);
-//        }
-//        return productList;
-//    }
+    public List<Object[]> getTop8() {
+        List<Object[]> productList = new ArrayList<>();
+        String sql = "SELECT p.*, c.CategoryName FROM Category c\n"
+                + "OUTER APPLY (\n"
+                + "    SELECT TOP 8 * \n"
+                + "    FROM Products p\n"
+                + "    WHERE p.CategoryID = c.CategoryID\n"
+                + "    ORDER BY p.DiscountPercent DESC\n"
+                + ") p\n"
+                + "WHERE p.DiscountPercent > 0\n"
+                + "ORDER BY c.CategoryID, p.DiscountPercent DESC;";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Object[] p = new Object[]{
+                    rs.getInt("ProductID"),
+                    rs.getString("ProductName"),
+                    rs.getBigDecimal("Price"),
+                    rs.getString("Brand"),
+                    rs.getString("ImageURL"),
+                    rs.getBigDecimal("DiscountPercent"),
+                    rs.getString("CategoryName"),
+                    rs.getInt("CategoryID")
+
+                };
+                productList.add(p);
+            }
+            System.out.println(productList.size());
+        } catch (SQLException e) {
+
+            System.out.println("error: " + e);
+            e.printStackTrace();
+        }
+        return productList;
+    }
 
     public int count_product() {
         String sql = "select count(*) from Products";
