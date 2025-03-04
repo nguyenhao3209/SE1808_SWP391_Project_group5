@@ -1,11 +1,4 @@
-<%-- 
-    Document   : sidebar
-    Created on : Sep 22, 2024, 6:36:55 PM
-    Author     : Admin
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 
 <div class="ttr-sidebar">
     <div class="ttr-sidebar-wrapper content-scroll">
@@ -17,6 +10,7 @@
             </div>
         </div>
         <!-- side menu logo end -->
+
         <!-- sidebar menu start -->
         <nav class="ttr-sidebar-navi">
             <ul>
@@ -104,6 +98,22 @@
                         </li>
                     </ul>
                 </li>
+
+                <li>
+                    <a href="VoucherServlet?action=list" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-gift"></i></span>
+                        <span class="ttr-label">Voucher Management</span>
+                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
+
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="admin/voucher-form.jsp" class="ttr-material-button"><span class="ttr-label">Add Voucher</span></a>
+                        </li>
+                    </ul>
+                </li
+
+
                 <li class="ttr-seperate"></li>
             </ul>
             <!-- sidebar menu end -->
