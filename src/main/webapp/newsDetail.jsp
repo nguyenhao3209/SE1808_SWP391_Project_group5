@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
-    <jsp:include page="./common/header.jsp"/>
     <head>
         <title>${news.title}</title>
         <!-- Bootstrap CSS -->
@@ -202,6 +201,7 @@
         </style>
     </head>
     <body>
+        <jsp:include page="./common/header.jsp"/>
         <div class="container">
             <h1 class="text-center">${news.title}</h1>
             <div class="news-content">
