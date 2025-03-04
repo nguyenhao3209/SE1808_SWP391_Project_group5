@@ -45,7 +45,7 @@ public class ProductsDAO extends DBContext {
     public ProductsDAO() {
         super();
     }
-
+    
     public List<Products> getAllProducts(int page_number) {
         List<Products> productList = new ArrayList<>();
 //        String sql = "SELECT p.ProductID, p.ImageURL, p.ProductName, s.Size, p.Brand, p.Price, p.StockQuantity FROM Products p\n"
@@ -62,8 +62,8 @@ public class ProductsDAO extends DBContext {
                         rs.getBigDecimal("Price"),
                         rs.getInt("StockQuantity"),
                         rs.getString("Brand"),
-                        getCategoryByID(rs.getInt("CategoryID")), 
-                        null, 
+                        getCategoryByID(rs.getInt("CategoryID")),
+                        null,
                         rs.getString("ImageURL"),
                         null,
                         null,
@@ -78,10 +78,10 @@ public class ProductsDAO extends DBContext {
         }
         return productList;
     }
-
+    
     public void addProduct(Products product) {
         String sql = "INSERT INTO Products (ProductName, Description, StockQuantity, Brand, CategoryID, Price, DiscountPercent, ImageURL) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-
+        
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, product.getProductName());
@@ -92,16 +92,16 @@ public class ProductsDAO extends DBContext {
             ps.setBigDecimal(6, product.getPrice());
             ps.setBigDecimal(7, product.getDiscountProduct() != null ? product.getDiscountProduct() : BigDecimal.ZERO);
             ps.setString(8, product.getImageURL());
-
+            
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
+    
     public void updateProduct(Products product) {
         String sql = "UPDATE Products SET ProductName = ?, Description = ?, Brand = ?, CategoryID = ?, Price = ?, DiscountPercent = ?, ImageURL = ? WHERE ProductID = ?";
-
+        
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, product.getProductName());
@@ -112,16 +112,16 @@ public class ProductsDAO extends DBContext {
             ps.setBigDecimal(6, product.getDiscountProduct() != null ? product.getDiscountProduct() : BigDecimal.ZERO);
             ps.setString(7, product.getImageURL());
             ps.setInt(8, product.getProductID());
-
+            
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
+    
     public void deleteProductById(String productId) {
         String sql = "DELETE FROM [dbo].[Products] WHERE [ProductID] = ?";
-
+        
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, productId);
@@ -131,36 +131,95 @@ public class ProductsDAO extends DBContext {
         }
     }
 
-//    public ArrayList<Products> getTop8() {
-//        ArrayList<Products> productList = new ArrayList<>();
-//        String sql = "SELECT p.* FROM Category c\n"
-//                + "OUTER APPLY (\n"
-//                + "    SELECT TOP 8 * \n"
-//                + "    FROM Products p\n"
-//                + "    WHERE p.CategoryID = c.CategoryID\n"
-//                + "    ORDER BY p.DiscountPercent DESC\n"
-//                + ") p\n"
-//                + "WHERE p.DiscountPercent > 0\n"
-//                + "ORDER BY c.CategoryID, p.DiscountPercent DESC;";
-//
-//        try ( PreparedStatement ps = connection.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+//    public List<Products> searchProductsByName(String query, int page_number) {
+//        List<Products> products = new ArrayList<>();
+//        String sql = "SELECT * FROM Products WHERE ProductName LIKE ?";
+//        try {
+//            PreparedStatement ps = connection.prepareStatement(sql);
+//            ps.setString(1, "%" + query + "%");
+//            ResultSet rs = ps.executeQuery();
 //            while (rs.next()) {
-//                Products p = new Products();
-//                p.setProductID(rs.getInt("ProductID"));
-//                p.setProductName(rs.getString("ProductName"));
-//                p.setPrice(rs.getBigDecimal("Price"));
-//                p.setBrand(rs.getString("Brand"));
-//                p.setImageURL(rs.getString("ImageURL"));
-//                p.setDiscountProduct(rs.getBigDecimal("DiscountPercent"));
-//                productList.add(p);
+//                Products product = new Products();
+//                product.setProductID(rs.getInt("ProductID"));
+//                product.setImageURL(rs.getString("ImageURL"));
+//                product.setProductName(rs.getString("ProductName"));
+//                product.setBrand(rs.getString("Brand"));
+//                product.setPrice(rs.getBigDecimal("Price"));
+//                
+//                products.add(product);
 //            }
 //        } catch (SQLException e) {
 //            e.printStackTrace();
-//            System.out.println("error: " + e);
 //        }
-//        return productList;
+//        return products;
 //    }
-
+    public List<Products> searchProductsByName(String query, int offset, int limit) {
+        List<Products> products = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE ProductName LIKE ? "
+                + "ORDER BY ProductID ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + query + "%");
+            ps.setInt(2, offset);
+            ps.setInt(3, limit);
+            
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Products product = new Products();
+                    product.setProductID(rs.getInt("ProductID"));
+                    product.setImageURL(rs.getString("ImageURL"));
+                    product.setProductName(rs.getString("ProductName"));
+                    product.setBrand(rs.getString("Brand"));
+                    product.setPrice(rs.getBigDecimal("Price"));
+                    product.setCategory(getCategoryByID(rs.getInt("CategoryID")));
+                    
+                    products.add(product);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+    
+    public List<Object[]> getTop8() {
+        List<Object[]> productList = new ArrayList<>();
+        String sql = "SELECT p.*, c.CategoryName FROM Category c\n"
+                + "OUTER APPLY (\n"
+                + "    SELECT TOP 8 * \n"
+                + "    FROM Products p\n"
+                + "    WHERE p.CategoryID = c.CategoryID\n"
+                + "    ORDER BY p.DiscountPercent DESC\n"
+                + ") p\n"
+                + "WHERE p.DiscountPercent > 0\n"
+                + "ORDER BY c.CategoryID, p.DiscountPercent DESC;";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Object[] p = new Object[]{
+                    rs.getInt("ProductID"),
+                    rs.getString("ProductName"),
+                    rs.getBigDecimal("Price"),
+                    rs.getString("Brand"),
+                    rs.getString("ImageURL"),
+                    rs.getBigDecimal("DiscountPercent"),
+                    rs.getString("CategoryName"),
+                    rs.getInt("CategoryID")
+                
+                };
+                productList.add(p);
+            }
+            System.out.println(productList.size());
+        } catch (SQLException e) {
+            
+            System.out.println("error: " + e);
+            e.printStackTrace();
+        }
+        return productList;
+    }
+    
     public int count_product() {
         String sql = "select count(*) from Products";
         int count = 0;
@@ -175,7 +234,25 @@ public class ProductsDAO extends DBContext {
         }
         return count;
     }
-
+    
+    public int countSearchResults(String searchQuery) {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM Products WHERE ProductName LIKE ?";
+        
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + searchQuery + "%");
+            
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+    
     public List<Category> getAllCategory() {
         ArrayList<Category> list = new ArrayList<>();
         String sql = "select * "
@@ -193,7 +270,7 @@ public class ProductsDAO extends DBContext {
         }
         return list;
     }
-
+    
     public List<String> getAllBrand() {
         ArrayList<String> list = new ArrayList<>();
         String sql = "select distinct Brand "
@@ -211,7 +288,7 @@ public class ProductsDAO extends DBContext {
         }
         return list;
     }
-
+    
     public ArrayList<Products> searchProductsWithFilters2(String keyword, String[] categories, String[] brands, String priceRange, int pageNumber, int pageSize) {
         ArrayList<Products> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
@@ -271,7 +348,7 @@ public class ProductsDAO extends DBContext {
         sql.append(" GROUP BY p.ProductID, p.ProductName, p.Price, p.StockQuantity, p.Brand, p.CategoryID, CAST(p.Description AS NVARCHAR(MAX)), CAST(p.ImageURL AS NVARCHAR(MAX)),  p.CreateAt,\n"
                 + "    p.UpdateAt, p.DiscountPercent, c.CategoryName");
         sql.append(" ORDER BY p.ProductID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-
+        
         try {
             PreparedStatement ps = connection.prepareStatement(sql.toString());
             int index = 1;
@@ -299,7 +376,7 @@ public class ProductsDAO extends DBContext {
 
             // Set page size
             ps.setInt(index++, pageSize);
-
+            
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Products p = new Products();
@@ -429,7 +506,7 @@ public class ProductsDAO extends DBContext {
             }
             sql.append(")");
         }
-
+        
         if (brands != null && brands.length > 0) {
             sql.append(" AND Brand IN (");
             for (int i = 0; i < brands.length; i++) {
@@ -440,7 +517,7 @@ public class ProductsDAO extends DBContext {
             }
             sql.append(")");
         }
-
+        
         if (priceRange != null && !priceRange.isEmpty()) {
             if (priceRange.equals("low")) {
                 sql.append(" AND Price < 150");
@@ -450,7 +527,7 @@ public class ProductsDAO extends DBContext {
                 sql.append(" AND Price > 300");
             }
         }
-
+        
         int total = 0;
         try {
             PreparedStatement ps = connection.prepareStatement(sql.toString());
@@ -472,7 +549,7 @@ public class ProductsDAO extends DBContext {
                     ps.setString(index++, brand);
                 }
             }
-
+            
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 total = rs.getInt(1); // Lấy giá trị COUNT từ kết quả truy vấn
@@ -484,7 +561,7 @@ public class ProductsDAO extends DBContext {
         }
         return total;
     }
-
+    
     public ArrayList<String> getBrandByCategory(String category) {
         ArrayList<String> listBrand = new ArrayList<>();
         String sql = "SELECT DISTINCT Brand\n"
@@ -503,29 +580,29 @@ public class ProductsDAO extends DBContext {
         }
         return listBrand;
     }
-
+    
     public ArrayList<Cart> getCartByUserID(String userID) {
         ArrayList<Cart> cart = new ArrayList<>();
         String sql = "SELECT [CartID], [CustomerID], [ProductID], [SizeID], [Quantity], [CreatedAt] "
                 + "FROM [Cart] WHERE CustomerID = ?";
-
+        
         CustomersDAO cusDAO = new CustomersDAO();
-
+        
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, userID);
             ResultSet rs = ps.executeQuery();
-
+            
             while (rs.next()) {
                 Customers customer = cusDAO.getCustomerByID(rs.getString("CustomerID"));
                 Products pro = getProductByID(rs.getInt("ProductID"));
-
+                
                 int sizeID = rs.getInt("SizeID");
                 ProductSizes size = null;
                 if (!rs.wasNull()) {
                     size = getProductSizeByID(sizeID);
                 }
-
+                
                 if (pro.getCategory().getCategoryName().equals("Shoes")
                         || pro.getCategory().getCategoryName().equals("Clothes")) {
                     cart.add(new Cart(rs.getInt("CartID"), customer, pro, size, rs.getInt("Quantity")));
@@ -533,7 +610,7 @@ public class ProductsDAO extends DBContext {
                     cart.add(new Cart(rs.getInt("CartID"), customer, pro, rs.getInt("Quantity")));
                 }
             }
-
+            
             rs.close();
             ps.close();
         } catch (SQLException e) {
@@ -541,7 +618,7 @@ public class ProductsDAO extends DBContext {
         }
         return cart;
     }
-
+    
     public void updateCart(Cart item) {
         String sql = "UPDATE [dbo].[Cart]\n"
                 + "   SET [Quantity] = ?\n"
@@ -550,15 +627,15 @@ public class ProductsDAO extends DBContext {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, item.getQuantity());
             ps.setInt(2, item.getCartID());
-
+            
             ps.executeUpdate();
             ps.close();
-
+            
         } catch (SQLException e) {
             System.out.println(e);
         }
     }
-
+    
     public int getQuantityOfItemByUserID(String userID) {
         String sql = "SELECT COUNT(CartID) AS 'CountItems' FROM [dbo].[Cart] WHERE CustomerID = ?";
         int totalQuantity = 0;
@@ -566,11 +643,11 @@ public class ProductsDAO extends DBContext {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, userID);
             ResultSet rs = ps.executeQuery();
-
+            
             if (rs.next()) {
                 totalQuantity = rs.getInt("CountItems");
             }
-
+            
             rs.close();
             ps.close();
         } catch (SQLException e) {
@@ -578,14 +655,14 @@ public class ProductsDAO extends DBContext {
         }
         return totalQuantity;
     }
-
+    
     public boolean removeItemOfCart(int itemID) {
         String sql = "DELETE FROM [dbo].[Cart]\n"
                 + "      WHERE CartID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, itemID);
-
+            
             ps.executeUpdate();
             ps.close();
             return true;
@@ -594,11 +671,11 @@ public class ProductsDAO extends DBContext {
         }
         return false;
     }
-
+    
     public Products getProductById(int productId) {
         Products product = null; // Khai báo product trước try
         String sql = "SELECT ProductID, ProductName, Description, Brand, CategoryID, Price, DiscountPercent, ImageURL FROM Products WHERE ProductID = ?";
-
+        
         try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, productId);
             try ( ResultSet rs = ps.executeQuery()) {
@@ -608,13 +685,13 @@ public class ProductsDAO extends DBContext {
                     product.setProductName(rs.getString("ProductName"));
                     product.setDescription(rs.getString("Description"));
                     product.setBrand(rs.getString("Brand"));
-
+                    
                     Category category = new Category();
                     category.setCategoryID(rs.getInt("CategoryID"));
 
                     // Gán category vào product
                     product.setCategory(category);
-
+                    
                     product.setPrice(rs.getBigDecimal("Price"));
                     product.setDiscountProduct(rs.getBigDecimal("DiscountPercent"));
                     product.setImageURL(rs.getString("ImageURL"));
@@ -625,7 +702,7 @@ public class ProductsDAO extends DBContext {
         }
         return product;
     }
-
+    
     public Products getProductByID(int productId) {
         String sql = "SELECT p.ProductID, p.ProductName, p.Price, p.StockQuantity, p.Brand, "
                 + "p.CategoryID, CAST(p.Description AS NVARCHAR(MAX)) AS Description, "
@@ -639,7 +716,7 @@ public class ProductsDAO extends DBContext {
                 + "GROUP BY p.ProductID, p.ProductName, p.Price, p.StockQuantity, p.Brand, "
                 + "p.CategoryID, CAST(p.Description AS NVARCHAR(MAX)), CAST(p.ImageURL AS NVARCHAR(MAX)), "
                 + "p.CreateAt, p.UpdateAt, p.DiscountPercent, c.CategoryName";
-
+        
         try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, productId);
             try ( ResultSet rs = ps.executeQuery()) {
@@ -656,7 +733,7 @@ public class ProductsDAO extends DBContext {
                     c.setCategoryID(rs.getInt("CategoryID"));
                     c.setCategoryName(rs.getString("CategoryName"));
                     p.setCategory(c);
-
+                    
                     p.setDescription(rs.getString("Description"));
                     p.setImageURL(rs.getString("ImageURL"));
                     p.setDiscountProduct(rs.getBigDecimal("DiscountPercent"));
@@ -671,16 +748,16 @@ public class ProductsDAO extends DBContext {
         }
         return null;
     }
-
+    
     public ArrayList<Specifications> getSpecificationsByProductId(int productId) {
         ArrayList<Specifications> specifications = new ArrayList<>();
         String query = "SELECT * FROM Specifications WHERE ProductID = ?";
-
+        
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, productId);
             ResultSet rs = stmt.executeQuery();
-
+            
             while (rs.next()) {
                 specifications.add(new Specifications(
                         rs.getInt("SpecificationID"),
@@ -694,7 +771,7 @@ public class ProductsDAO extends DBContext {
         }
         return specifications;
     }
-
+    
     public Category getCategoryByID(int id) {
         String sql = "SELECT [CategoryID]\n"
                 + "      ,[CategoryName]\n"
@@ -711,44 +788,44 @@ public class ProductsDAO extends DBContext {
             }
             rs.close();
             ps.close();
-
+            
         } catch (SQLException e) {
         }
         return null;
     }
-
+    
     public static void main(String[] args) {
         ProductsDAO proDAO = new ProductsDAO();
         Products proS = proDAO.getProductByID(500);
         System.out.println(proS.getAvgRating());
     }
-
+    
     public void insertToCart(Cart item) {
         String sql = "INSERT INTO [dbo].[Cart] "
                 + "([CustomerID], [ProductID], [SizeID], [Quantity]) "
                 + "VALUES (?, ?, ?, ?)";
-
+        
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, item.getCustomer().getCustomerId());
             ps.setInt(2, item.getProduct().getProductID());
-
+            
             if (item.getProductSizes() != null) {
                 ps.setInt(3, item.getProductSizes().getSizeID());
             } else {
                 ps.setNull(3, java.sql.Types.INTEGER);
             }
-
+            
             ps.setInt(4, item.getQuantity());
-
+            
             ps.executeUpdate();
             ps.close();
-
+            
         } catch (SQLException e) {
             System.out.println(e);
         }
     }
-
+    
     public Cart getCartByCartID(int cartID) {
         String sql = "SELECT [CartID]\n"
                 + "      ,[CustomerID]\n"
@@ -763,33 +840,33 @@ public class ProductsDAO extends DBContext {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, cartID);
             ResultSet rs = ps.executeQuery();
-
+            
             if (rs.next()) {
                 Customers user = uDAO.getCustomerByID(rs.getString("CustomerID"));
                 Products pro = getProductByID(rs.getInt("ProductID"));
                 Cart cart = new Cart(user, pro, rs.getInt("Quantity"));
                 return cart;
             }
-
+            
             rs.close();
             ps.close();
-
+            
         } catch (SQLException e) {
             System.out.println(e);
         }
         return null;
-
+        
     }
-
+    
     public ArrayList<ProductSizes> getSizesOfProductByID(int productId) {
         ArrayList<ProductSizes> productSizes = new ArrayList<>();
         String sql = "SELECT SizeID, Size, StockQuantity FROM ProductSizes WHERE ProductID = ?";
-
+        
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, productId);
             ResultSet rs = ps.executeQuery();
-
+            
             while (rs.next()) {
                 int sizeId = rs.getInt("SizeID");
                 String size = rs.getString("Size");
@@ -797,7 +874,7 @@ public class ProductsDAO extends DBContext {
                 ProductSizes psObj = new ProductSizes(sizeId, getProductByID(productId), size, stockQuantity);
                 productSizes.add(psObj);
             }
-
+            
             rs.close();
             ps.close();
         } catch (SQLException e) {
@@ -805,15 +882,15 @@ public class ProductsDAO extends DBContext {
         }
         return productSizes;
     }
-
+    
     public ProductSizes getProductSizeByID(int sizeID) {
-
+        
         String sql = "SELECT [SizeID], [ProductID], [Size], [StockQuantity] "
                 + "FROM [dbo].[ProductSizes] WHERE SizeID = ?";
-
+        
         try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, sizeID);
-
+            
             try ( ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     ProductSizes proSizes = new ProductSizes();
@@ -828,11 +905,11 @@ public class ProductsDAO extends DBContext {
         }
         return null;
     }
-
+    
     public ArrayList<Slider> getAllSliders() {
         ArrayList<Slider> sliders = new ArrayList<>();
         String query = "SELECT SliderID, ProductID, ImageURL FROM Sliders";
-
+        
         try {
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -840,9 +917,9 @@ public class ProductsDAO extends DBContext {
                 int sliderID = rs.getInt("SliderID");
                 int productID = rs.getInt("ProductID");
                 String imageURL = rs.getString("ImageURL");
-
+                
                 Products product = getProductByID(productID);
-
+                
                 sliders.add(new Slider(sliderID, product, imageURL));
             }
         } catch (SQLException e) {
@@ -850,12 +927,12 @@ public class ProductsDAO extends DBContext {
         }
         return sliders;
     }
-
+    
     public ArrayList<StockImport> getAllStockImports() {
         StaffsDAO staffDAO = new StaffsDAO();
         ArrayList<StockImport> stockList = new ArrayList<>();
         String sql = "SELECT ImportID, StaffID, Supplier, ImportDate, TotalCost FROM StockImport";
-
+        
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
@@ -873,7 +950,7 @@ public class ProductsDAO extends DBContext {
         }
         return stockList;
     }
-
+    
     public ArrayList<StockImport> getFilteredStock(String fromDate, String toDate, String supplier, String staffName) {
         ArrayList<StockImport> stockList = new ArrayList<>();
         StaffsDAO staffDAO = new StaffsDAO();
@@ -881,9 +958,9 @@ public class ProductsDAO extends DBContext {
                 + "FROM StockImport si "
                 + "JOIN Staffs s ON si.StaffID = s.StaffID "
                 + "WHERE 1=1";
-
+        
         List<String> params = new ArrayList<>();
-
+        
         if (fromDate != null && !fromDate.isEmpty()) {
             sql += " AND si.ImportDate >= ?";
             params.add(fromDate);
@@ -900,12 +977,12 @@ public class ProductsDAO extends DBContext {
             sql += " AND s.StaffName LIKE ?";
             params.add("%" + staffName + "%");
         }
-
+        
         try ( PreparedStatement pstmt = connection.prepareStatement(sql)) {
             for (int i = 0; i < params.size(); i++) {
                 pstmt.setString(i + 1, params.get(i));
             }
-
+            
             try ( ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     StockImport stock = new StockImport();
@@ -914,7 +991,7 @@ public class ProductsDAO extends DBContext {
                     stock.setTotalCost(rs.getBigDecimal("TotalCost"));
                     stock.setSupplier(rs.getString("Supplier"));
                     stock.setStaff(staffDAO.getStaffByID(rs.getString("StaffID")));
-
+                    
                     stockList.add(stock);
                 }
             }
@@ -922,8 +999,8 @@ public class ProductsDAO extends DBContext {
             System.err.println("Error fetching filtered stock: " + e.getMessage());
             e.printStackTrace();
         }
-
+        
         return stockList;
     }
-
+    
 }

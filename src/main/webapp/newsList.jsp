@@ -34,12 +34,14 @@
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
                 gap: 30px;
+                gap: 30px;
                 padding: 20px;
             }
 
             .news-card {
                 border: 1px solid #e0e0e0;
                 border-radius: 15px;
+                padding: 25px;
                 padding: 25px;
                 background-color: #ffffff;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -51,16 +53,20 @@
             .news-card:hover {
                 transform: translateY(-10px);
                 box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+                transform: translateY(-10px);
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
             }
 
             .news-card img {
                 width: 100%;
                 border-radius: 10px;
                 margin-bottom: 20px;
+                margin-bottom: 20px;
                 transition: transform 0.3s ease;
             }
 
             .news-card img:hover {
+                transform: scale(1.1);
                 transform: scale(1.1);
             }
 
@@ -76,6 +82,9 @@
                 color: #7f8c8d;
                 font-size: 0.95em;
                 margin-bottom: 15px;
+                color: #7f8c8d;
+                font-size: 0.95em;
+                margin-bottom: 15px;
                 display: flex;
                 align-items: center;
             }
@@ -83,27 +92,37 @@
             .news-date i {
                 margin-right: 8px;
                 color: #3498db;
+                margin-right: 8px;
+                color: #3498db;
             }
 
             .news-card p {
                 font-size: 1em;
                 line-height: 1.8;
+                line-height: 1.8;
                 color: #555;
+                margin-bottom: 20px;
                 margin-bottom: 20px;
             }
 
             .news-card strong {
                 color: #2980b9;
+                color: #2980b9;
             }
 
             .read-more-btn, .delete-btn {
                 margin-top: 15px;
+                margin-top: 15px;
                 display: inline-block;
+                padding: 10px 20px;
+                border-radius: 8px;
                 padding: 10px 20px;
                 border-radius: 8px;
                 text-decoration: none;
                 font-size: 1em;
+                font-size: 1em;
                 transition: background-color 0.3s ease, transform 0.3s ease;
+                font-weight: 500;
                 font-weight: 500;
             }
 
@@ -121,12 +140,15 @@
 
             .delete-btn {
                 background-color: #e74c3c;
+                background-color: #e74c3c;
                 color: white;
                 border: none;
                 cursor: pointer;
             }
 
             .delete-btn:hover {
+                background-color: #c0392b;
+                transform: translateY(-3px);
                 background-color: #c0392b;
                 transform: translateY(-3px);
             }
@@ -139,9 +161,11 @@
 
                 .news-card h2 {
                     font-size: 1.5em;
+                    font-size: 1.5em;
                 }
 
                 .news-card p {
+                    font-size: 0.95em;
                     font-size: 0.95em;
                 }
             }
@@ -205,10 +229,13 @@
     </head>
     <body>
         <jsp:include page="./common/header.jsp"/>
+        <jsp:include page="./common/header.jsp"/>
         <div class="container news-list">
             <h1 class="text-center">Sports News</h1>
             <div class="news-grid">
                 <c:if test="${not empty newsList}">
+                    <c:forEach var="news" items="${newsList}" varStatus="loop">
+                        <div class="news-card" data-page="${Math.floor(loop.index / 9) + 1}">
                     <c:forEach var="news" items="${newsList}" varStatus="loop">
                         <div class="news-card" data-page="${Math.floor(loop.index / 9) + 1}">
                             <div class="news-card-content">
@@ -233,10 +260,59 @@
             </div>
             <!-- Pagination -->
             <div class="pagination" id="pagination"></div>
+            <!-- Pagination -->
+            <div class="pagination" id="pagination"></div>
         </div>
 
         <!-- Bootstrap JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Pagination Script
+            document.addEventListener("DOMContentLoaded", function () {
+                const newsCards = document.querySelectorAll('.news-card');
+                const itemsPerPage = 6; // Đã thay đổi từ 9 thành 6
+                const totalPages = Math.ceil(newsCards.length / itemsPerPage);
+                const paginationContainer = document.getElementById('pagination');
+
+                // Hiển thị bài báo của trang cụ thể
+                function showPage(page) {
+                    newsCards.forEach((card, index) => {
+                        const cardPage = Math.floor(index / itemsPerPage) + 1;
+                        if (cardPage === page) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                }
+
+                // Tạo các nút phân trang
+                function createPaginationButtons() {
+                    paginationContainer.innerHTML = '';
+                    for (let i = 1; i <= totalPages; i++) {
+                        const button = document.createElement('button');
+                        button.innerText = i;
+                        button.addEventListener('click', () => {
+                            showPage(i);
+                            setActiveButton(button);
+                        });
+                        paginationContainer.appendChild(button);
+                    }
+                    setActiveButton(paginationContainer.firstChild);
+                }
+
+                // Đặt nút phân trang hiện tại là active
+                function setActiveButton(button) {
+                    const buttons = paginationContainer.querySelectorAll('button');
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                }
+
+                // Hiển thị trang đầu tiên khi tải trang
+                showPage(1);
+                createPaginationButtons();
+            });
+        </script>
         <script>
             // Pagination Script
             document.addEventListener("DOMContentLoaded", function () {

@@ -5,24 +5,26 @@
 
 package Controller;
 
-import Models.Products;
-import Models.Slider;
-import dal.ProductsDAO;
+import Models.Customers;
+import Models.Orders;
+import dal.OrdersDAO;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
- * @author Haontce180451
+ * @author tien
  */
-public class HomeServlet extends HttpServlet {
+@WebServlet(name="HistoryServlet", urlPatterns={"/HistoryServlet"})
+public class HistoryServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -39,10 +41,10 @@ public class HomeServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet HomeServlet</title>");  
+            out.println("<title>Servlet HistoryServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet HomeServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet HistoryServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,36 +60,23 @@ public class HomeServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            HttpSession session = request.getSession();
-            ProductsDAO productDAO = new ProductsDAO();
+    throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
 
-            // Lấy danh sách slider
-            ArrayList<Slider> slide = productDAO.getAllSliders();
-            session.setAttribute("slides", slide);
-
-            // Lấy danh mục sản phẩm được chọn từ request
-            String categoryID = request.getParameter("categoryID");
-
-            // Nếu categoryID null, mặc định lấy danh mục đầu tiên (VD: Racket - ID = 1)
-            List<Object[]> saleList;
-            if (categoryID == null) {
-                categoryID = "1"; // Mặc định chọn danh mục đầu tiên
-            }
-            saleList = productDAO.getTop8();
-
-            session.setAttribute("saleList", saleList);
-            session.setAttribute("check_click_category", categoryID); // Lưu trạng thái danh mục đã chọn
-
-            request.getRequestDispatcher("home.jsp").forward(request, response);
-        } catch (NumberFormatException e) {
-            System.out.println("Lỗi chuyển đổi categoryID: " + e.getMessage());
-            response.sendRedirect("error.jsp");
-        } catch (Exception e) {
-            System.out.println("Lỗi trong HomeController: " + e);
-            response.sendRedirect("error.jsp");
+        // Kiểm tra session và đối tượng User
+        if (session == null || session.getAttribute("user") == null) {
+            // Chuyển hướng về trang đăng nhập nếu session hết hạn hoặc không có user
+            response.sendRedirect("login.jsp");
+            return;
         }
+        Customers user = (Customers) session.getAttribute("user");
+        
+        String customerId = user.getCustomerId();
+        OrdersDAO odao = new OrdersDAO();
+        List<Orders> listorders = odao.getOrdersByCustomerID(customerId);
+        request.setAttribute("listorders", listorders);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("History.jsp");
+        dispatcher.forward(request, response);
     } 
 
     /** 

@@ -5,7 +5,6 @@
 package Controller.admin;
 
 import Models.Products;
-import com.google.gson.Gson;
 import dal.ProductsDAO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -15,19 +14,16 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author HuyLVQCE180656
  */
-@WebServlet(name = "ListProducts", urlPatterns = {"/listProducts"})
-public class ListProducts extends HttpServlet {
+@WebServlet(name = "SearchServlet", urlPatterns = {"/searchServlet"})
+public class SearchServlet extends HttpServlet {
 
-    int count_page = 0;
-//    int startPage = 1;
-//    int endPage = 0;
+    private static final int ITEMS_PER_PAGE = 20;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,10 +42,10 @@ public class ListProducts extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ListProducts</title>");
+            out.println("<title>Servlet SearchServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ListProducts at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SearchServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -68,43 +64,52 @@ public class ListProducts extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ProductsDAO productsDAO = new ProductsDAO();
-        int count_item = productsDAO.count_product();
-//        count_page = (int) Math.ceil((double) count_item / 20);
-        count_page = (int) count_item / 20;
+        String searchInput = request.getParameter("searchQuery");
 
-        // Lấy tham số page từ request (mặc định là 1 nếu không có)
+        // Nếu không có input, mặc định là rỗng để tránh lỗi truy vấn
+        if (searchInput == null) {
+            searchInput = "";
+        }
+
+        // Đếm tổng số sản phẩm tìm thấy
+        int count_item = productsDAO.countSearchResults(searchInput);
+        int totalPages = (int) Math.ceil((double) count_item / ITEMS_PER_PAGE); // Tổng số trang
+
+        // Lấy trang hiện tại từ request (mặc định là trang 1)
         String pageParam = request.getParameter("page");
-//        String page_number_aram = request.getParameter("page_number");
         int currentPage;
-        int page_number;
         try {
             currentPage = (pageParam != null) ? Integer.parseInt(pageParam) : 1;
-//             page_number = (page_number_aram != null) ? Integer.parseInt(page_number_aram) : 0;
         } catch (NumberFormatException e) {
-            currentPage = 1; // Mặc định là trang 1 nếu `page` không hợp lệ
-//            page_number=0;
-        }
-        if (currentPage == 1) {
-            page_number = 0;
-        } else {
-            page_number = currentPage * 20;
+            currentPage = 1;
         }
 
-        // Tính toán phạm vi trang hiển thị
-        int totalPages = count_page;
-        int pageGroupSize = 10; // Số trang hiển thị mỗi lần
+        // Đảm bảo `currentPage` không vượt quá tổng số trang
+        if (currentPage < 1) {
+            currentPage = 1;
+        }
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        // Tính OFFSET (số sản phẩm cần bỏ qua)
+        int offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+        // Xác định phạm vi trang hiển thị (hiển thị tối đa 10 trang liên tiếp)
+        int pageGroupSize = 10;
         int startPage = ((currentPage - 1) / pageGroupSize) * pageGroupSize + 1;
         int endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
 
-        // Gửi thông tin đến JSP
+        // Gọi hàm tìm kiếm sản phẩm có phân trang
+        List<Products> searchResult = productsDAO.searchProductsByName(searchInput, offset, ITEMS_PER_PAGE);
+
+        // Gửi dữ liệu đến JSP
+        request.setAttribute("searchQuery", searchInput);
+        request.setAttribute("productList", searchResult);
         request.setAttribute("startPage", startPage);
         request.setAttribute("endPage", endPage);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
-
-        List<Products> productList = productsDAO.getAllProducts(page_number);
-        
-        request.setAttribute("productList", productList);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("admin/listProducts.jsp");
         dispatcher.forward(request, response);
