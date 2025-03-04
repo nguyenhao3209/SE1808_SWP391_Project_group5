@@ -1,5 +1,6 @@
 package Models;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -16,14 +17,15 @@ public class Contact {
     private String subject;
     private String message;
     private Status status;
-    private Date createAt;
+    private Timestamp createAt;
+    private Customers customer;
 
     public Contact() {
     }
     public enum Status {
-        PENDING, REPLIED
+        PENDING, ANSWERED
     }
-    public Contact(int contactId, String customerId, String subject, String message, Status status, Date createAt) {
+    public Contact(int contactId, String customerId, String subject, String message, Status status, Timestamp createAt) {
         this.contactId = contactId;
         this.customerId = customerId;
         this.subject = subject;
@@ -37,6 +39,16 @@ public class Contact {
         this.subject = subject;
         this.message = message;
         this.status = status;
+    }
+
+    public Contact(int contactId, String customerId, String subject, String message, Status status, Timestamp createAt, Customers customer) {
+        this.contactId = contactId;
+        this.customerId = customerId;
+        this.subject = subject;
+        this.message = message;
+        this.status = status;
+        this.createAt = createAt;
+        this.customer = customer;
     }
 
     public int getContactId() {
@@ -79,12 +91,20 @@ public class Contact {
         this.status = status;
     }
 
-    public Date getCreateAt() {
+    public Timestamp getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(Date createAt) {
+    public void setCreateAt(Timestamp createAt) {
         this.createAt = createAt;
+    }
+
+    public Customers getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customers customer) {
+        this.customer = customer;
     }
     
 }

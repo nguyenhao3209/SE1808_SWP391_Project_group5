@@ -76,9 +76,8 @@
                                 <h4>Update Staff Information</h4>
                             </div>
                             <div class="widget-inner">
-                                <form action="editStaff" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                <form action="editStaff" method="post" class="form-horizontal">
                                     <input type="hidden" name="staffId" value="${staff.staffID}">
-
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -86,12 +85,19 @@
                                                 <input type="text" class="form-control" name="staffName" value="${staff.staffName}" required>
                                             </div>
                                             <div class="form-group">
+                                                <label for="password">Password</label>
+                                                <input type="password" class="form-control" name="password" required>
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="phone">Phone</label>
-                                                <input type="text" class="form-control" name="phone" value="${staff.phone}" required>
+                                                <input type="text" class="form-control" name="phone" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="role">Role</label>
-                                                <input type="text" class="form-control" name="role" value="${staff.role}" required>
+                                                <select name="role" class="form-control" required>
+                                                    <option value="ADMIN">Admin</option>
+                                                    <option value="STAFF">Staff</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -102,25 +108,23 @@
                                             <div class="form-group">
                                                 <label for="gender">Gender</label>
                                                 <select name="gender" class="form-control" required>
-                                                    <option value="Male" ${staff.gender eq 'Male' ? 'selected' : ''}>Male</option>
-                                                    <option value="Female" ${staff.gender eq 'Female' ? 'selected' : ''}>Female</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="status">Status</label>
                                                 <select name="status" class="form-control" required>
-                                                    <option value="Active" ${staff.status eq 'Active' ? 'selected' : ''}>Active</option>
-                                                    <option value="Inactive" ${staff.status eq 'Inactive' ? 'selected' : ''}>Inactive</option>
+                                                    <option value="ACTIVE">Active</option>
+                                                    <option value="INACTIVE">Inactive</option>
                                                 </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="address">Address</label>
+                                                <input type="text" class="form-control" name="address" required>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label for="address">Address</label>
-                                        <input type="text" class="form-control" name="address" value="${staff.address}" required>
-                                    </div>
-
                                     <div class="form-actions text-center">
                                         <button type="submit" class="btn btn-primary">Update</button>
                                         <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>

@@ -87,7 +87,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Staff Name</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control" type="hidden" name="staffId" value="${sessionScope.user.staffid}" readonly>
+                                                <input class="form-control" type="hidden" name="staffId" value="${sessionScope.user.staffID}" readonly>
                                             <input class="form-control" type="text" name="staffName" value="${sessionScope.user.staffName}" readonly>
                                         </div>
                                     </div>

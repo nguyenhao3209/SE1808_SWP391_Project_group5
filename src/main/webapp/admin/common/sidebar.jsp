@@ -1,3 +1,9 @@
+<%-- 
+    Document   : sidebar
+    Created on : Sep 22, 2024, 6:36:55 PM
+    Author     : Admin
+--%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <div class="ttr-sidebar">
@@ -20,20 +26,11 @@
                         <span class="ttr-label">Dashboard</span>
                     </a>
                 </li>
-                <li>
-                    <a href="admin/contact-list.jsp" class="ttr-material-button">
+                 <li>
+                    <a href="contact-list" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-email"></i></span>
                         <span class="ttr-label">Contact</span>
-                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
                     </a>
-                    <ul>
-                        <li>
-                            <a href="admin/contact-list.jsp" class="ttr-material-button"><span class="ttr-label">Contact List</span></a>
-                        </li>
-                        <li>
-                            <a href="admin/contact-detail.jsp" class="ttr-material-button"><span class="ttr-label">Contact Detail</span></a>
-                        </li>
-                    </ul>
                 </li>
                 <li>
                     <a href="admin/review.jsp" class="ttr-material-button">
@@ -56,6 +53,7 @@
                         </li>
                     </ul>
                 </li>
+
                 <li>
                     <a href="OrdersServlet" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-comments"></i></span>
@@ -68,6 +66,7 @@
                         <span class="ttr-label">Customers Management</span>
                     </a>
                 </li>
+                <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                 <li>
                     <a href="#" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
@@ -79,10 +78,11 @@
                             <a href="admin/addStaff.jsp" class="ttr-material-button"><span class="ttr-label">Add Staff</span></a>
                         </li>
                         <li>
-                            <a href="admin/listStaffs" class="ttr-material-button"><span class="ttr-label">Staffs List</span></a>
+                            <a href="listStaffs" class="ttr-material-button"><span class="ttr-label">Staffs List</span></a>
                         </li>
                     </ul>
                 </li>
+                </c:if>
                 <li>
                     <a href="#" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
@@ -91,7 +91,7 @@
                     </a>
                     <ul>
                         <li>
-                            <a href="admin/viewImported.jsp" class="ttr-material-button"><span class="ttr-label">Imported Invoices</span></a>
+                            <a href="viewImported" class="ttr-material-button"><span class="ttr-label">Imported Invoices</span></a>
                         </li>
                         <li>
                             <a href="admin/stock_import.jsp" class="ttr-material-button"><span class="ttr-label">Stock In</span></a>
@@ -113,6 +113,19 @@
                     </ul>
                 </li
 
+
+                <li>
+                    <a href="#" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-user"></i></span>
+                        <span class="ttr-label">News Management</span>
+                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="news-management" class="ttr-material-button"><span class="ttr-label">List News</span></a>
+                        </li>
+                    </ul>
+                </li>
 
                 <li class="ttr-seperate"></li>
             </ul>

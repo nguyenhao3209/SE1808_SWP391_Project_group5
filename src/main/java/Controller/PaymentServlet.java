@@ -111,25 +111,18 @@ public class PaymentServlet extends HttpServlet {
                 proDAO.removeItemOfCart(item.getCartID());
             }
         }
-        session.setAttribute("cartList", null);
 
-        // == Cập nhật usageCount, quantity sau khi insertOrder thành công ==
-        if (selectedVoucherID != null) {
-            VoucherDAO voucherDAO = new VoucherDAO();
-            Vouchers v = voucherDAO.getVoucherById(selectedVoucherID);
-            if (v != null) {
-                // Tăng usageCount
-                v.setUsageCount(v.getUsageCount() + 1);
-                // Nếu muốn giảm quantity
-                v.setQuantity(v.getQuantity() - 1);
-
-                voucherDAO.updateVoucher(v);
-            }
+        // Lưu đơn hàng và danh sách OrderItems vào cơ sở dữ liệu
+        int orderId = 0;
+        if (!orderItemsList.isEmpty()) {
+            Orders order = new Orders(customer, "PENDING", paymentMethod, totalPrice); // Tạo đối tượng Orders
+            OrdersDAO orderDAO = new OrdersDAO();
+            orderId = orderDAO.insertOrder(order, orderItemsList); // Lưu Orders và OrderItems
         }
-        // Xoá session voucher
-        session.removeAttribute("selectedVoucherID");
 
-        // Cập nhật quantityTotal
+        session.setAttribute("cartList", currentCart);
+        session.setAttribute("user", customer);
+        session.setAttribute("selectedPaymentMethod", paymentMethod);
         int quantityTotal = proDAO.getQuantityOfItemByUserID(customer.getCustomerId());
         session.setAttribute("quantityTotal", quantityTotal);
 

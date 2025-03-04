@@ -15,13 +15,13 @@ import Models.Customers;
 
 public class ReviewsDAO extends DBContext {
 
-     // Lấy danh sách đánh giá cho một sản phẩm dựa trên ProductID
+    // Lấy danh sách đánh giá cho một sản phẩm dựa trên ProductID
     public List<Feedback> getReviewsByProductId(int productId) {
         List<Feedback> reviews = new ArrayList<>();
         String query = "SELECT * FROM Feedback WHERE ProductID = ?";
         CustomersDAO userDAO = new CustomersDAO();
         try (
-                PreparedStatement ps = connection.prepareStatement(query)) {
+                 PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, productId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -49,7 +49,7 @@ public class ReviewsDAO extends DBContext {
         String query = "SELECT * FROM Reply WHERE FeedbackID = ?";
         CustomersDAO userDAO = new CustomersDAO();
         try (
-                PreparedStatement ps = connection.prepareStatement(query)) {
+                 PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -74,7 +74,7 @@ public class ReviewsDAO extends DBContext {
         String username = null;
         String query = "SELECT CustomerName FROM Customers WHERE CustomerID = ?"; // Câu lệnh SQL để lấy tên người dùng
         try (
-                PreparedStatement ps = connection.prepareStatement(query)) {
+                 PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, customerID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -97,7 +97,7 @@ public class ReviewsDAO extends DBContext {
                 + "     VALUES\n"
                 + "          (?,?,?,?,CURRENT_TIMESTAMP)";
         try (
-                PreparedStatement ps = connection.prepareStatement(query)) {
+                 PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, newReview.getCustomerId());
             ps.setInt(2, newReview.getProductID());
             ps.setInt(3, newReview.getRating());
@@ -111,7 +111,7 @@ public class ReviewsDAO extends DBContext {
     // Phương thức cập nhật Feedback
     public void updateFeedback(Feedback f) {
         String sql = "UPDATE Feedback SET Comment = ? WHERE FeedbackID = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, f.getComment());
             ps.setInt(2, f.getReviewID());
             ps.executeUpdate();
@@ -123,7 +123,7 @@ public class ReviewsDAO extends DBContext {
     // Phương thức xóa reply
     public void deleteFeedback(int id) {
         String sql = "DELETE FROM Feedback WHERE FeedbackID = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -135,7 +135,7 @@ public class ReviewsDAO extends DBContext {
         String query = "SELECT * FROM Feedback WHERE FeedbackID = ?";
         CustomersDAO userDAO = new CustomersDAO();
         try (
-                PreparedStatement ps = connection.prepareStatement(query)) {
+                 PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, productId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -156,6 +156,34 @@ public class ReviewsDAO extends DBContext {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<Feedback> getReviewsByProductIdAndRating(int productId, int rating) {
+        List<Feedback> reviews = new ArrayList<>();
+        String query = "SELECT * FROM Feedback WHERE ProductID = ? AND Rating = ?";
+        CustomersDAO userDAO = new CustomersDAO();
+        try ( PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, productId);
+            ps.setInt(2, rating);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Customers u = userDAO.getUserByID(rs.getString("CustomerID"));
+
+                Feedback review = new Feedback();
+                review.setReviewID(rs.getInt("FeedbackID"));
+                review.setUser(u);
+                review.setProductID(rs.getInt("ProductID"));
+                review.setRating(rs.getInt("Rating"));
+                review.setComment(rs.getString("Comment"));
+                review.setCreatedAt(rs.getDate("CreatedAt"));
+                List<Reply> replys = getReplyByFeedback(review.getReviewID());
+                review.setReplies(replys);
+                reviews.add(review);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return reviews;
     }
 
     public boolean isBought(String customerId, int productId) {
