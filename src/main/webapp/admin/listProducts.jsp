@@ -84,12 +84,18 @@
                                 <div class="container">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <h2>Products Management</h2>
+                                        <form action="searchServlet" method="GET" class="d-flex">
+                                            <input type="text" class="form-control me-2" name="searchQuery" id="searchInput" 
+                                                   placeholder="Search by product name..." value="${searchQuery}" style="width: 400px;">
+                                            <button type="submit" class="btn btn-primary">Search</button>
+                                        </form>
                                     </div>
+
                                     <div class="table-responsive">
-                                        <table id="productTable" class="table table-striped table-bordered">
+                                        <table id="productTable" class="table table-striped table-bordered text-center">
                                             <thead class="thead-dark">
                                                 <tr>
-                                                    <th>ID</th>
+                                                    <th style="width: 10%;">Product ID</th>
                                                     <th style="width: 15%;">Image</th>
                                                     <th>Product Name</th>
                                                     <th style="width: 10%;">Brand</th>
@@ -101,25 +107,25 @@
                                                 <c:choose>
                                                     <c:when test="${empty productList}">
                                                         <tr>
-                                                            <td colspan="8" class="text-center">List is empty.</td>
+                                                            <td colspan="6" class="text-center">List is empty.</td>
                                                         </tr>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <c:forEach var="product" items="${productList}">
                                                             <tr>
-                                                                <td>${product.productID}</td>
-                                                                <td>
+                                                                <td class="align-middle">${product.productID}</td>
+                                                                <td class="align-middle">
                                                                     <c:if test="${product.category.categoryName eq 'Accessory'}">
                                                                         <img src="./img/${product.category.categoryName}/${product.getImageURL()}" alt="${product.productName}">
                                                                     </c:if>
                                                                     <c:if test="${product.category.categoryName ne 'Accessory'}">
-                                                                        <img src="./img/${product.category.categoryName}/${product.brand}/${product.getImageURL()}" alt="${product.productName}">
+                                                                         <img src="./img/${product.category.getCategoryName()}/${product.brand}/${product.imageURL}" alt="${product.productName}">
                                                                     </c:if>
                                                                 </td>
-                                                                <td>${product.productName}</td>
-                                                                <td>${product.brand}</td>
-                                                                <td>${product.price} $</td>
-                                                                <td>
+                                                                <td class="align-middle">${product.productName}</td>
+                                                                <td class="align-middle">${product.brand}</td>
+                                                                <td class="align-middle">${product.price} $</td>
+                                                                <td class="align-middle">
                                                                     <a href="editProduct?productId=${product.productID}" class="btn btn-warning btn-sm">Edit</a>
                                                                     <a href="deleteProduct?productId=${product.productID}" class="btn btn-danger btn-sm"
                                                                        onclick="return confirm('Are you sure you want to delete?');">Delete</a>
@@ -132,31 +138,27 @@
                                         </table>
                                     </div>
                                 </div>
+
                                 <div class="d-flex justify-content-center">
-                                    <div class="pagination-bx rounded-sm gray">
-                                        <ul class="pagination mb-0">
-                                            <!-- Nút Quay Lại -->
-                                            <c:if test="${startPage > 1}">
-                                                <li class="page-item">
-                                                    <a href="listProducts?page=${startPage - 1}" class="page-link">&laquo;</a>
-                                                </li>
-                                            </c:if>
+                                    <ul class="pagination mb-0">
+                                        <c:if test="${currentPage > 1}">
+                                            <li class="page-item">
+                                                <a href="searchServlet?searchQuery=${searchQuery}&page=${currentPage - 1}" class="page-link">&laquo;</a>
+                                            </li>
+                                        </c:if>
 
-                                            <!-- Hiển thị các số trang -->
-                                            <c:forEach var="page" begin="${startPage}" end="${endPage}">
-                                                <li class="page-item ${page == currentPage ? 'active' : ''}">
-                                                    <a href="listProducts?page=${page}" class="page-link">${page}</a>
-                                                </li>
-                                            </c:forEach>
+                                        <c:forEach var="page" begin="${startPage}" end="${endPage}">
+                                            <li class="page-item ${page == currentPage ? 'active' : ''}">
+                                                <a href="searchServlet?searchQuery=${searchQuery}&page=${page}" class="page-link">${page}</a>
+                                            </li>
+                                        </c:forEach>
 
-                                            <!-- Nút Tiếp Theo -->
-                                            <c:if test="${endPage < totalPages}">
-                                                <li class="page-item">
-                                                    <a href="listProducts?page=${endPage + 1}" class="page-link">&raquo;</a>
-                                                </li>
-                                            </c:if>
-                                        </ul>
-                                    </div>
+                                        <c:if test="${currentPage < totalPages}">
+                                            <li class="page-item">
+                                                <a href="searchServlet?searchQuery=${searchQuery}&page=${currentPage + 1}" class="page-link">&raquo;</a>
+                                            </li>
+                                        </c:if>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
