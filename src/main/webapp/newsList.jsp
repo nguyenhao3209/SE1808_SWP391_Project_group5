@@ -3,27 +3,31 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>News List</title>
+        <title>Sports News List</title>
         <!-- Bootstrap CSS -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
         <!-- Bootstrap Icons -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
         <!-- Custom Styles -->
         <style>
-            /* Custom Styles for News List Page */
+            /* Custom Styles for Sports News List Page */
             .news-list {
                 padding: 40px 20px;
-                background-color: #f8f9fa;
+                background: linear-gradient(135deg, #f8f9fa, #e9ecef);
                 min-height: 100vh;
             }
 
             .news-list h1 {
-                font-size: 3em;
+                font-size: 3.5em;
                 color: #2c3e50;
                 margin-bottom: 30px;
                 text-align: center;
-                font-weight: 700;
+                font-weight: 900;
                 letter-spacing: -1px;
+                text-transform: uppercase;
+                background: linear-gradient(135deg, #3498db, #2ecc71);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
             }
 
             .news-grid {
@@ -41,6 +45,7 @@
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
                 overflow: hidden;
+                position: relative;
             }
 
             .news-card:hover {
@@ -63,7 +68,7 @@
                 font-size: 1.75em;
                 color: #34495e;
                 margin-bottom: 15px;
-                font-weight: 600;
+                font-weight: 700;
                 line-height: 1.3;
             }
 
@@ -103,14 +108,14 @@
             }
 
             .read-more-btn {
-                background-color: #3498db;
+                background-color: #2ecc71;
                 color: white;
                 border: none;
                 cursor: pointer;
             }
 
             .read-more-btn:hover {
-                background-color: #2980b9;
+                background-color: #27ae60;
                 transform: translateY(-3px);
             }
 
@@ -161,34 +166,59 @@
             }
 
             .pagination button:hover {
-                background-color: #3498db;
+                background-color: #2ecc71;
                 color: white;
-                border-color: #3498db;
+                border-color: #2ecc71;
             }
 
             .pagination button.active {
-                background-color: #3498db;
+                background-color: #2ecc71;
                 color: white;
-                border-color: #3498db;
+                border-color: #2ecc71;
+            }
+
+            .news-card-content {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+
+            .news-card-content p,
+            .news-card-content h2,
+            .news-card-content .news-date {
+                flex-grow: 1;
+            }
+
+            .read-more-btn {
+                margin-top: auto;
+            }
+
+            /* Sports Icon */
+            .sports-icon {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                font-size: 1.5em;
+                color: #2ecc71;
             }
         </style>
     </head>
     <body>
         <jsp:include page="./common/header.jsp"/>
         <div class="container news-list">
-            <h1 class="text-center">News</h1>
+            <h1 class="text-center">Sports News</h1>
             <div class="news-grid">
                 <c:if test="${not empty newsList}">
                     <c:forEach var="news" items="${newsList}" varStatus="loop">
                         <div class="news-card" data-page="${Math.floor(loop.index / 9) + 1}">
                             <div class="news-card-content">
+                                <i class="bi bi-trophy sports-icon"></i>
                                 <h2>${news.title}</h2>
                                 <span class="news-date"><i class="bi bi-calendar3"></i> ${news.publishedDate}</span>
                                 <p><strong>Author:</strong> ${news.author}</p>
                                 <p><strong>Email:</strong> ${news.staff.email}</p>
                                 <p>${news.content}</p>
                                 <img src="${news.image}" alt="${news.title}" class="img-fluid rounded">
-
                                 <!-- Read More link with icon -->
                                 <a href="news-list?action=view&id=${news.newsID}" class="btn read-more-btn">
                                     <i class="bi bi-book"></i> Read More

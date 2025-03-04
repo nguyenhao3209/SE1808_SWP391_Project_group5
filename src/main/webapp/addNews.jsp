@@ -12,23 +12,13 @@
 
             body {
                 font-family: 'Helvetica Neue', sans-serif;
-                background: linear-gradient(90deg, #b29f7d, #6e6e6e);
-                color: #ddd;
+                background-color: #f9f9f9;
+                color: #333;
                 padding: 20px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 min-height: 100vh;
-                animation: backgroundShift 12s ease-in-out infinite;
-            }
-
-            @keyframes backgroundShift {
-                0%, 100% {
-                    background: radial-gradient(circle, #1c1f24, #14171a);
-                }
-                50% {
-                    background: radial-gradient(circle, #14171a, #0f1215);
-                }
             }
 
             h1 {
@@ -38,47 +28,23 @@
                 color: #0077cc;
                 margin-bottom: 20px;
                 letter-spacing: 1px;
-                text-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-                animation: glow 1.5s ease-in-out infinite alternate;
-            }
-
-            @keyframes glow {
-                0%, 100% {
-                    color: #0077cc;
-                    text-shadow: 0 0 10px #0077cc;
-                }
-                50% {
-                    color: #005fa3;
-                    text-shadow: 0 0 20px #005fa3;
-                }
             }
 
             form {
-                background: #1b1e21;
+                background: #fff;
                 max-width: 700px;
-                padding: 35px;
+                width: 100%;
+                padding: 30px;
                 border-radius: 12px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-                transform: scale(0.95);
-                animation: scaleUp 0.8s ease forwards;
-            }
-
-            @keyframes scaleUp {
-                from {
-                    transform: scale(0.9);
-                    opacity: 0.8;
-                }
-                to {
-                    transform: scale(1);
-                    opacity: 1;
-                }
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                border: 1px solid #e0e0e0;
             }
 
             label {
                 display: block;
                 margin-bottom: 8px;
                 font-weight: bold;
-                color: #b0c4de;
+                color: #555;
                 font-size: 15px;
             }
 
@@ -89,21 +55,20 @@
                 width: 100%;
                 padding: 12px;
                 margin-bottom: 15px;
-                border: 1px solid #333;
+                border: 1px solid #ddd;
                 border-radius: 8px;
-                background-color: #2c2f33;
-                color: #ddd;
-                box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.3);
-                transition: box-shadow 0.3s ease, border-color 0.3s ease;
+                background-color: #f9f9f9;
+                color: #333;
                 font-size: 1rem;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease;
             }
 
             input[type="text"]:focus,
             input[type="date"]:focus,
             input[type="file"]:focus,
             textarea:focus {
-                border-color: #3498db;
-                box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+                border-color: #0077cc;
+                box-shadow: 0 0 8px rgba(0, 119, 204, 0.2);
                 outline: none;
             }
 
@@ -113,7 +78,7 @@
             }
 
             .btn {
-                background: linear-gradient(135deg, #0077cc, #005fa3);
+                background: #0077cc;
                 color: #fff;
                 padding: 12px;
                 font-size: 17px;
@@ -123,18 +88,18 @@
                 cursor: pointer;
                 transition: background-color 0.3s ease, transform 0.3s ease;
                 width: 100%;
-                box-shadow: 0 5px 15px rgba(0, 119, 204, 0.3);
+                box-shadow: 0 4px 8px rgba(0, 119, 204, 0.2);
             }
 
             .btn:hover {
-                background: linear-gradient(135deg, #005fa3, #0077cc);
-                transform: scale(1.03);
-                box-shadow: 0 8px 20px rgba(0, 119, 204, 0.4);
+                background: #005fa3;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(0, 119, 204, 0.3);
             }
 
             .btn:active {
                 transform: translateY(0);
-                box-shadow: 0 3px 8px rgba(76, 175, 80, 0.2);
+                box-shadow: 0 4px 8px rgba(0, 119, 204, 0.2);
             }
         </style>
     </head>

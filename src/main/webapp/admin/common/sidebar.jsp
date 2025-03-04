@@ -109,6 +109,9 @@
                         <li>
                             <a href="news-management" class="ttr-material-button"><span class="ttr-label">List News</span></a>
                         </li>
+                        <li>
+                            <a href="add-news" class="ttr-material-button"><span class="ttr-label">Add News</span></a>
+                        </li>
                     </ul>
                 </li>
 
