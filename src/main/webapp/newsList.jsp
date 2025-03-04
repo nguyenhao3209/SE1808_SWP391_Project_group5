@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
-    <jsp:include page="./common/header.jsp"/>
+
     <head>
         <title>News List</title>
         <!-- Bootstrap CSS -->
@@ -139,6 +139,7 @@
         </style>
     </head>
     <body>
+        <jsp:include page="./common/header.jsp"/>
         <div class="container news-list">
             <h1 class="text-center">News</h1>
             <div class="news-grid">
@@ -154,7 +155,7 @@
                                 <img src="${news.image}" alt="${news.title}" class="img-fluid rounded">
 
                                 <!-- Check if the user is ADMIN -->
-                                
+
 
                                 <!-- Read More link with icon -->
                                 <a href="news-list?action=view&id=${news.newsID}" class="btn read-more-btn">
