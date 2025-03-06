@@ -20,8 +20,8 @@ import java.util.List;
  *
  * @author HuyLVQCE180656
  */
-@WebServlet(name = "SearchServlet", urlPatterns = {"/searchServlet"})
-public class SearchServlet extends HttpServlet {
+@WebServlet(name = "AdminSearchProduct", urlPatterns = {"/adminSearchProduct"})
+public class AdminSearchProduct extends HttpServlet {
 
     private static final int ITEMS_PER_PAGE = 20;
 
@@ -42,10 +42,10 @@ public class SearchServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SearchServlet</title>");
+            out.println("<title>Servlet AdminSearchProduct</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SearchServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AdminSearchProduct at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }

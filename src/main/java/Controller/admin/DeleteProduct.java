@@ -58,7 +58,29 @@ public class DeleteProduct extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        // Lấy productId từ request
+        String productId = request.getParameter("productId");
+
+        // Kiểm tra productId có hợp lệ không
+        if (productId != null && !productId.isEmpty()) {
+            try {
+                int id = Integer.parseInt(productId);
+
+                // Gọi DAO để xóa sản phẩm
+                ProductsDAO dao = new ProductsDAO();
+                dao.deleteProductById(id);
+
+                // Sau khi xóa, chuyển hướng về trang danh sách sản phẩm
+                response.sendRedirect("listProducts?success=true");
+
+            } catch (NumberFormatException e) {
+                // Nếu productId không hợp lệ, chuyển hướng với thông báo lỗi
+                response.sendRedirect("listProducts?error=invalid_id");
+            }
+        } else {
+            // Nếu productId không tồn tại trong request, chuyển hướng về danh sách
+            response.sendRedirect("listProducts?error=missing_id");
+        }
     }
 
     /**
@@ -72,13 +94,6 @@ public class DeleteProduct extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String productId = request.getParameter("productId");
-        ProductsDAO productDAO = new ProductsDAO();
-        productDAO.deleteProductById(productId);
-
-        request.getSession().setAttribute("successMessage", "Product deleted successfully!");
-        response.sendRedirect("listProducts.jsp");
-
     }
 
     /**
