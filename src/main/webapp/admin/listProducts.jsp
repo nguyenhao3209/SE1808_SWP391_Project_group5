@@ -84,7 +84,7 @@
                                 <div class="container">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <h2>Products Management</h2>
-                                        <form action="searchServlet" method="GET" class="d-flex">
+                                        <form action="adminSearchProduct" method="GET" class="d-flex">
                                             <input type="text" class="form-control me-2" name="searchQuery" id="searchInput" 
                                                    placeholder="Search by product name..." value="${searchQuery}" style="width: 400px;">
                                             <button type="submit" class="btn btn-primary">Search</button>
@@ -143,19 +143,19 @@
                                     <ul class="pagination mb-0">
                                         <c:if test="${currentPage > 1}">
                                             <li class="page-item">
-                                                <a href="searchServlet?searchQuery=${searchQuery}&page=${currentPage - 1}" class="page-link">&laquo;</a>
+                                                <a href="adminSearchProduct?searchQuery=${searchQuery}&page=${currentPage - 1}" class="page-link">&laquo;</a>
                                             </li>
                                         </c:if>
 
                                         <c:forEach var="page" begin="${startPage}" end="${endPage}">
                                             <li class="page-item ${page == currentPage ? 'active' : ''}">
-                                                <a href="searchServlet?searchQuery=${searchQuery}&page=${page}" class="page-link">${page}</a>
+                                                <a href="adminSearchProduct?searchQuery=${searchQuery}&page=${page}" class="page-link">${page}</a>
                                             </li>
                                         </c:forEach>
 
                                         <c:if test="${currentPage < totalPages}">
                                             <li class="page-item">
-                                                <a href="searchServlet?searchQuery=${searchQuery}&page=${currentPage + 1}" class="page-link">&raquo;</a>
+                                                <a href="adminSearchProduct?searchQuery=${searchQuery}&page=${currentPage + 1}" class="page-link">&raquo;</a>
                                             </li>
                                         </c:if>
                                     </ul>
