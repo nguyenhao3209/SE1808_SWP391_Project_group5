@@ -67,6 +67,7 @@
                                             <a href="#" class="nav-link"><img class="user-avatar" src="${sessionScope.user.avatar}" alt="alt"/> ${sessionScope.user.customerName}</a>
                                             <ul>
                                                 <li><a href="profile.jsp">Profile</a></li>
+                                                <li><a href="HistoryServlet">History</a></li>
                                                 <li><a href="change-pass.jsp">Change Password</a></li>
                                                 <li><a href="logout">Logout</a></li>
                                             </ul>
@@ -124,7 +125,7 @@
                                 <li class="menu-item"><a href="cart" class="nav-link">Cart</a></li>
                                 <li class="menu-item"><a href="ViewVouchersServlet" class="nav-link">Voucher</a></li>
                                 <li class="menu-item"><a href="contact.jsp" class="nav-link">Contact</a></li>
-                                <li class="menu-item"><a href="#download-app" class="nav-link">Articles</a></li>
+                                <li class="menu-item"><a href="news-list" class="nav-link">Articles</a></li>
                             </ul>
 
                             <div class="hamburger">

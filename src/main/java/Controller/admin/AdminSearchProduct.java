@@ -4,8 +4,9 @@
  */
 package Controller.admin;
 
-import Models.Staffs;
-import dal.StaffsDAO;
+import Models.Products;
+import dal.ProductsDAO;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,14 +14,16 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  *
  * @author HuyLVQCE180656
  */
-@WebServlet(name = "DeleteStaff", urlPatterns = {"/deleteStaff"})
-public class DeleteStaff extends HttpServlet {
+@WebServlet(name = "AdminSearchProduct", urlPatterns = {"/adminSearchProduct"})
+public class AdminSearchProduct extends HttpServlet {
+
+    private static final int ITEMS_PER_PAGE = 20;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +42,10 @@ public class DeleteStaff extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DeleteStaff</title>");
+            out.println("<title>Servlet AdminSearchProduct</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DeleteStaff at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AdminSearchProduct at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,26 +63,56 @@ public class DeleteStaff extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        ProductsDAO productsDAO = new ProductsDAO();
+        String searchInput = request.getParameter("searchQuery");
 
-        HttpSession session = request.getSession();
-
-        String staffId = request.getParameter("staffId");
-        if (staffId == null || staffId.trim().isEmpty()) {
-            session.setAttribute("errorMessage", "Invalid staff ID!");
-            response.sendRedirect("listStaffs.jsp");
-            return;
+        // Nếu không có input, mặc định là rỗng để tránh lỗi truy vấn
+        if (searchInput == null) {
+            searchInput = "";
         }
 
-        StaffsDAO staffDao = new StaffsDAO();
-        boolean isDeleted = staffDao.deleteStaffById(staffId);
+        // Đếm tổng số sản phẩm tìm thấy
+        int count_item = productsDAO.countSearchResults(searchInput);
+        int totalPages = (int) Math.ceil((double) count_item / ITEMS_PER_PAGE); // Tổng số trang
 
-        if (isDeleted) {
-            session.setAttribute("successMessage", "Staff deleted successfully!");
-        } else {
-            session.setAttribute("errorMessage", "Failed to delete staff. Staff may not exist.");
+        // Lấy trang hiện tại từ request (mặc định là trang 1)
+        String pageParam = request.getParameter("page");
+        int currentPage;
+        try {
+            currentPage = (pageParam != null) ? Integer.parseInt(pageParam) : 1;
+        } catch (NumberFormatException e) {
+            currentPage = 1;
         }
 
-        response.sendRedirect("listStaffs");
+        // Đảm bảo `currentPage` không vượt quá tổng số trang
+        if (currentPage < 1) {
+            currentPage = 1;
+        }
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        // Tính OFFSET (số sản phẩm cần bỏ qua)
+        int offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+        // Xác định phạm vi trang hiển thị (hiển thị tối đa 10 trang liên tiếp)
+        int pageGroupSize = 10;
+        int startPage = ((currentPage - 1) / pageGroupSize) * pageGroupSize + 1;
+        int endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
+
+        // Gọi hàm tìm kiếm sản phẩm có phân trang
+        List<Products> searchResult = productsDAO.searchProductsByName(searchInput, offset, ITEMS_PER_PAGE);
+
+        // Gửi dữ liệu đến JSP
+        request.setAttribute("searchQuery", searchInput);
+        request.setAttribute("productList", searchResult);
+        request.setAttribute("startPage", startPage);
+        request.setAttribute("endPage", endPage);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("admin/listProducts.jsp");
+        dispatcher.forward(request, response);
     }
 
     /**

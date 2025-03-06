@@ -4,8 +4,7 @@
  */
 package Controller.admin;
 
-import Models.Staffs;
-import dal.StaffsDAO;
+import dal.ProductsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,18 +12,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import utils.PasswordUtils;
 
 /**
  *
  * @author HuyLVQCE180656
  */
-@WebServlet(name = "EditStaff", urlPatterns = {"/editStaff"})
-public class EditStaff extends HttpServlet {
+@WebServlet(name = "DeleteProduct", urlPatterns = {"/deleteProduct"})
+public class DeleteProduct extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,10 +37,10 @@ public class EditStaff extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet EditStaff</title>");
+            out.println("<title>Servlet DeleteProduct</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet EditStaff at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DeleteProduct at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -64,18 +58,29 @@ public class EditStaff extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String staffId = request.getParameter("staffId");
-        if (staffId != null) {
-            StaffsDAO staffDAO = new StaffsDAO();
-            Staffs staff = staffDAO.getStaffById(staffId);
+        // Lấy productId từ request
+        String productId = request.getParameter("productId");
 
-            if (staff != null) {
-                request.setAttribute("staff", staff);
-                request.getRequestDispatcher("admin/editStaff.jsp").forward(request, response);
-                return;
+        // Kiểm tra productId có hợp lệ không
+        if (productId != null && !productId.isEmpty()) {
+            try {
+                int id = Integer.parseInt(productId);
+
+                // Gọi DAO để xóa sản phẩm
+                ProductsDAO dao = new ProductsDAO();
+                dao.deleteProductById(id);
+
+                // Sau khi xóa, chuyển hướng về trang danh sách sản phẩm
+                response.sendRedirect("listProducts?success=true");
+
+            } catch (NumberFormatException e) {
+                // Nếu productId không hợp lệ, chuyển hướng với thông báo lỗi
+                response.sendRedirect("listProducts?error=invalid_id");
             }
+        } else {
+            // Nếu productId không tồn tại trong request, chuyển hướng về danh sách
+            response.sendRedirect("listProducts?error=missing_id");
         }
-        response.sendRedirect("listStaffs"); // Nếu staffId không hợp lệ, quay về danh sách
     }
 
     /**
@@ -89,48 +94,6 @@ public class EditStaff extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        HttpSession session = request.getSession();
-
-        String staffId = request.getParameter("staffId").trim();
-        String staffName = request.getParameter("staffName").trim();
-        String password = request.getParameter("password").trim();
-        String phone = request.getParameter("phone").trim();
-        String role = request.getParameter("role").trim();
-        String gender = request.getParameter("gender").trim();
-        String status = request.getParameter("status").trim();
-        String address = request.getParameter("address").trim();
-
-        if (staffName.isEmpty() || phone.isEmpty() || role.isEmpty() || gender.isEmpty() || status.isEmpty() || address.isEmpty()) {
-            response.sendRedirect("editStaff.jsp?staffId=" + staffId);
-            return;
-        }
-
-        StaffsDAO staffDAO = new StaffsDAO();
-        Staffs staff = staffDAO.getStaffById(staffId);
-
-        if (staff == null) {
-            session.setAttribute("errorMessage", "Staff not found!");
-            response.sendRedirect("listStaffs");
-            return;
-        }
-
-        // Cập nhật thông tin nhân viên
-        staff.setStaffName(staffName);
-        if (!password.isEmpty()) {
-            staff.setPassword(PasswordUtils.hashPassword(password));
-        }
-        staff.setPhone(phone);
-        staff.setRole(Staffs.Role.valueOf(role));
-        staff.setGender(gender);
-        staff.setStatus(Staffs.Status.valueOf(status));
-        staff.setAddress(address);
-
-        // Gọi phương thức update (không kiểm tra kết quả)
-        staffDAO.updateStaff(staff);
-
-        session.setAttribute("successMessage", "Staff updated successfully!");
-        response.sendRedirect("listStaffs");
     }
 
     /**

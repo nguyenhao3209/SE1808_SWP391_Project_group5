@@ -5,6 +5,7 @@
 
 package Controller;
 
+import Models.Products;
 import Models.Slider;
 import dal.ProductsDAO;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -56,13 +58,36 @@ public class HomeServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        ProductsDAO productDAO = new ProductsDAO();
-        ArrayList<Slider> slide = productDAO.getAllSliders();
-        
-        session.setAttribute("slides", slide);
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+            throws ServletException, IOException {
+        try {
+            HttpSession session = request.getSession();
+            ProductsDAO productDAO = new ProductsDAO();
+
+            // Lấy danh sách slider
+            ArrayList<Slider> slide = productDAO.getAllSliders();
+            session.setAttribute("slides", slide);
+
+            // Lấy danh mục sản phẩm được chọn từ request
+            String categoryID = request.getParameter("categoryID");
+
+            // Nếu categoryID null, mặc định lấy danh mục đầu tiên (VD: Racket - ID = 1)
+            List<Object[]> saleList;
+            if (categoryID == null) {
+                categoryID = "1"; // Mặc định chọn danh mục đầu tiên
+            }
+            saleList = productDAO.getTop8();
+
+            session.setAttribute("saleList", saleList);
+            session.setAttribute("check_click_category", categoryID); // Lưu trạng thái danh mục đã chọn
+
+            request.getRequestDispatcher("home.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            System.out.println("Lỗi chuyển đổi categoryID: " + e.getMessage());
+            response.sendRedirect("error.jsp");
+        } catch (Exception e) {
+            System.out.println("Lỗi trong HomeController: " + e);
+            response.sendRedirect("error.jsp");
+        }
     } 
 
     /** 

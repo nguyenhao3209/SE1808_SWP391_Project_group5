@@ -5,6 +5,7 @@
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 
@@ -72,6 +73,7 @@
                     </a>
                 </li>
                 <c:if test="${sessionScope.user.role eq 'ADMIN'}">
+                <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                 <li>
                     <a href="#" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
@@ -101,6 +103,18 @@
                         </li>
                         <li>
                             <a href="admin/stock_import.jsp" class="ttr-material-button"><span class="ttr-label">Stock In</span></a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-user"></i></span>
+                        <span class="ttr-label">News Management</span>
+                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="news-management" class="ttr-material-button"><span class="ttr-label">List News</span></a>
                         </li>
                     </ul>
                 </li>

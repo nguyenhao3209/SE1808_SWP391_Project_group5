@@ -90,16 +90,17 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label for="genderFilter"></label>
-                                                <select id="genderFilter" class="form-control">
-                                                    <option value="">All Genders</option>
+
+                                                <select id="gendersFilter" class="form-control"  onchange="handleGenderChange(this)">
+                                                    <option value="All" selected="true">All Genders</option>
                                                     <option value="Male">Male</option>
                                                     <option value="Female">Female</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="statusFilter"></label>
-                                                <select id="statusFilter" class="form-control">
-                                                    <option value="">All Status</option>
+                                                <select id="statusFilter" class="form-control" onchange="handleStatusChange(this)">
+                                                    <option value="All" selected="true">All Status</option>
                                                     <option value="Active">Active</option>
                                                     <option value="Inactive">Inactive</option>
                                                 </select>
@@ -122,7 +123,7 @@
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="staffTableBody">
+                                            <tbody id="staffTableBody" >
                                                 <c:choose>
                                                     <c:when test="${empty staffList}">
                                                         <tr>
@@ -161,39 +162,59 @@
                 </div>
             </div>
 
-            <script>
+            <script type="text/javascript">
+                function handleGenderChange(selectElement) {
+                    console.log("Selected value:", selectElement.value);
+                    $.ajax({
+                        url: "./selectStaffGenders",
+                        type: "GET",
+                        data: {select: selectElement.value},
+                        success: function (data) {
+                            console.log(data);
+                            var row = document.getElementById("staffTableBody");
+                            row.innerHTML = data;
+                        },
+                        error: function (xhr) {
+                            console.error("Error fetching data:", xhr);
+                        },
+                    });
+                }
+                function handleStatusChange(selectElement) {
+                    console.log("Selected value:", selectElement.value);
+                    $.ajax({
+                        url: "./selectStaffGenders",
+                        type: "GET",
+                        data: {selectStatus: selectElement.value},
+                        success: function (data) {
+                            console.log(data);
+                            var row = document.getElementById("staffTableBody");
+                            row.innerHTML = data;
+                        },
+                        error: function (xhr) {
+                            console.error("Error fetching data:", xhr);
+                        },
+                    });
+                }
                 document.addEventListener("DOMContentLoaded", function () {
                     const searchInput = document.getElementById("searchInput");
-                    const genderFilter = document.getElementById("genderFilter");
-                    const statusFilter = document.getElementById("statusFilter");
                     const tableRows = document.querySelectorAll("#staffTable tbody tr");
-
                     function updateTableVisibility() {
                         tableRows.forEach(row => {
                             const staffID = row.cells[0].textContent.toLowerCase();
                             const staffName = row.cells[1].textContent.toLowerCase();
-                            const gender = row.cells[4].textContent.trim().toLowerCase();
-                            const status = row.cells[5].textContent.trim().toLowerCase();
 
                             // Lấy giá trị từ input và dropdown
                             const selectedInput = searchInput.value.toLowerCase();
-                            const selectedGender = genderFilter.value.toLowerCase();
-                            const selectedStatus = statusFilter.value.toLowerCase();
 
                             // Điều kiện lọc
                             const matchSearch = (selectedInput === "" || staffID.includes(selectedInput) || staffName.includes(selectedInput));
-                            const matchGender = (selectedGender === "" || gender === selectedGender);
-                            const matchStatus = (selectedStatus === "" || status === selectedStatus);
 
                             // Hiển thị hoặc ẩn hàng
-                            row.style.display = (matchSearch && matchGender && matchStatus) ? "" : "none";
+                            row.style.display = (matchSearch) ? "" : "none";
                         });
                     }
-
                     // Gán sự kiện lắng nghe
                     searchInput.addEventListener("input", updateTableVisibility);
-                    genderFilter.addEventListener("change", updateTableVisibility);
-                    statusFilter.addEventListener("change", updateTableVisibility);
                 });
             </script>
         </main>

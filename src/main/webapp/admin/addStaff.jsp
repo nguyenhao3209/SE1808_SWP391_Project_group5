@@ -76,7 +76,7 @@
                                 <h4>Add New Staff</h4>
                             </div>
                             <div class="widget-inner">
-                                <form action="addStaff" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                <form action="addStaff" method="post" class="form-horizontal">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -84,8 +84,8 @@
                                                 <input type="text" class="form-control" name="staffName" required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="passWord">Password</label>
-                                                <input type="password" class="form-control" name="passWord" required>
+                                                <label for="password">Password</label>
+                                                <input type="password" class="form-control" name="password" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="phone">Phone</label>
@@ -93,7 +93,10 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="role">Role</label>
-                                                <input type="text" class="form-control" name="role" required>
+                                                <select name="role" class="form-control" required>
+                                                    <option value="ADMIN">Admin</option>
+                                                    <option value="STAFF">Staff</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -104,7 +107,6 @@
                                             <div class="form-group">
                                                 <label for="gender">Gender</label>
                                                 <select name="gender" class="form-control" required>
-                                                    <option value="" selected>Gender</option>
                                                     <option value="Male">Male</option>
                                                     <option value="Female">Female</option>
                                                 </select>
@@ -112,9 +114,8 @@
                                             <div class="form-group">
                                                 <label for="status">Status</label>
                                                 <select name="status" class="form-control" required>
-                                                    <option value="" selected>Status</option>
-                                                    <option value="Active">Active</option>
-                                                    <option value="Inactive">Inactive</option>
+                                                    <option value="ACTIVE">Active</option>
+                                                    <option value="INACTIVE">Inactive</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
