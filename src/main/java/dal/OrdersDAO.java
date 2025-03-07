@@ -15,7 +15,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.criteria.Order;
 
 /**
@@ -154,6 +156,7 @@ public class OrdersDAO extends DBContext {
         }
         return list;
     }
+
     public Orders getOderByID(int id) {
         Orders order = null;
         CustomersDAO customersDAO = new CustomersDAO();
@@ -164,7 +167,7 @@ public class OrdersDAO extends DBContext {
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, id);
-            ps.executeUpdate();
+            ps.executeQuery();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Customers customers = customersDAO.getCustomerByID(rs.getString("CustomerID"));
@@ -179,7 +182,7 @@ public class OrdersDAO extends DBContext {
                 order.setPaymentMethod(rs.getString("PaymentMethod"));
                 order.setTotalPrice(rs.getBigDecimal("TotalPrice"));
                 order.setCreateAt(rs.getDate("CreatedAt"));
-                
+
             }
             rs.close();
             ps.close();
@@ -188,13 +191,14 @@ public class OrdersDAO extends DBContext {
         }
         return order;
     }
+
     public List<OrderDetails> getOdersDetailByID(int id) {
         ArrayList<OrderDetails> list = new ArrayList<>();
-        CustomersDAO customersDAO = new CustomersDAO();
+
         ProductsDAO productsDAO = new ProductsDAO();
         String sql = "SELECT \n"
                 + "    od.[OrderID],\n"
-                + "    od.[OrderDetailID]\n,"
+                + "    od.[OrderDetailID],\n"
                 + "    od.[ProductID],\n"
                 + "    od.[Price],\n"
                 + "    od.[Quantity],\n"
@@ -207,12 +211,12 @@ public class OrdersDAO extends DBContext {
                 + "	Where o.[OrderID] = ?\n"
                 + "ORDER BY o.[CreatedAt] DESC;";
         try {
-            ps = connection.prepareStatement(sql);
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, id);
-            ps.executeUpdate();
+            ps.executeQuery();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Customers customers = customersDAO.getCustomerByID(rs.getString("CustomerID"));
+
                 Products products = productsDAO.getProductByID(rs.getInt("ProductID"));
                 Orders order = getOderByID(rs.getInt("OrderID"));
 
@@ -226,6 +230,114 @@ public class OrdersDAO extends DBContext {
         }
         return list;
     }
-    
+
+    public static void main(String[] args) {
+        OrdersDAO odao = new OrdersDAO();
+        List<OrderDetails> list = odao.getOdersDetailByID(1006);
+        for (OrderDetails orderDetails : list) {
+            System.out.println(orderDetails.getProduct().getProductID());
+        }
+    }
+
+    public List<Orders> getOrdersByCustomerID(String id) {
+        ArrayList<Orders> list = new ArrayList<>();
+        CustomersDAO customersDAO = new CustomersDAO();
+        VoucherDAO voucherDAO = new VoucherDAO();
+        StaffsDAO staffsdao = new StaffsDAO();
+        String sql = "SELECT *FROM [SE1808_SWP391_Group5].[dbo].[Orders] where [CustomerID] = ? \n";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, id);
+            ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Customers customers = customersDAO.getCustomerByID(rs.getString("CustomerID"));
+                Vouchers voucher = voucherDAO.getVoucherById(rs.getInt("VoucherID"));
+                Staffs staff = staffsdao.getStaffByID(rs.getString("StaffID"));
+                list.add(new Orders(rs.getInt("OrderID"), customers, staff, voucher, rs.getString("Status"), rs.getString("PaymentMethod"), rs.getBigDecimal("TotalPrice"), rs.getDate("CreatedAt")));
+
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace(); // Nên in lỗi để dễ dàng debug
+        }
+        return list;
+    }
+
+    public List<Integer> getMonthlyOrderCountByYear(int year) {
+        List<Integer> list = new ArrayList<>();
+        String query = "WITH Months AS (\n"
+                + "    SELECT 1 AS Month\n"
+                + "    UNION ALL SELECT 2\n"
+                + "    UNION ALL SELECT 3\n"
+                + "    UNION ALL SELECT 4\n"
+                + "    UNION ALL SELECT 5\n"
+                + "    UNION ALL SELECT 6\n"
+                + "    UNION ALL SELECT 7\n"
+                + "    UNION ALL SELECT 8\n"
+                + "    UNION ALL SELECT 9\n"
+                + "    UNION ALL SELECT 10\n"
+                + "    UNION ALL SELECT 11\n"
+                + "    UNION ALL SELECT 12\n"
+                + ")\n"
+                + "SELECT \n"
+                + "    m.Month,\n"
+                + "    COUNT(o.OrderID) AS OrderCount\n"
+                + "FROM \n"
+                + "    Months m\n"
+                + "LEFT JOIN \n"
+                + "    Orders o ON MONTH(o.CreatedAt) = m.Month AND YEAR(o.CreatedAt) = ? AND o.Status = 'COMPLETED'\n"
+                + "GROUP BY \n"
+                + "    m.Month\n"
+                + "ORDER BY \n"
+                + "    m.Month;";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, year);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(rs.getInt(2));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Map<String, Object>> getTop10StaffByOrderCount(int year) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        String query = "SELECT TOP 10 \n"
+                + "    s.StaffID, \n"
+                + "    s.StaffName, \n"
+                + "    COUNT(o.OrderID) AS OrderCount\n"
+                + "FROM \n"
+                + "    Orders o\n"
+                + "JOIN \n"
+                + "    Staffs s ON o.StaffID = s.StaffID\n"
+                + "WHERE \n"
+                + "    o.Status = 'COMPLETED' and YEAR(o.CreatedAt) = ?\n"
+                + "GROUP BY \n"
+                + "    s.StaffID, s.StaffName\n"
+                + "ORDER BY \n"
+                + "    OrderCount DESC;";
+
+        try {
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, year);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("StaffID", rs.getString("StaffID"));
+                map.put("StaffName", rs.getString("StaffName"));
+                map.put("OrderCount", rs.getInt("OrderCount"));
+                list.add(map);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
 }

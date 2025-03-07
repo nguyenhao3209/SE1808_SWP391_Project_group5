@@ -117,6 +117,8 @@ public class LoginController extends HttpServlet {
                         response.addCookie(emailCookie);
                         response.addCookie(passwordCookie);
                     }
+
+                    // Điều hướng dựa vào vai trò người dùng
                     if (user != null) {
                         session.setAttribute("user", user);
                         response.sendRedirect("home.jsp");

@@ -5,19 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 import Models.News;
 import Models.Staffs;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 public class NewsDAO extends DBContext {
 
     public News getNewsById(int id) {
         String sql = "SELECT n.NewsID, n.Author, n.Title, n.Content, n.PublishedDate, n.FilePath, n.ImageURL, s.StaffID, s.StaffName, s.Email "
-                   + "FROM News n "
-                   + "JOIN Staffs s ON n.StaffID = s.StaffID "
-                   + "WHERE n.NewsID = ?";
+                + "FROM News n "
+                + "JOIN Staffs s ON n.StaffID = s.StaffID "
+                + "WHERE n.NewsID = ?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
+            try ( ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     News news = new News();
                     news.setNewsID(rs.getInt("NewsID"));
@@ -46,9 +50,9 @@ public class NewsDAO extends DBContext {
 
     public void addNews(String staffID, String author, String title, String content, LocalDateTime publishedDate, String filePath, String imageURL) throws SQLException {
         String sql = "INSERT INTO News (StaffID, Author, Title, Content, PublishedDate, FilePath, ImageURL) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, staffID);
             stmt.setString(2, author);
             stmt.setString(3, title);
@@ -62,7 +66,7 @@ public class NewsDAO extends DBContext {
 
     public void deleteNewsById(int newsId) throws SQLException {
         String sql = "DELETE FROM News WHERE NewsID = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, newsId);
             stmt.executeUpdate();
         }
@@ -71,7 +75,7 @@ public class NewsDAO extends DBContext {
     public void updateNewsById(int newsId, String staffID, String author, String title, String content, LocalDateTime publishedDate, String filePath, String imageURL) throws SQLException {
         String sql = "UPDATE News SET StaffID = ?, Author = ?, Title = ?, Content = ?, PublishedDate = ?, FilePath = ?, ImageURL = ? WHERE NewsID = ?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, staffID);
             stmt.setString(2, author);
             stmt.setString(3, title);
@@ -87,11 +91,10 @@ public class NewsDAO extends DBContext {
     public List<News> getNewsList() {
         List<News> newsList = new ArrayList<>();
         String sql = "SELECT n.NewsID, n.Author, n.Title, n.Content, n.PublishedDate, n.FilePath, n.ImageURL, s.StaffID, s.StaffName, s.Email "
-                   + "FROM News n "
-                   + "JOIN Staffs s ON n.StaffID = s.StaffID";
+                + "FROM News n "
+                + "JOIN Staffs s ON n.StaffID = s.StaffID";
 
-        try (PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try ( PreparedStatement ps = connection.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 News news = new News();
@@ -115,5 +118,24 @@ public class NewsDAO extends DBContext {
             e.printStackTrace();
         }
         return newsList;
+    }
+
+    public ArrayList<String> extractContentAndImg(String filePath) throws IOException {
+        ArrayList<String> newsDetail = new ArrayList();
+
+        // Kiểm tra filePath có hợp lệ không
+        try ( FileInputStream fis = new FileInputStream(filePath);  XWPFDocument document = new XWPFDocument(fis)) {
+
+            // Đọc nội dung văn bản từ các đoạn văn (paragraphs)
+            for (XWPFParagraph paragraph : document.getParagraphs()) {
+                String text = paragraph.getText().trim();
+                if (!text.isEmpty()) {
+                    newsDetail.add(text); // Thêm đoạn văn vào danh sách
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return newsDetail;
     }
 }

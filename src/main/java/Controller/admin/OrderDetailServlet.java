@@ -15,6 +15,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -62,17 +63,34 @@ public class OrderDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //HttpSession session = request.getSession();
         String id = request.getParameter("orderID");
         int orderID = Integer.parseInt(id);
         OrdersDAO ordersDAO = new OrdersDAO();
         Orders order = ordersDAO.getOderByID(orderID);
         List<OrderDetails> orderDetails = ordersDAO.getOdersDetailByID(orderID);
-
+        
         request.setAttribute("orderDetails", orderDetails);
+        //session.setAttribute("orderDetails", orderDetails);
         request.setAttribute("order", order);
         RequestDispatcher dispatcher = request.getRequestDispatcher("order_detail_partial.jsp");
-    dispatcher.forward(request, response);
+        dispatcher.forward(request, response);
 
+    }
+
+    public static void main(String[] args) {
+        OrdersDAO ordersDAO = new OrdersDAO();
+        Orders order = ordersDAO.getOderByID(1006);
+        List<OrderDetails> orderDetails = ordersDAO.getOdersDetailByID(1006);
+        for (OrderDetails orderDetail : orderDetails) {
+            System.out.println(orderDetail.getPrice());
+        }
+        for (OrderDetails od : orderDetails) {
+    System.out.println("Product ID: " + od.getProduct().getProductID());
+    System.out.println("Product Name: " + od.getProduct().getProductName());
+    System.out.println("Quantity: " + od.getQuantity());
+    System.out.println("Price: " + od.getPrice());
+}
     }
 
     /**

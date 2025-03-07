@@ -24,10 +24,15 @@ public class StaffsDAO extends DBContext {
     private PreparedStatement ps = null;
     private ResultSet rs = null;
 
-    public List<Staffs> getAllStaffs() {
+    public List<Staffs> getAllStaffs(String gender, String status) {
         List<Staffs> staffs = new ArrayList<>();
         String sql = "SELECT StaffID, StaffName, Email, Phone, Gender, Status, Address FROM Staffs Where [Status] != 'DELETED'";
-
+        if (!gender.equalsIgnoreCase("all")) {
+            sql = sql + " and Gender =" + "'" + gender + "'";
+        }
+        if (!status.equalsIgnoreCase("all")) {
+            sql = sql + " and Status =" + "'" + status + "'";
+        }
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -131,7 +136,7 @@ public class StaffsDAO extends DBContext {
 
     public Staffs getStaffById(String staffId) {
         Staffs staff = null;
-        String sql = "SELECT StaffID, StaffName, Email, Phone, Gender, Status, Address FROM Staffs WHERE StaffID = ?";
+        String sql = "SELECT StaffID, StaffName, Password, Phone, Role, Email, Gender, Status, Address FROM Staffs WHERE StaffID = ?";
 
         try {
             ps = connection.prepareStatement(sql);
@@ -142,8 +147,10 @@ public class StaffsDAO extends DBContext {
                 staff = new Staffs();
                 staff.setStaffID(rs.getString("StaffID"));
                 staff.setStaffName(rs.getString("StaffName"));
-                staff.setEmail(rs.getString("Email"));
+                staff.setPassword(rs.getString("Password"));
                 staff.setPhone(rs.getString("Phone"));
+                staff.setRole(Staffs.Role.valueOf(rs.getString("Role")));
+                staff.setEmail(rs.getString("Email"));
                 staff.setGender(rs.getString("Gender"));
                 staff.setStatus(Staffs.Status.valueOf(rs.getString("Status")));
                 staff.setAddress(rs.getString("Address"));
@@ -154,7 +161,7 @@ public class StaffsDAO extends DBContext {
         return staff;
     }
 
-    public boolean updateStaff(Staffs staff) {
+    public void updateStaff(Staffs staff) {
         String sql = "UPDATE Staffs SET StaffName=?, Password=?, Phone=?, Role=?, Email=?, Gender=?, Status=?, Address=? WHERE StaffId=?";
         try {
             ps = connection.prepareStatement(sql);
@@ -166,11 +173,12 @@ public class StaffsDAO extends DBContext {
             ps.setString(6, staff.getGender());
             ps.setString(7, staff.getStatus().toString());
             ps.setString(8, staff.getAddress());
-            return ps.executeUpdate() > 0;
+            ps.setString(9, staff.getStaffID());
+
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
     public boolean deleteStaffById(String staffId) {

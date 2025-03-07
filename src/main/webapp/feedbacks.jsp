@@ -11,7 +11,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Customer Feedback</title>
-        <style>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    </head>
+            <style>
             /* Reset CSS */
             * {
                 margin: 0;
@@ -243,16 +247,13 @@
                 display: none;
             }
         </style>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    </head>
     <body>
         <h1>Customer Feedback</h1>
 
         <!-- Filter Section -->
         <div class="filter-section">
             <label for="rating-filter">Filter by Rating:</label>
-            <select id="rating-filter">
+            <select id="rating-filter" onchange="filterFeedbacks()">
                 <option value="0">All Ratings</option>
                 <option value="1">1 Star</option>
                 <option value="2">2 Stars</option>
@@ -265,70 +266,74 @@
         <div class="reviews">
             <!-- Thông báo khi không có đánh giá phù hợp -->
             <div class="no-reviews-message"></div>
-
-            <c:forEach var="feedback" items="${reviews}">
-                <div class="review" data-rating="${feedback.rating}">
-                    <div class="review-header">
-                        <strong> <span class="username">${feedback.user.customerName}</span></strong><br/>
-                        <span class="rating">
-                            <i class="fas fa-star ${feedback.rating >= 1 ? 'checked' : ''}"></i>
-                            <i class="fas fa-star ${feedback.rating >= 2 ? 'checked' : ''}"></i>
-                            <i class="fas fa-star ${feedback.rating >= 3 ? 'checked' : ''}"></i>
-                            <i class="fas fa-star ${feedback.rating >= 4 ? 'checked' : ''}"></i>
-                            <i class="fas fa-star ${feedback.rating >= 5 ? 'checked' : ''}"></i>
-                        </span>
-                    </div>
-                    <div class="review-body">
-                        <p>${feedback.comment}</p>
-                        <form action="feedbacks-controller" method="post" id="editFeedbackForm${feedback.reviewID}" class="reply-form" style="display: none">
-                            <input type="hidden" name="action" value="edit">
-                            <input type="hidden" name="feedbackID" value="${feedback.reviewID}">
-                            <input type="hidden" name="productID" value="${feedback.productID}">
-                            <textarea name="comment" rows="2" required>${feedback.comment}</textarea>
-                            <button type="submit" class="btn-minhanh">Save Changes</button>
-                        </form>
-                        <c:if test="${sessionScope.user != null && feedback.user.customerId == sessionScope.user.customerId}">
-                            <button class="btn-action" onclick="editFeedback('${feedback.reviewID}')">Edit</button>
-                            <button class="btn-action" onclick="deleteFeedback('${feedback.reviewID}')">Delete</button>
-                        </c:if>
-                    </div>
-
-                    <!-- Hiển thị danh sách reply -->
-                    <div class="review-replies">
-                        <c:forEach var="reply" items="${feedback.replies}">
-                            <div class="reply">
-                                <p><strong>${reply.user.customerName}:</strong> ${reply.comment}</p>
-
-                                <!-- Form chỉnh sửa reply -->
-                                <form action="replyServlet" method="post" id="editReplyForm${reply.replyID}" class="reply-form" style="display: none">
+            <div id="feedbackList">
+                <c:if test="${not empty sessionScope.reviews}">
+                    <c:forEach var="feedback" items="${reviews}">
+                        <div class="review" data-rating="${feedback.rating}">
+                            <div class="review-header">
+                                <strong> <span class="username">${feedback.user.customerName}</span></strong><br/>
+                                <span class="rating">
+                                    <i class="fas fa-star ${feedback.rating >= 1 ? 'checked' : ''}"></i>
+                                    <i class="fas fa-star ${feedback.rating >= 2 ? 'checked' : ''}"></i>
+                                    <i class="fas fa-star ${feedback.rating >= 3 ? 'checked' : ''}"></i>
+                                    <i class="fas fa-star ${feedback.rating >= 4 ? 'checked' : ''}"></i>
+                                    <i class="fas fa-star ${feedback.rating >= 5 ? 'checked' : ''}"></i>
+                                </span>
+                            </div>
+                            <div class="review-body">
+                                <p>${feedback.comment}</p>
+                                <form action="feedbacks-controller" method="post" id="editFeedbackForm${feedback.reviewID}" class="reply-form" style="display: none">
                                     <input type="hidden" name="action" value="edit">
-                                    <input type="hidden" name="replyId" id="editReplyId" value="${reply.replyID}">
-                                    <input type="hidden" name="productID" value="${product.productID}">
-                                    <textarea name="comment" id="editReplyComment" rows="2" required>${reply.comment}</textarea>
-                                    <button type="submit" class="btn-minhanh" name="action" value="edit">Save Changes</button>
+                                    <input type="hidden" name="feedbackID" value="${feedback.reviewID}">
+                                    <input type="hidden" name="productID" value="${feedback.productID}">
+                                    <textarea name="comment" rows="2" required>${feedback.comment}</textarea>
+                                    <button type="submit" class="btn-minhanh">Save Changes</button>
                                 </form>
-
-                                <!-- Nút chỉnh sửa và xóa reply -->
-                                <c:if test="${sessionScope.user != null && reply.user.customerId == sessionScope.user.customerId}">
-                                    <button class="btn-action" onclick="editReply(${reply.replyID}, `${reply.comment}`)">Edit</button>
-                                    <button class="btn-action" onclick="deleteReply(${reply.replyID})">Delete</button>
+                                <c:if test="${sessionScope.user != null && feedback.user.customerId == sessionScope.user.customerId}">
+                                    <button class="btn-action" onclick="editFeedback('${feedback.reviewID}')">Edit</button>
+                                    <button class="btn-action" onclick="deleteFeedback('${feedback.reviewID}')">Delete</button>
                                 </c:if>
                             </div>
-                        </c:forEach>
 
-                        <!-- Form để thêm reply -->
-                        <c:if test="${sessionScope.user != null}">
-                            <form action="replyServlet" method="post" class="reply-form">
-                                <input type="hidden" name="reviewId" value="${feedback.reviewID}">
-                                <input type="hidden" name="customerID" value="${sessionScope.user.customerId}">
-                                <input type="hidden" name="productID" value="${product.productID}">
-                                <textarea name="comment" rows="2" placeholder="Write your reply here..." required></textarea>
-                                <button type="submit" class="btn-minhanh" name="action" value="add">Reply</button>
-                            </form>
-                        </c:if>
-                    </div>
-                </div>
-            </c:forEach>
+                            <!-- Hiển thị danh sách reply -->
+                            <div class="review-replies">
+                                <c:forEach var="reply" items="${feedback.replies}">
+                                    <div class="reply">
+                                        <p><strong>${reply.user.customerName}:</strong> ${reply.comment}</p>
+
+                                        <!-- Form chỉnh sửa reply -->
+                                        <form action="replyServlet" method="post" id="editReplyForm${reply.replyID}" class="reply-form" style="display: none">
+                                            <input type="hidden" name="action" value="edit">
+                                            <input type="hidden" name="replyId" id="editReplyId" value="${reply.replyID}">
+                                            <input type="hidden" name="productID" value="${product.productID}">
+                                            <textarea name="comment" id="editReplyComment" rows="2" required>${reply.comment}</textarea>
+                                            <button type="submit" class="btn-minhanh" name="action" value="edit">Save Changes</button>
+                                        </form>
+
+                                        <!-- Nút chỉnh sửa và xóa reply -->
+                                        <c:if test="${sessionScope.user != null && reply.user.customerId == sessionScope.user.customerId}">
+                                            <button class="btn-action" onclick="editReply(${reply.replyID}, `${reply.comment}`)">Edit</button>
+                                            <button class="btn-action" onclick="deleteReply(${reply.replyID})">Delete</button>
+                                        </c:if>
+                                    </div>
+                                </c:forEach>
+
+                                <!-- Form để thêm reply -->
+                                <c:if test="${sessionScope.user != null}">
+                                    <form action="replyServlet" method="post" class="reply-form">
+                                        <input type="hidden" name="reviewId" value="${feedback.reviewID}">
+                                        <input type="hidden" name="customerID" value="${sessionScope.user.customerId}">
+                                        <input type="hidden" name="productID" value="${product.productID}">
+                                        <textarea name="comment" rows="2" placeholder="Write your reply here..." required></textarea>
+                                        <button type="submit" class="btn-minhanh" name="action" value="add">Reply</button>
+                                    </form>
+                                </c:if>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:if>
+
+            </div>
 
             <c:if test="${sessionScope.user != null && isBought}">
                 <div class="review-form">
@@ -393,48 +398,13 @@
                     window.location.href = "replyServlet?action=delete&replyId=" + id + "&productID=" + `${product.productID}`;
                 }
             }
-
-            // Xử lý filter feedbacks theo rating
-            document.getElementById('rating-filter').addEventListener('change', function () {
-                const selectedRating = parseInt(this.value); // Lấy giá trị rating được chọn
-                const reviews = document.querySelectorAll('.review'); // Lấy tất cả các feedback
-                let hasMatchingReview = false;
-
-                reviews.forEach(review => {
-                    const rating = parseInt(review.getAttribute('data-rating')); // Lấy số sao của feedback
-                    if (selectedRating === 0 || rating === selectedRating) {
-                        review.style.display = 'block'; // Hiển thị feedback nếu phù hợp
-                        hasMatchingReview = true;
-                    } else {
-                        review.style.display = 'none'; // Ẩn feedback nếu không phù hợp
-                    }
-                });
-
-                // Hiển thị thông báo nếu không có đánh giá phù hợp
-                const noReviewsMessage = document.querySelector('.no-reviews-message');
-                if (!hasMatchingReview && selectedRating !== 0) {
-                    noReviewsMessage.textContent = `No reviews found with ${selectedRating} star(s).`;
-                    noReviewsMessage.style.display = 'block';
-                } else {
-                    noReviewsMessage.style.display = 'none';
-                }
-            });
-
-            document.querySelectorAll('.star-rating .fa-star').forEach(star => {
-                star.addEventListener('click', () => {
-                    const rating = star.getAttribute('data-value');
-                    document.getElementById('rating-value').value = rating;
-
-                    document.querySelectorAll('.star-rating .fa-star').forEach(s => {
-                        if (s.getAttribute('data-value') <= rating) {
-                            s.classList.add('checked');
-                        } else {
-                            s.classList.remove('checked');
-                        }
-                    });
-                });
-            });
-
+            if (!hasMatchingReview && selectedRating !== 0) {
+                noReviewsMessage.textContent = `No reviews found with ${selectedRating} star(s).`;
+                noReviewsMessage.style.display = 'block';
+            } else {
+                noReviewsMessage.style.display = 'none';
+            }
+            // Hàm validate rating trước khi submit feedback
             function validateRating() {
                 const ratingValue = document.getElementById('rating-value').value;
                 const errorMessage = document.querySelector('.error-message');
@@ -447,6 +417,36 @@
                     return true; // Cho phép form được submit
                 }
             }
+
+
         </script>
+
+
+        <script>
+            $(document).ready(function () {
+                $('#rating-filter').change(function () {
+                    var selectedRating = $(this).val();
+                    var productId = "${product.productID}"; // Đảm bảo lấy đúng ID từ JSP
+
+                    $.ajax({
+                        url: 'filter-feedback',
+                        type: 'GET',
+                        data: {
+                            productId: productId, // Đảm bảo thống nhất với Servlet
+                            rating: selectedRating
+                        },
+                        dataType: 'html',
+                        success: function (response) {
+                            $('#feedbackList').html(response);
+                        },
+                        error: function () {
+                            $('#feedbackList').html('<p class="error">Error loading review.</p>');
+                        }
+                    });
+                });
+            });
+        </script>
+
+
     </body>
 </html>

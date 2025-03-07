@@ -143,89 +143,90 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <script>
+            <script>
 
 
-                    document.addEventListener("DOMContentLoaded", function () {
-                        const searchInput = document.getElementById("searchInput");
-                        //const statusFilter = document.getElementById("statusFilter");
-                        const statusFilter = document.querySelector(".filter-section select[placeholder='Status']");
-                        const minPriceInput = document.querySelector(".filter-section input[placeholder='Min Price']");
-                        const maxPriceInput = document.querySelector(".filter-section input[placeholder='Max Price']");
-                        const startDateInput = document.querySelector(".filter-section input[placeholder='Start Day']");
-                        const endDateInput = document.querySelector(".filter-section input[placeholder='End Day']");
+                document.addEventListener("DOMContentLoaded", function () {
+                    const searchInput = document.getElementById("searchInput");
+                    //const statusFilter = document.getElementById("statusFilter");
+                    const statusFilter = document.querySelector(".filter-section select[placeholder='Status']");
+                    const minPriceInput = document.querySelector(".filter-section input[placeholder='Min Price']");
+                    const maxPriceInput = document.querySelector(".filter-section input[placeholder='Max Price']");
+                    const startDateInput = document.querySelector(".filter-section input[placeholder='Start Day']");
+                    const endDateInput = document.querySelector(".filter-section input[placeholder='End Day']");
 
-                        function parseDate(dateString) {
-                            // Chuyển từ định dạng dd/MM/yyyy hoặc yyyy-MM-dd thành Date object
-                            let parts = dateString.split("/");
-                            if (parts.length === 3) {
-                                return new Date(parts[2], parts[1] - 1, parts[0]); // dd/MM/yyyy
-                            }
-                            return new Date(dateString); // yyyy-MM-dd
+                    function parseDate(dateString) {
+                        // Chuyển từ định dạng dd/MM/yyyy hoặc yyyy-MM-dd thành Date object
+                        let parts = dateString.split("/");
+                        if (parts.length === 3) {
+                            return new Date(parts[2], parts[1] - 1, parts[0]); // dd/MM/yyyy
                         }
+                        return new Date(dateString); // yyyy-MM-dd
+                    }
 
-                        function filterOrders() {
-                            const searchText = searchInput.value.trim().toLowerCase();
-                            const selectedStatus = statusFilter.value.trim().toLowerCase();
-                            const minPrice = minPriceInput.value ? parseFloat(minPriceInput.value) : 0;
-                            const maxPrice = maxPriceInput.value ? parseFloat(maxPriceInput.value) : Infinity;
-                            const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
-                            const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
+                    function filterOrders() {
+                        const searchText = searchInput.value.trim().toLowerCase();
+                        const selectedStatus = statusFilter.value.trim().toLowerCase();
+                        const minPrice = minPriceInput.value ? parseFloat(minPriceInput.value) : 0;
+                        const maxPrice = maxPriceInput.value ? parseFloat(maxPriceInput.value) : Infinity;
+                        const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
+                        const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
 
-                            const tableRows = document.querySelectorAll("tbody tr");
+                        const tableRows = document.querySelectorAll("tbody tr");
 
-                            tableRows.forEach(row => {
-                                const customerName = row.cells[1].textContent.trim().toLowerCase();
-                                const status = row.cells[4].textContent.trim().toLowerCase();
-                                const totalPrice = parseFloat(row.cells[5].textContent.replace("$", "")) || 0;
+                        tableRows.forEach(row => {
+                            const customerName = row.cells[1].textContent.trim().toLowerCase();
+                            const status = row.cells[4].textContent.trim().toLowerCase();
+                            const totalPrice = parseFloat(row.cells[5].textContent.replace("$", "")) || 0;
 
-                                // Chuyển đổi ngày trong bảng thành Date object
-                                const orderDateText = row.cells[3].textContent.trim();
-                                const orderDate = parseDate(orderDateText);
-                                const validOrderDate = !isNaN(orderDate.getTime());
+                            // Chuyển đổi ngày trong bảng thành Date object
+                            const orderDateText = row.cells[3].textContent.trim();
+                            const orderDate = parseDate(orderDateText);
+                            const validOrderDate = !isNaN(orderDate.getTime());
 
-                                const matchesSearch = searchText === "" || customerName.includes(searchText);
-                                const matchesStatus = selectedStatus === "" || status === selectedStatus;
-                                const matchesPrice = totalPrice >= minPrice && totalPrice <= maxPrice;
-                                const matchesDate = (!startDate || (validOrderDate && orderDate >= startDate)) &&
-                                        (!endDate || (validOrderDate && orderDate <= endDate));
+                            const matchesSearch = searchText === "" || customerName.includes(searchText);
+                            const matchesStatus = selectedStatus === "" || status === selectedStatus;
+                            const matchesPrice = totalPrice >= minPrice && totalPrice <= maxPrice;
+                            const matchesDate = (!startDate || (validOrderDate && orderDate >= startDate)) &&
+                                    (!endDate || (validOrderDate && orderDate <= endDate));
 
-                                row.style.display = (matchesSearch && matchesStatus && matchesPrice && matchesDate) ? "" : "none";
-                            });
-                        }
+                            row.style.display = (matchesSearch && matchesStatus && matchesPrice && matchesDate) ? "" : "none";
+                        });
+                    }
 
-                        searchInput.addEventListener("input", filterOrders);
-                        statusFilter.addEventListener("change", filterOrders);
-                        minPriceInput.addEventListener("input", filterOrders);
-                        maxPriceInput.addEventListener("input", filterOrders);
-                        startDateInput.addEventListener("change", filterOrders);
-                        endDateInput.addEventListener("change", filterOrders);
+                    searchInput.addEventListener("input", filterOrders);
+                    statusFilter.addEventListener("change", filterOrders);
+                    minPriceInput.addEventListener("input", filterOrders);
+                    maxPriceInput.addEventListener("input", filterOrders);
+                    startDateInput.addEventListener("change", filterOrders);
+                    endDateInput.addEventListener("change", filterOrders);
 
-                        filterOrders();
-                    });
+                    filterOrders();
+                });
 
 
-                    document.addEventListener("DOMContentLoaded", function () {
-                        document.querySelectorAll(".view-order-btn").forEach(button => {
-                            button.addEventListener("click", function () {
-                                let orderID = this.getAttribute("data-orderid");
+                document.addEventListener("DOMContentLoaded", function () {
+                    document.querySelectorAll(".view-order-btn").forEach(button => {
+                        button.addEventListener("click", function () {
+                            let orderID = this.getAttribute("data-orderid");
 
-                                fetch("OrderDetailServlet?orderID=" + orderID)
-                                        .then(response => response.text()) // Đảm bảo response là HTML
-                                        .then(data => {
-                                            document.getElementById("orderDetailModalBody").innerHTML = data;
-                                            let orderDetailModal = new bootstrap.Modal(document.getElementById("orderDetailModal"));
-                                            orderDetailModal.show();
-                                        })
-                                        .catch(error => console.error("Error:", error));
-                            });
+                            fetch("OrderDetailServlet?orderID=" + orderID)
+                                    .then(response => response.text()) // Đảm bảo response là HTML
+                                    .then(data => {
+                                        document.getElementById("orderDetailModalBody").innerHTML = data;
+                                        let orderDetailModal = new bootstrap.Modal(document.getElementById("orderDetailModal"));
+                                        orderDetailModal.show();
+                                    })
+                                    .catch(error => console.error("Error:", error));
                         });
                     });
+                });
 
 
 
-                </script>
+            </script>
 
 
         </main>
