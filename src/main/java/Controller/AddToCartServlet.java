@@ -9,6 +9,7 @@ import Models.Customers;
 import Models.ProductSizes;
 import Models.Products;
 import dal.ProductsDAO;
+import dal.VoucherDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -87,13 +88,14 @@ public class AddToCartServlet extends HttpServlet {
 
     }
 
-    private void buyNow(HttpServletRequest request, HttpServletResponse response)
+  private void buyNow(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
         ProductsDAO proDAO = new ProductsDAO();
+        VoucherDAO voucherDAO = new VoucherDAO();
 
         Customers user = (Customers) session.getAttribute("user");
         if (user == null) {
@@ -131,7 +133,6 @@ public class AddToCartServlet extends HttpServlet {
 
             if (product != null) {
                 BigDecimal brandTotal = product.getFinalPrice().multiply(BigDecimal.valueOf(quantity));
-
                 ArrayList<Cart> newList = new ArrayList<>();
                 Cart cart = new Cart(user, product, productSize, quantity);
                 newList.add(cart);
@@ -139,7 +140,9 @@ public class AddToCartServlet extends HttpServlet {
                 session.setAttribute("cartList", newList);
                 session.setAttribute("brandTotal", brandTotal);
                 session.setAttribute("user", user);
-
+                
+                // Lấy danh sách voucher phù hợp
+                request.setAttribute("availableVouchers", voucherDAO.getVouchersByPriceRange(brandTotal));
                 request.getRequestDispatcher("payment_method.jsp").forward(request, response);
             } else {
                 session.setAttribute("notification", "Product not found!");

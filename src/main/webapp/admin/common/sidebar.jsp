@@ -115,6 +115,39 @@
                     </ul>
                 </li>
                 <li>
+                    <a href="CategoryServlet?action=list" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-gift"></i></span>
+                        <span class="ttr-label">Category Management</span>
+                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
+
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="admin/category-form.jsp" class="ttr-material-button"><span class="ttr-label">Add Category</span></a>
+                        </li>
+                        <li>
+                            <a href="CategoryServlet?action=list" class="ttr-material-button"><span class="ttr-label">List Category</span></a>
+                        </li>
+                    </ul>
+                </li
+                <li>
+                    <a href="VoucherServlet?action=list" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-gift"></i></span>
+                        <span class="ttr-label">Voucher Management</span>
+                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
+
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="admin/voucher-form.jsp" class="ttr-material-button"><span class="ttr-label">Add Voucher</span></a>
+                        </li>
+                        <li>
+                            <a href="VoucherServlet?action=list" class="ttr-material-button"><span class="ttr-label">List Voucher</span></a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
                     <a href="#" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
                         <span class="ttr-label">News Management</span>
@@ -122,19 +155,13 @@
                     </a>
                     <ul>
                         <li>
-                            <a href="news-management" class="ttr-material-button"><span class="ttr-label">List News</span></a>
-                        </li>
-                        <li>
-                            <a href="add-news" class="ttr-material-button"><span class="ttr-label">Add News</span></a>
+                            <a href="news-management" class="ttr-material-button"><span
+                                    class="ttr-label">List News</span></a>
                         </li>
                     </ul>
                 </li>
 
                 <li class="ttr-seperate"></li>
-            </ul>
-            </li>
-
-            <li class="ttr-seperate"></li>
             </ul>
             <!-- sidebar menu end -->
         </nav>
