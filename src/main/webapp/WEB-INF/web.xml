@@ -11,7 +11,7 @@
     <servlet>
         <servlet-name>FilterFeedbackServlet</servlet-name>
         <servlet-class>Controller.FilterFeedbackServlet</servlet-class>
-         </servlet>
+    </servlet>
     <servlet>
         <servlet-name>ImportStockServlet</servlet-name>
         <servlet-class>Controller.admin.ImportStockServlet</servlet-class>
@@ -31,6 +31,14 @@
     <servlet>
         <servlet-name>CheckVoucherServlet</servlet-name>
         <servlet-class>Controller.CheckVoucherServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchServlet</servlet-name>
+        <servlet-class>Controller.SearchServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CategoryServlet</servlet-name>
+        <servlet-class>Controller.admin.CategoryServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>VoucherServlet</servlet-name>
@@ -83,7 +91,7 @@
     <servlet-mapping>
         <servlet-name>FilterFeedbackServlet</servlet-name>
         <url-pattern>/filter-feedback</url-pattern>
-        </servlet-mapping>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ImportStockServlet</servlet-name>
         <url-pattern>/importStock</url-pattern>
@@ -103,6 +111,14 @@
     <servlet-mapping>
         <servlet-name>CheckVoucherServlet</servlet-name>
         <url-pattern>/CheckVoucherServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchServlet</servlet-name>
+        <url-pattern>/searchServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CategoryServlet</servlet-name>
+        <url-pattern>/CategoryServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

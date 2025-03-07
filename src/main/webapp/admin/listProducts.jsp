@@ -143,19 +143,19 @@
                                     <ul class="pagination mb-0">
                                         <c:if test="${currentPage > 1}">
                                             <li class="page-item">
-                                                <a href="searchServlet?searchQuery=${searchQuery}&page=${currentPage - 1}" class="page-link">&laquo;</a>
+                                                <a href="searchServletAdmin?searchQuery=${searchQuery}&page=${currentPage - 1}" class="page-link">&laquo;</a>
                                             </li>
                                         </c:if>
 
                                         <c:forEach var="page" begin="${startPage}" end="${endPage}">
                                             <li class="page-item ${page == currentPage ? 'active' : ''}">
-                                                <a href="searchServlet?searchQuery=${searchQuery}&page=${page}" class="page-link">${page}</a>
+                                                <a href="searchServletAdmin?searchQuery=${searchQuery}&page=${page}" class="page-link">${page}</a>
                                             </li>
                                         </c:forEach>
 
                                         <c:if test="${currentPage < totalPages}">
                                             <li class="page-item">
-                                                <a href="searchServlet?searchQuery=${searchQuery}&page=${currentPage + 1}" class="page-link">&raquo;</a>
+                                                <a href="searchServletAdmin?searchQuery=${searchQuery}&page=${currentPage + 1}" class="page-link">&raquo;</a>
                                             </li>
                                         </c:if>
                                     </ul>

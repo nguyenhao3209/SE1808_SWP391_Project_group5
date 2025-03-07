@@ -2,19 +2,34 @@ package Controller;
 
 import Models.Cart;
 import Models.Orders;
+import Models.Products;
 import Models.Customers;
 import Models.OrderDetails;
-import Models.Products;
 import Models.Vouchers;
 import dal.CustomersDAO;
 import dal.OrdersDAO;
 import dal.ProductsDAO;
 import dal.VoucherDAO;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+import utils.Config;
 
 public class PaymentServlet extends HttpServlet {
 
@@ -78,20 +93,21 @@ public class PaymentServlet extends HttpServlet {
         // == Xử lý voucher (nếu có) ==
         Integer selectedVoucherID = (Integer) session.getAttribute("selectedVoucherID");
         if (selectedVoucherID != null) {
-            // Kiểm tra voucher
             VoucherDAO voucherDAO = new VoucherDAO();
             Vouchers v = voucherDAO.getVoucherById(selectedVoucherID);
             if (v != null) {
-                // Kiểm tra maxUsagePerUser
                 OrdersDAO ordersDAO = new OrdersDAO();
                 int usedCount = ordersDAO.getCountOrdersByUserVoucher(customer.getCustomerId(), selectedVoucherID);
                 if (usedCount >= v.getMaxUsagePerUser()) {
                     // Người dùng đã xài đủ số lần
                     request.setAttribute("error", "You have reached the max usage for this voucher.");
-                    request.getRequestDispatcher("cart.jsp").forward(request, response);
+
+                    // **** Thêm dòng này: ****
+                    request.setAttribute("availableVouchers", voucherDAO.getVouchersByPriceRange(totalPrice));
+
+                    request.getRequestDispatcher("payment_method.jsp").forward(request, response);
                     return;
                 }
-                // Gán voucherID vào order
                 order.setVoucher(v);
             }
         }
@@ -111,18 +127,25 @@ public class PaymentServlet extends HttpServlet {
                 proDAO.removeItemOfCart(item.getCartID());
             }
         }
+        session.setAttribute("cartList", null);
 
-        // Lưu đơn hàng và danh sách OrderItems vào cơ sở dữ liệu
-        int orderId = 0;
-        if (!orderItemsList.isEmpty()) {
-            Orders order = new Orders(customer, "PENDING", paymentMethod, totalPrice); // Tạo đối tượng Orders
-            OrdersDAO orderDAO = new OrdersDAO();
-            orderId = orderDAO.insertOrder(order, orderItemsList); // Lưu Orders và OrderItems
+        // == Cập nhật usageCount, quantity sau khi insertOrder thành công ==
+        if (selectedVoucherID != null) {
+            VoucherDAO voucherDAO = new VoucherDAO();
+            Vouchers v = voucherDAO.getVoucherById(selectedVoucherID);
+            if (v != null) {
+                // Tăng usageCount
+                v.setUsageCount(v.getUsageCount() + 1);
+                // Nếu muốn giảm quantity
+                v.setQuantity(v.getQuantity() - 1);
+
+                voucherDAO.updateVoucher(v);
+            }
         }
+        // Xoá session voucher
+        session.removeAttribute("selectedVoucherID");
 
-        session.setAttribute("cartList", currentCart);
-        session.setAttribute("user", customer);
-        session.setAttribute("selectedPaymentMethod", paymentMethod);
+        // Cập nhật quantityTotal
         int quantityTotal = proDAO.getQuantityOfItemByUserID(customer.getCustomerId());
         session.setAttribute("quantityTotal", quantityTotal);
 
@@ -132,11 +155,83 @@ public class PaymentServlet extends HttpServlet {
             request.setAttribute("paymentMethod", paymentMethod);
             request.getRequestDispatcher("confirmation.jsp").forward(request, response);
         } else {
-            // Xử lý VNPay
-            // ...
-            // (Ví dụ rút gọn, tuỳ logic cổng thanh toán)
-            String paymentUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?...";
-            response.sendRedirect(paymentUrl);
+            if (!paymentMethod.equals("VNPay")) {
+                request.getRequestDispatcher("confirmation.jsp").forward(request, response);
+            } else {
+                // VNPay
+                String vnp_Version = "2.1.0";
+                String vnp_Command = "pay";
+                String orderType = "other";
+                long amount = totalPrice.multiply(BigDecimal.valueOf(2500000)).longValue();
+                String bankCode = "NCB";
+
+                String vnp_TxnRef = Config.getRandomNumber(8);
+                String vnp_IpAddr = Config.getIpAddress(request);
+
+                String vnp_TmnCode = Config.vnp_TmnCode;
+
+                Map<String, String> vnp_Params = new HashMap<>();
+                vnp_Params.put("vnp_Version", vnp_Version);
+                vnp_Params.put("vnp_Command", vnp_Command);
+                vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
+                vnp_Params.put("vnp_Amount", String.valueOf(amount));
+                vnp_Params.put("vnp_CurrCode", "VND");
+
+                vnp_Params.put("vnp_BankCode", bankCode);
+                vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
+                vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
+                vnp_Params.put("vnp_OrderType", orderType);
+
+                String locate = request.getParameter("language");
+                if (locate != null && !locate.isEmpty()) {
+                    vnp_Params.put("vnp_Locale", locate);
+                } else {
+                    vnp_Params.put("vnp_Locale", "vn");
+                }
+                String returnURL = Config.vnp_ReturnUrl + "?orderId=" + orderId;
+                vnp_Params.put("vnp_ReturnUrl", returnURL);
+                vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
+
+                Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+                String vnp_CreateDate = formatter.format(cld.getTime());
+                vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
+
+                cld.add(Calendar.MINUTE, 15);
+                String vnp_ExpireDate = formatter.format(cld.getTime());
+                vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
+
+                List fieldNames = new ArrayList(vnp_Params.keySet());
+                Collections.sort(fieldNames);
+                StringBuilder hashData = new StringBuilder();
+                StringBuilder query = new StringBuilder();
+                Iterator itr = fieldNames.iterator();
+                while (itr.hasNext()) {
+                    String fieldName = (String) itr.next();
+                    String fieldValue = (String) vnp_Params.get(fieldName);
+                    if ((fieldValue != null) && (fieldValue.length() > 0)) {
+                        //Build hash data
+                        hashData.append(fieldName);
+                        hashData.append('=');
+                        hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+                        //Build query
+                        query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
+                        query.append('=');
+                        query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+                        if (itr.hasNext()) {
+                            query.append('&');
+                            hashData.append('&');
+                        }
+                    }
+                }
+                String queryUrl = query.toString();
+
+                String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hashData.toString());
+                queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+                String paymentUrl = Config.vnp_PayUrl + "?" + queryUrl;
+
+                response.sendRedirect(paymentUrl);
+            }
         }
     }
 }

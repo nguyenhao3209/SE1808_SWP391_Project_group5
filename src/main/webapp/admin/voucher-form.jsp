@@ -54,20 +54,24 @@
                 <div class="db-breadcrumb">
                     <h4 class="breadcrumb-title">
                         <c:choose>
-                            <c:when test="${not empty voucher}">Edit Voucher</c:when>
-                            <c:otherwise>Add New Voucher</c:otherwise>
+                            <c:when test="${isEdit}">
+                                <input type="hidden" name="action" value="update" />
+                            </c:when>
+                            <c:otherwise>
+                                <input type="hidden" name="action" value="create" />
+                            </c:otherwise>
                         </c:choose>
                     </h4>
                     <ul class="db-breadcrumb-list">
                         <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                        <c:choose>
-                            <c:when test="${not empty voucher}">
+                            <c:choose>
+                                <c:when test="${not empty voucher}">
                                 <li>Edit Voucher</li>
-                            </c:when>
-                            <c:otherwise>
+                                </c:when>
+                                <c:otherwise>
                                 <li>Add New Voucher</li>
-                            </c:otherwise>
-                        </c:choose>
+                                </c:otherwise>
+                            </c:choose>
                     </ul>
                 </div>
 
@@ -101,11 +105,14 @@
                                 <!-- FORM -->
                                 <form action="VoucherServlet" method="post" enctype="multipart/form-data">
                                     <!-- Xác định action để Servlet biết -->
-                                    <input type="hidden" name="action"
-                                           value="<c:choose>
-                                                      <c:when test='${isEdit}'>update</c:when>
-                                                      <c:otherwise>create</c:otherwise>
-                                                  </c:choose>" />
+                                    <c:choose>
+                                        <c:when test="${isEdit}">
+                                            <input type="hidden" name="action" value="update" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <input type="hidden" name="action" value="create" />
+                                        </c:otherwise>
+                                    </c:choose>
 
                                     <!-- Khi Edit, cần voucherID -->
                                     <c:if test="${isEdit}">
@@ -169,22 +176,22 @@
                                         <label class="form-label">Is Active</label>
                                         <select class="form-select" name="isActive">
                                             <option value="true"
-                                                <c:if test="${isEdit and voucher.isActive}">selected</c:if>>
-                                                Active
-                                            </option>
-                                            <option value="false"
-                                                <c:if test="${isEdit and not voucher.isActive}">selected</c:if>>
-                                                Inactive
-                                            </option>
-                                        </select>
-                                    </div>
+                                                    <c:if test="${isEdit and voucher.isActive}">selected</c:if>>
+                                                        Active
+                                                    </option>
+                                                    <option value="false"
+                                                    <c:if test="${isEdit and not voucher.isActive}">selected</c:if>>
+                                                        Inactive
+                                                    </option>
+                                            </select>
+                                        </div>
 
-                                    <!-- Min Order Value -->
-                                    <div class="mb-3">
-                                        <label class="form-label">Min Order Value</label>
-                                        <input type="number" step="0.01" class="form-control"
-                                               name="minOrderValue"
-                                               value="${isEdit ? voucher.minOrderValue : ''}">
+                                        <!-- Min Order Value -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Min Order Value</label>
+                                            <input type="number" step="0.01" class="form-control"
+                                                   name="minOrderValue"
+                                                   value="${isEdit ? voucher.minOrderValue : ''}">
                                     </div>
 
                                     <!-- Max Usage Per User -->

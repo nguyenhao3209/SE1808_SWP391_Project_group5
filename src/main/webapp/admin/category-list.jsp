@@ -19,12 +19,10 @@
         <meta name="format-detection" content="telephone=no">
 
         <!-- FAVICONS ICON ============================================= -->
-        <!-- Xoá hoặc sửa dòng dưới nếu không tồn tại error-404.html -->
-        <!-- <link rel="icon" href="../error-404.html" type="image/x-icon" /> -->
         <link rel="shortcut icon" type="image/x-icon" href="admin/assets/images/favicon.png" />
 
         <!-- PAGE TITLE HERE ============================================= -->
-        <title>EduChamp : Voucher Management</title>
+        <title>EduChamp : Category Management</title>
 
         <!-- MOBILE SPECIFIC ============================================= -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -50,7 +48,7 @@
             .table.table-bordered thead.table-dark th {
                 color: #fff !important;
             }
-            /* Tạo khoảng cách giữa nút Edit và Delete */
+            /* Tạo khoảng cách giữa nút Edit và Delete (nếu sau này thêm Delete) */
             .btn-edit {
                 margin-right: 8px;
             }
@@ -67,103 +65,61 @@
             <div class="container-fluid">
                 <!-- Breadcrumb -->
                 <div class="db-breadcrumb">
-                    <h4 class="breadcrumb-title">Voucher Management</h4>
+                    <h4 class="breadcrumb-title">Category Management</h4>
                     <ul class="db-breadcrumb-list">
                         <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                        <li>Voucher Management</li>
+                        <li>Category Management</li>
                     </ul>
                 </div>
-                <!-- Button to Add New Voucher -->
-                <a href="admin/voucher-form.jsp" class="btn btn-success mb-3">Add New Voucher</a>
+
+                <!-- Button to Add New Category -->
+                <!-- Gọi Servlet hiển thị form create: CategoryServlet?action=createForm -->
+                <a href="CategoryServlet?action=createForm" class="btn btn-success mb-3">Add New Category</a>
+
                 <!-- Content Row -->
                 <div class="row">
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="wc-title">
-                                <h4>Manage Vouchers</h4>
+                                <h4>Manage Categories</h4>
                             </div>
                             <div class="widget-inner">
-                                <!-- NỘI DUNG CHÍNH: DANH SÁCH VOUCHER -->
+                                <!-- NỘI DUNG CHÍNH: DANH SÁCH CATEGORY -->
                                 <div class="container">
-                                    <!-- Button to Add New Voucher -->
-                                    <!-- CHỈNH SỬA: Dùng Servlet action=add thay vì gọi trực tiếp voucher-form.jsp -->
-
-
-                                    <!-- Display Voucher List -->
                                     <div class="table-responsive">
                                         <table class="table table-bordered">
                                             <thead class="table-dark">
                                                 <tr>
                                                     <th>ID</th>
-                                                    <th>Name</th>
+                                                    <th>Category Name</th>
                                                     <th>Description</th>
-                                                    <th>Discount %</th>
-                                                    <th>Max Reducing</th>
-                                                    <th>Code</th>
-                                                    <th>Quantity</th>
-                                                    <th>Expiry Date</th>
-                                                    <th>Is Active</th>
-                                                    <th>Min Order Value</th>
-                                                    <th>Max Usage/User</th>
-                                                    <th>Usage Count</th>
-                                                    <th>Image</th>
                                                     <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <!-- Nếu danh sách voucher rỗng, hiển thị thông báo -->
+                                                <!-- Nếu danh sách category rỗng, hiển thị thông báo -->
                                                 <c:choose>
-                                                    <c:when test="${not empty voucherList}">
-                                                        <c:forEach var="v" items="${voucherList}">
+                                                    <c:when test="${not empty categoryList}">
+                                                        <c:forEach var="c" items="${categoryList}">
                                                             <tr>
-                                                                <td>${v.voucherID}</td>
-                                                                <td>${v.name}</td>
-                                                                <td>${v.description}</td>
-                                                                <td>${v.discountPercentage}</td>
-                                                                <td>${v.maxReducing}</td>
-                                                                <td>${v.code}</td>
-                                                                <td>${v.quantity}</td>
-                                                                <td>${v.expiryDate}</td>
-                                                                <td>${v.isActive}</td>
-                                                                <td>${v.minOrderValue}</td>
-                                                                <td>${v.maxUsagePerUser}</td>
-                                                                <td>${v.usageCount}</td>
+                                                                <td>${c.categoryID}</td>
+                                                                <td>${c.categoryName}</td>
+                                                                <td>${c.description}</td>
                                                                 <td>
-                                                                    <c:choose>
-                                                                        <c:when test="${not empty v.imageURL}">
-                                                                            <img src="${v.imageURL}" 
-                                                                                 alt="Voucher Image" 
-                                                                                 width="80" 
-                                                                                 height="80" />
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            No image
-                                                                        </c:otherwise>
-                                                                    </c:choose>
+                                                                    <!-- Ở đây chỉ có nút Edit, chưa có delete -->
+                                                                    <a href="CategoryServlet?action=edit&id=${c.categoryID}"
+                                                                       class="btn btn-warning btn-sm btn-edit">
+                                                                        Edit
+                                                                    </a>
                                                                 </td>
-                                                                <td>
-                                                                    <div style="display: flex; flex-direction: column; align-items: center;">
-                                                                        <a href="VoucherServlet?action=edit&id=${v.voucherID}"
-                                                                           class="btn btn-warning btn-sm btn-edit"
-                                                                           style="margin-bottom: 5px;">
-                                                                            Edit
-                                                                        </a>
-                                                                        <a href="VoucherServlet?action=delete&id=${v.voucherID}"
-                                                                           class="btn btn-danger btn-sm"
-                                                                           onclick="return confirm('Are you sure you want to delete this voucher?');">
-                                                                            Delete
-                                                                        </a>
-                                                                    </div>
-                                                                </td>
-
                                                             </tr>
                                                         </c:forEach>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <tr>
-                                                            <!-- colspan = 14 để khớp với số cột ở <thead> -->
-                                                            <td colspan="14" class="text-center">
-                                                                No vouchers found.
+                                                            <!-- colspan = 4 để khớp với số cột ở <thead> -->
+                                                            <td colspan="4" class="text-center">
+                                                                No categories found.
                                                             </td>
                                                         </tr>
                                                     </c:otherwise>

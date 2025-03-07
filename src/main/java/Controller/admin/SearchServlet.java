@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author HuyLVQCE180656
  */
-@WebServlet(name = "SearchServlet", urlPatterns = {"/searchServlet"})
+@WebServlet(name = "SearchServlet", urlPatterns = {"/searchServletAdmin"})
 public class SearchServlet extends HttpServlet {
 
     private static final int ITEMS_PER_PAGE = 20;

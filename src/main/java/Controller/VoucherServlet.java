@@ -36,9 +36,6 @@ public class VoucherServlet extends HttpServlet {
             case "list":
                 listVouchers(request, response);
                 break;
-            case "add":
-                showAddForm(request, response);
-                break;
             case "edit":
                 showEditForm(request, response);
                 break;
@@ -73,29 +70,14 @@ public class VoucherServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Hiển thị danh sách voucher
-     */
+    // Hiển thị danh sách voucher
     private void listVouchers(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setAttribute("voucherList", voucherDAO.getAllVouchers());
-        // Forward đến trang danh sách voucher trong dashboard
         request.getRequestDispatcher("admin/voucher-list.jsp").forward(request, response);
     }
 
-    /**
-     * Hiển thị form thêm mới (Add)
-     * Không set "voucher" => JSP hiểu là đang tạo mới
-     */
-    private void showAddForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.getRequestDispatcher("admin/voucher-form.jsp").forward(request, response);
-    }
-
-    /**
-     * Hiển thị form edit (Edit)
-     * Có set "voucher" => JSP hiểu là đang chỉnh sửa
-     */
+    // Hiển thị form edit
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -104,21 +86,18 @@ public class VoucherServlet extends HttpServlet {
 
             if (voucher == null) {
                 request.setAttribute("errorMessage", "Voucher không tồn tại!");
-                request.getRequestDispatcher("admin/voucher-form.jsp").forward(request, response);
+                request.getRequestDispatcher("admin/voucher-edit.jsp").forward(request, response);
                 return;
             }
             request.setAttribute("voucher", voucher);
-            request.getRequestDispatcher("admin/voucher-form.jsp").forward(request, response);
+            request.getRequestDispatcher("admin/voucher-edit.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "ID không hợp lệ!");
-            request.getRequestDispatcher("admin/voucher-form.jsp").forward(request, response);
+            request.getRequestDispatcher("admin/voucher-edit.jsp").forward(request, response);
         }
     }
 
-    /**
-     * Xử lý Tạo voucher (action=create)
-     * Admin nhập ExpiryDate dạng "yyyy-MM-ddTHH:mm:ss"
-     */
+    // Tạo voucher (admin tự nhập ExpiryDate)
     private void createVoucher(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -129,16 +108,21 @@ public class VoucherServlet extends HttpServlet {
         BigDecimal maxReducing = new BigDecimal(request.getParameter("maxReducing"));
         String code = request.getParameter("code");
         int quantity = Integer.parseInt(request.getParameter("quantity"));
-
-        // Lấy ExpiryDate từ <input type="datetime-local">
+        
+        // Lấy ExpiryDate từ <input type="datetime-local">, ví dụ "2025-03-01T15:30:00"
         String expiryDate = request.getParameter("expiryDate");
         if (expiryDate != null && !expiryDate.isEmpty()) {
-            expiryDate = expiryDate.replace("T", " "); // "2025-03-01T15:30:00" => "2025-03-01 15:30:00"
+            expiryDate = expiryDate.replace("T", " ");
+            // Nếu chuỗi chỉ có "yyyy-MM-dd HH:mm" (16 ký tự) thì thêm giây ":00"
+            if(expiryDate.length() == 16) {
+                expiryDate += ":00";
+            }
         } else {
             expiryDate = null;
         }
 
-        boolean isActive = (request.getParameter("isActive") != null);
+        // Chuyển đổi trường isActive chính xác
+        boolean isActive = Boolean.parseBoolean(request.getParameter("isActive"));
         BigDecimal minOrderValue = new BigDecimal(request.getParameter("minOrderValue"));
         int maxUsagePerUser = Integer.parseInt(request.getParameter("maxUsagePerUser"));
         int usageCount = 0; // Mặc định 0 khi tạo mới
@@ -160,32 +144,27 @@ public class VoucherServlet extends HttpServlet {
 
         // Tạo đối tượng Vouchers
         Vouchers newVoucher = new Vouchers(
-                0,
-                name,
-                description,
-                discountPercentage,
-                maxReducing,
-                code,
-                quantity,
-                expiryDate,
-                isActive,
-                minOrderValue,
-                maxUsagePerUser,
-                usageCount,
-                imageURL
+            0,
+            name,
+            description,
+            discountPercentage,
+            maxReducing,
+            code,
+            quantity,
+            expiryDate,  // Đảm bảo định dạng là "yyyy-MM-dd HH:mm:ss"
+            isActive,
+            minOrderValue,
+            maxUsagePerUser,
+            usageCount,
+            imageURL
         );
 
         // Gọi DAO để thêm voucher
         voucherDAO.insertVoucher(newVoucher);
-
-        // Quay về danh sách
         response.sendRedirect("VoucherServlet?action=list");
     }
 
-    /**
-     * Xử lý Cập nhật voucher (action=update)
-     * Admin chỉnh sửa ExpiryDate tương tự
-     */
+    // Cập nhật voucher (admin có thể chỉnh sửa ExpiryDate)
     private void updateVoucher(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -196,16 +175,20 @@ public class VoucherServlet extends HttpServlet {
         BigDecimal maxReducing = new BigDecimal(request.getParameter("maxReducing"));
         String code = request.getParameter("code");
         int quantity = Integer.parseInt(request.getParameter("quantity"));
-
+        
         // Lấy ExpiryDate
         String expiryDate = request.getParameter("expiryDate");
         if (expiryDate != null && !expiryDate.isEmpty()) {
             expiryDate = expiryDate.replace("T", " ");
+            // Nếu chuỗi chỉ có "yyyy-MM-dd HH:mm" (16 ký tự) thì thêm giây ":00"
+            if(expiryDate.length() == 16) {
+                expiryDate += ":00";
+            }
         } else {
             expiryDate = null;
         }
 
-        boolean isActive = (request.getParameter("isActive") != null);
+        boolean isActive = Boolean.parseBoolean(request.getParameter("isActive"));
         BigDecimal minOrderValue = new BigDecimal(request.getParameter("minOrderValue"));
         int maxUsagePerUser = Integer.parseInt(request.getParameter("maxUsagePerUser"));
         int usageCount = Integer.parseInt(request.getParameter("usageCount"));
@@ -234,31 +217,27 @@ public class VoucherServlet extends HttpServlet {
 
         // Tạo đối tượng voucher mới
         Vouchers updatedVoucher = new Vouchers(
-                voucherID,
-                name,
-                description,
-                discountPercentage,
-                maxReducing,
-                code,
-                quantity,
-                expiryDate,
-                isActive,
-                minOrderValue,
-                maxUsagePerUser,
-                usageCount,
-                imageURL
+            voucherID,
+            name,
+            description,
+            discountPercentage,
+            maxReducing,
+            code,
+            quantity,
+            expiryDate,  // Đảm bảo định dạng là "yyyy-MM-dd HH:mm:ss"
+            isActive,
+            minOrderValue,
+            maxUsagePerUser,
+            usageCount,
+            imageURL
         );
 
         // Cập nhật DB
         voucherDAO.updateVoucher(updatedVoucher);
-
-        // Quay về danh sách
         response.sendRedirect("VoucherServlet?action=list");
     }
 
-    /**
-     * Xóa voucher
-     */
+    // Xóa voucher
     private void deleteVoucher(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));

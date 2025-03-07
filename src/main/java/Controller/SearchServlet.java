@@ -23,7 +23,6 @@ import java.util.List;
  *
  * @author CE180220_Trần Minh Khánh
  */
-@WebServlet(name="SearchServlet", urlPatterns={"/searchServlet"})
 public class SearchServlet extends HttpServlet {
    
     /** 

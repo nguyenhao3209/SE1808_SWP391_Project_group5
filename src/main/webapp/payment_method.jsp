@@ -135,6 +135,13 @@
         <p style="color:red;">Cart is empty</p>
     </c:if>
 
+    <!-- HIỂN THỊ LỖI (NẾU CÓ) -->
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger mx-3" role="alert">
+            ${error}
+        </div>
+    </c:if>
+
     <div class="container">
         <!-- LEFT COLUMN: Invoice -->
         <div class="left-column">
