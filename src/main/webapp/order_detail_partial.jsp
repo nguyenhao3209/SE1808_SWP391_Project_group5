@@ -1,3 +1,6 @@
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:forEach var="order" items="${order}">
     <p><strong>Order ID:</strong> ${order.orderID}</p>
     <p><strong>Customer Name:</strong> ${order.customer.customerName}</p>
@@ -17,13 +20,13 @@
         </tr>
     </thead>
     <tbody>
-        <c:forEach var="Details" items="${orderDetails}">
-            <tr>
-                <td>${Details.product.productID}</td>
-                <td>${Details.product.productName}</td>
-                <td>${Details.quantity}</td>
-                <td>${Details.product.price}</td>
-            </tr>
-        </c:forEach>                                
-    </tbody>
+    <c:forEach var="Details" items="${orderDetails}">
+        <tr>
+            <td>${Details.product.productID}</td>
+            <td>${Details.product.productName}</td>
+            <td>${Details.quantity}</td>
+            <td>${Details.product.price}</td>
+        </tr>
+    </c:forEach>                                
+</tbody>
 </table>

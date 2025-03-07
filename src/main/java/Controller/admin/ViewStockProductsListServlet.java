@@ -4,9 +4,9 @@
  */
 package Controller.admin;
 
-import Models.StockImport;
+import Models.Category;
+import Models.Products;
 import dal.ProductsDAO;
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,12 +14,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Haontce180451
  */
-public class ViewImportedServlet extends HttpServlet {
+public class ViewStockProductsListServlet extends HttpServlet {
+
+    private static final int RECORDS_PER_PAGE = 10;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +41,10 @@ public class ViewImportedServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ViewImportedServlet</title>");
+            out.println("<title>Servlet ViewStockProductsListServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ViewImportedServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ViewStockProductsListServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,14 +62,27 @@ public class ViewImportedServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-        ProductsDAO stockDAO = new ProductsDAO();
-        ArrayList<StockImport> stockList = stockDAO.getAllStockImports();
+        int page = 1; // Mặc định trang đầu tiên
+        if (request.getParameter("page") != null) {
+            page = Integer.parseInt(request.getParameter("page"));
+        }
 
+        ProductsDAO productsDAO = new ProductsDAO();
+        ArrayList<Products> stockList = productsDAO.getStockProducts(page, RECORDS_PER_PAGE);
+        List<Category> categoryList = productsDAO.getAllCategory();
+        List<String> brandList = productsDAO.getAllBrand();
+        
+        int totalRecords = productsDAO.getTotalProducts();
+        int totalPages = (int) Math.ceil(totalRecords * 1.0 / RECORDS_PER_PAGE);
+        request.setAttribute("brandList", brandList);
+        request.setAttribute("categoryList", categoryList);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("currentPage", page);
         request.setAttribute("stockList", stockList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("admin/imported-view.jsp");
-        dispatcher.forward(request, response);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+
+        request.getRequestDispatcher("/admin/stock-view.jsp").forward(request, response);
     }
 
     /**
@@ -80,22 +96,9 @@ public class ViewImportedServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("application/json");
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
 
-        String fromDate = request.getParameter("fromDate");
-        String toDate = request.getParameter("toDate");
-        String supplier = request.getParameter("supplier");
-        String staffName = request.getParameter("staffName");
-        String status = request.getParameter("status");
-
-        ProductsDAO stockDAO = new ProductsDAO();
-        ArrayList<StockImport> stockList = stockDAO.getFilteredStock(fromDate, toDate, supplier, staffName, status);
-        request.setAttribute("stockList", stockList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("admin/imported-view.jsp");
-        dispatcher.forward(request, response);
     }
+
     /**
      * Returns a short description of the servlet.
      *

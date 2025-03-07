@@ -9,20 +9,44 @@
         <servlet-class>Controller.ViewVouchersServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ImportStockServlet</servlet-name>
-        <servlet-class>Controller.admin.ImportStockServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ViewStockServlet</servlet-name>
-        <servlet-class>Controller.admin.ViewStockServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ViewImportedServlet</servlet-name>
         <servlet-class>Controller.admin.ViewImportedServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
         <servlet-class>Controller.HomeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchProductToImport</servlet-name>
+        <servlet-class>Controller.admin.SearchProductToImport</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductSizeServlet</servlet-name>
+        <servlet-class>Controller.ProductSizeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SaveStockImportServlet</servlet-name>
+        <servlet-class>Controller.admin.SaveStockImportServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReadExcelFileToImportServlet</servlet-name>
+        <servlet-class>Controller.admin.ReadExcelFileToImportServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StockImportServlet</servlet-name>
+        <servlet-class>Controller.admin.StockImportServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewStockProductsListServlet</servlet-name>
+        <servlet-class>Controller.admin.ViewStockProductsListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StockPaginationServlet</servlet-name>
+        <servlet-class>Controller.admin.StockPaginationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewImportedDetails</servlet-name>
+        <servlet-class>Controller.admin.ViewImportedDetails</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>VoucherServlet</servlet-name>
@@ -73,20 +97,44 @@
         <url-pattern>/ViewVouchersServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ImportStockServlet</servlet-name>
-        <url-pattern>/importStock</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ViewStockServlet</servlet-name>
-        <url-pattern>/viewStock</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ViewImportedServlet</servlet-name>
         <url-pattern>/viewImported</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>
         <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchProductToImport</servlet-name>
+        <url-pattern>/searchProductToImport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductSizeServlet</servlet-name>
+        <url-pattern>/productSize</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SaveStockImportServlet</servlet-name>
+        <url-pattern>/saveStockImport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReadExcelFileToImportServlet</servlet-name>
+        <url-pattern>/readExcel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StockImportServlet</servlet-name>
+        <url-pattern>/stockImport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewStockProductsListServlet</servlet-name>
+        <url-pattern>/viewStockProducts</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StockPaginationServlet</servlet-name>
+        <url-pattern>/stockProductsPagination</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewImportedDetails</servlet-name>
+        <url-pattern>/viewImportedDetails</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

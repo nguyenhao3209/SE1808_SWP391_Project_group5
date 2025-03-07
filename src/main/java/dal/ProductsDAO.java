@@ -12,6 +12,9 @@ import Models.Products;
 import Models.Slider;
 import Models.Specifications;
 import Models.StockImport;
+import Models.StockImportDetails;
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -557,8 +560,10 @@ public class ProductsDAO extends DBContext {
 
     public static void main(String[] args) {
         ProductsDAO proDAO = new ProductsDAO();
-        Products proS = proDAO.getProductByID(500);
-        System.out.println(proS.getAvgRating());
+        ArrayList<Products> listP = proDAO.getAllStockProducts();
+        for (Products products : listP) {
+            System.out.println(products.getImportDate());
+        }
     }
 
     public void insertToCart(Cart item) {
@@ -692,7 +697,7 @@ public class ProductsDAO extends DBContext {
     public ArrayList<StockImport> getAllStockImports() {
         StaffsDAO staffDAO = new StaffsDAO();
         ArrayList<StockImport> stockList = new ArrayList<>();
-        String sql = "SELECT ImportID, StaffID, Supplier, ImportDate, TotalCost FROM StockImport";
+        String sql = "SELECT ImportID, StaffID, Supplier, ImportDate, TotalCost, Status FROM StockImport";
 
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -704,6 +709,7 @@ public class ProductsDAO extends DBContext {
                 stock.setSupplier(rs.getString("Supplier"));
                 stock.setImportDate(rs.getTimestamp("ImportDate"));
                 stock.setTotalCost(rs.getBigDecimal("TotalCost"));
+                stock.setStatus(rs.getString("Status"));
                 stockList.add(stock);
             }
         } catch (SQLException e) {
@@ -712,10 +718,10 @@ public class ProductsDAO extends DBContext {
         return stockList;
     }
 
-    public ArrayList<StockImport> getFilteredStock(String fromDate, String toDate, String supplier, String staffName) {
+    public ArrayList<StockImport> getFilteredStock(String fromDate, String toDate, String supplier, String staffName, String status) {
         ArrayList<StockImport> stockList = new ArrayList<>();
         StaffsDAO staffDAO = new StaffsDAO();
-        String sql = "SELECT si.ImportID, si.ImportDate, si.TotalCost, si.Supplier, s.StaffID, s.StaffName "
+        String sql = "SELECT si.ImportID, si.ImportDate, si.TotalCost, si.Supplier, si.Status, s.StaffID, s.StaffName "
                 + "FROM StockImport si "
                 + "JOIN Staffs s ON si.StaffID = s.StaffID "
                 + "WHERE 1=1";
@@ -738,6 +744,10 @@ public class ProductsDAO extends DBContext {
             sql += " AND s.StaffName LIKE ?";
             params.add("%" + staffName + "%");
         }
+        if (status != null && !status.isEmpty()) {
+            sql += " AND si.Status = ?";
+            params.add(status);
+        }
 
         try ( PreparedStatement pstmt = connection.prepareStatement(sql)) {
             for (int i = 0; i < params.size(); i++) {
@@ -751,6 +761,7 @@ public class ProductsDAO extends DBContext {
                     stock.setImportDate(rs.getTimestamp("ImportDate"));
                     stock.setTotalCost(rs.getBigDecimal("TotalCost"));
                     stock.setSupplier(rs.getString("Supplier"));
+                    stock.setStatus(rs.getString("Status"));  // Thêm dòng này để set trạng thái
                     stock.setStaff(staffDAO.getStaffByID(rs.getString("StaffID")));
 
                     stockList.add(stock);
@@ -762,6 +773,516 @@ public class ProductsDAO extends DBContext {
         }
 
         return stockList;
+    }
+
+    public ArrayList<Products> getSearchProductToImport(String keyword) {
+        ArrayList<Products> listProduct = new ArrayList<>();
+        String sql = "SELECT ProductID, ProductName, Description, StockQuantity, Brand, CategoryID, Price, DiscountPercent, ImageURL "
+                + "FROM Products "
+                + "WHERE ProductName LIKE ? OR ProductID = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, "%" + keyword + "%");
+
+            // Kiểm tra nếu keyword là số thì mới set vào ProductID, ngược lại gán giá trị -1 để tránh lỗi
+            try {
+                ps.setInt(2, Integer.parseInt(keyword));
+            } catch (NumberFormatException e) {
+                ps.setInt(2, -1); // Không có sản phẩm nào có ID là -1
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Products p = new Products();
+                p.setProductID(rs.getInt("ProductID"));
+                p.setProductName(rs.getString("ProductName"));
+                p.setPrice(rs.getBigDecimal("Price"));
+                p.setStockQuantity(rs.getInt("StockQuantity"));
+                p.setBrand(rs.getString("Brand"));
+                p.setDescription(rs.getString("Description"));
+                p.setImageURL(rs.getString("ImageURL"));
+                p.setDiscountProduct(rs.getBigDecimal("DiscountPercent"));
+
+                // Lấy danh mục từ ID
+                Category c = getCategoryByID(rs.getInt("CategoryID"));
+                p.setCategory(c);
+
+                listProduct.add(p);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching filtered stock: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return listProduct;
+    }
+
+    public int addImportStock(String staffID, String supplier, BigDecimal totalCost, String status, String[] productIDs, String[] quantities, String[] size, String[] prices) {
+        PreparedStatement importStmt = null;
+        PreparedStatement detailStmt = null;
+        ResultSet rs = null;
+        int importID = 0;
+
+        try {
+
+            // 2️⃣ Chèn dữ liệu vào bảng StockImport
+            String importSQL = "INSERT INTO StockImport (StaffID, Supplier, ImportDate, TotalCost, Status) VALUES (?, ?, GETDATE(), ?, ?) "
+                    + "SELECT SCOPE_IDENTITY();";
+            connection.setAutoCommit(false);
+            importStmt = connection.prepareStatement(importSQL);
+            importStmt.setString(1, staffID);
+            importStmt.setString(2, supplier);
+            importStmt.setBigDecimal(3, totalCost);
+            importStmt.setString(4, status);
+
+            rs = importStmt.executeQuery();
+            if (rs.next()) {
+                importID = rs.getInt(1);
+            }
+            String detailSQL = "INSERT INTO [dbo].[StockImportDetails]\n"
+                    + "           ([ImportID]\n"
+                    + "           ,[ProductID]\n"
+                    + "           ,[Quantity]\n"
+                    + "           ,[CostPrice]"
+                    + "           ,[SizeID]) VALUES ( ?, ?, ?, ?, ?)";
+            detailStmt = connection.prepareStatement(detailSQL);
+            for (int i = 0; i < productIDs.length; i++) {
+                detailStmt.setInt(1, importID);
+                detailStmt.setInt(2, Integer.parseInt(productIDs[i]));
+                detailStmt.setInt(3, Integer.parseInt(quantities[i]));
+                detailStmt.setBigDecimal(4, new BigDecimal(prices[i]));
+                // Lấy SizeID (nếu có)
+                if (size[i] != null && !size[i].isEmpty()) {
+                    detailStmt.setInt(5, Integer.parseInt(size[i]));
+                    if (status.equals("Complete")) {
+                        updateQuantityOfProductHavSizeAfterInventory(getProductByID(Integer.parseInt(productIDs[i])), getProductSizeByID(Integer.parseInt(size[i])), Integer.parseInt(quantities[i]));
+                    }
+                } else {
+                    detailStmt.setNull(5, java.sql.Types.INTEGER);
+                    if (status.equals("Complete")) {
+                        updateQuantityOfProductAfterInventory(getProductByID(Integer.parseInt(productIDs[i])), Integer.parseInt(quantities[i]));
+                    }
+                }
+                detailStmt.executeUpdate();
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return importID;
+    }
+
+    public ProductSizes getSize(int productID, String size) {
+        String sql = "SELECT * FROM ProductSizes WHERE ProductID = ? AND Size = ?";
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, productID);
+            ps.setString(2, size);
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new ProductSizes(rs.getInt("SizeID"), rs.getString("Size"), rs.getInt("StockQuantity"));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving size: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public StockImport getStockImport(int importedID) {
+        StaffsDAO staffDAO = new StaffsDAO();
+        String sql = "SELECT [ImportID]\n"
+                + "      ,[StaffID]\n"
+                + "      ,[Supplier]\n"
+                + "      ,[ImportDate]\n"
+                + "      ,[TotalCost]\n"
+                + "      ,[Status]\n"
+                + "  FROM [dbo].[StockImport]"
+                + "  WHERE ImportID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, importedID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                StockImport stock = new StockImport();
+                stock.setImportID(rs.getInt("ImportID"));
+                stock.setStaff(staffDAO.getStaffByID(rs.getString("StaffID")));
+                stock.setSupplier(rs.getString("Supplier"));
+                stock.setImportDate(rs.getTimestamp("ImportDate"));
+                stock.setTotalCost(rs.getBigDecimal("TotalCost"));
+                return stock;
+            }
+
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public ArrayList<StockImportDetails> getAllDetailOfImported(int importedID) {
+        ArrayList<StockImportDetails> importedDetailList = new ArrayList<>();
+        String sql = "SELECT [ImportDetailID]\n"
+                + "      ,[ImportID]\n"
+                + "      ,[ProductID]\n"
+                + "      ,[Quantity]\n"
+                + "      ,[CostPrice]\n"
+                + "      ,[SizeID]\n"
+                + "  FROM [dbo].[StockImportDetails]\n"
+                + "  WHERE ImportID = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, importedID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                StockImportDetails importDetails = new StockImportDetails();
+                importDetails.setStockImport(getStockImport(rs.getInt("ImportID")));
+                importDetails.setProduct(getProductByID(rs.getInt("ProductID")));
+                importDetails.setQuantity(rs.getInt("Quantity"));
+                importDetails.setCostPrice(rs.getBigDecimal("CostPrice"));
+                importDetails.setSize(getProductSizeByID(rs.getInt("SizeID")));
+                importedDetailList.add(importDetails);
+            }
+
+        } catch (Exception e) {
+        }
+        return importedDetailList;
+    }
+
+    public void insertProductFromExcel(int importID, String[] productIDs,
+            String[] sizeIDs, int[] quantities, BigDecimal[] prices,
+            String supplier, BigDecimal totalCost, String staffID) {
+        PreparedStatement importStmt = null;
+        PreparedStatement detailStmt = null;
+
+        try {
+            connection.setAutoCommit(false); // Bắt đầu transaction
+
+            // 1️⃣ Cập nhật thông tin StockImport
+            String importSQL = "UPDATE [dbo].[StockImport] "
+                    + "SET StaffID = ?, Supplier = ?, TotalCost = ?, Status = ? "
+                    + "WHERE ImportID = ?";
+            importStmt = connection.prepareStatement(importSQL);
+            importStmt.setString(1, staffID);
+            importStmt.setString(2, supplier);
+            importStmt.setBigDecimal(3, totalCost);
+            importStmt.setString(4, "Completed");
+            importStmt.setInt(5, importID);
+            importStmt.executeUpdate();
+
+            // 2️⃣ Cập nhật StockImportDetails
+            String detailSQL = "UPDATE [dbo].[StockImportDetails] "
+                    + "SET Quantity = ?, CostPrice = ?, SizeID = ? "
+                    + "WHERE ImportID = ? AND ProductID = ?";
+            detailStmt = connection.prepareStatement(detailSQL);
+
+            for (int i = 0; i < productIDs.length; i++) {
+                if (checkProudctInImported(importID, Integer.parseInt(productIDs[i]))) {
+                    detailStmt.setInt(1, quantities[i]);
+                    detailStmt.setBigDecimal(2, prices[i]);
+
+                    // Kiểm tra SizeID
+                    if (sizeIDs[i] != null && !sizeIDs[i].isEmpty()) {
+                        detailStmt.setInt(3, Integer.parseInt(sizeIDs[i]));
+                        updateQuantityOfProductHavSizeAfterInventory(getProductByID(Integer.parseInt(productIDs[i])), getProductSizeByID(Integer.parseInt(sizeIDs[i])), quantities[i]);
+                    } else {
+                        detailStmt.setNull(3, java.sql.Types.INTEGER);
+                        updateQuantityOfProductAfterInventory(getProductByID(Integer.parseInt(productIDs[i])), quantities[i]);
+                    }
+
+                    detailStmt.setInt(4, importID);
+                    detailStmt.setInt(5, Integer.parseInt(productIDs[i]));
+
+                    detailStmt.executeUpdate();
+                } else {
+                    insertNewProductToImported(importID, Integer.parseInt(productIDs[i]), quantities[i], prices[i], sizeIDs[i]);
+                }
+            }
+            connection.commit(); // Xác nhận transaction
+            System.out.println("Stock import updated successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean checkProudctInImported(int importedID, int productID) {
+        String sql = "SELECT [ImportDetailID]\n"
+                + "      ,[ImportID]\n"
+                + "      ,[ProductID]\n"
+                + "      ,[Quantity]\n"
+                + "      ,[CostPrice]\n"
+                + "      ,[SizeID]\n"
+                + "  FROM [dbo].[StockImportDetails]\n"
+                + "  WHERE ImportID = ? AND ProductID = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, importedID);
+            ps.setInt(2, productID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    public void insertNewProductToImported(int importedID, int productID, int quantity, BigDecimal price, String sizeID) {
+        String detailSQL = "INSERT INTO [dbo].[StockImportDetails]\n"
+                + "           ([ImportID]\n"
+                + "           ,[ProductID]\n"
+                + "           ,[Quantity]\n"
+                + "           ,[CostPrice]"
+                + "           ,[SizeID]) VALUES ( ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement detailStmt = connection.prepareStatement(detailSQL);
+            detailStmt.setInt(1, importedID);
+            detailStmt.setInt(2, productID);
+            detailStmt.setInt(3, quantity);
+            detailStmt.setBigDecimal(4, price);
+            // Lấy SizeID (nếu có)
+            if (sizeID != null && !sizeID.isEmpty()) {
+                detailStmt.setInt(5, Integer.parseInt(sizeID));
+            } else {
+                detailStmt.setNull(5, java.sql.Types.INTEGER);
+            }
+            detailStmt.executeUpdate();
+        } catch (Exception e) {
+        }
+
+    }
+
+    public void updateQuantityOfProductAfterInventory(Products product, int quantity) {
+        String sql = "UPDATE [dbo].[Products]\n"
+                + "   SET [StockQuantity] = ?\n"
+                + " WHERE ProductID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            int quantityNew = product.getStockQuantity() + quantity;
+            ps.setInt(1, quantityNew);
+            ps.setInt(2, product.getProductID());
+            ps.executeUpdate();
+        } catch (Exception e) {
+        }
+    }
+
+    public void updateQuantityOfProductHavSizeAfterInventory(Products product, ProductSizes sizeP, int quantity) {
+        String sql = "UPDATE [dbo].[ProductSizes]\n"
+                + "   SET [StockQuantity] = ?\n"
+                + " WHERE [ProductID] = ? AND SizeID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            int quantityNew = sizeP.getStockQuantity() + quantity;
+            ps.setInt(1, quantityNew);
+            ps.setInt(2, product.getProductID());
+            ps.setInt(3, sizeP.getSizeID());
+            ps.executeUpdate();
+            updateQuantityOfProductAfterInventory(product, quantity);
+        } catch (Exception e) {
+        }
+    }
+
+    public void updateImportStatus(int importID, String status) {
+        String sql = "UPDATE [dbo].[StockImport] SET Status = ? WHERE ImportID = ?";
+        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setInt(2, importID);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Products> getAllStockProducts() {
+        ArrayList<Products> productList = new ArrayList<>();
+        String sql = "SELECT p.ProductID, p.ProductName, p.CategoryID, p.Brand, p.StockQuantity, p.ImageURL, si.ImportDate "
+                + "FROM Products p "
+                + "LEFT JOIN StockImportDetails sid ON p.ProductID = sid.ProductID "
+                + "LEFT JOIN StockImport si ON sid.ImportID = si.ImportID";
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Products product = new Products(
+                        rs.getInt("ProductID"),
+                        rs.getString("ProductName"),
+                        getCategoryByID(rs.getInt("CategoryID")),
+                        rs.getString("Brand"),
+                        rs.getInt("StockQuantity"),
+                        rs.getTimestamp("ImportDate"),
+                        rs.getString("ImageURL")
+                );
+                productList.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return productList;
+    }
+
+    public ArrayList<Products> getStockProducts(int page, int recordsPerPage) {
+        ArrayList<Products> productList = new ArrayList<>();
+
+        if (connection == null) {
+            System.err.println("Database connection is null!");
+            return productList;
+        }
+
+        String sql = "SELECT p.ProductID, p.ProductName, p.CategoryID, p.Brand, p.StockQuantity, p.ImageURL, si.ImportDate "
+                + "FROM Products p "
+                + "LEFT JOIN StockImportDetails sid ON p.ProductID = sid.ProductID "
+                + "LEFT JOIN StockImport si ON sid.ImportID = si.ImportID "
+                + "ORDER BY p.ProductID, si.ImportDate DESC " // Ưu tiên ngày nhập mới nhất trước
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            int offset = (page - 1) * recordsPerPage;
+            ps.setInt(1, offset);
+            ps.setInt(2, recordsPerPage);
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int productId = rs.getInt("ProductID");
+
+                    // Kiểm tra xem ProductID đã có trong danh sách chưa
+                    boolean exists = false;
+                    for (Products p : productList) {
+                        if (p.getProductID() == productId) {
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if (!exists) { // Chỉ thêm nếu chưa tồn tại
+                        Products product = new Products(
+                                productId,
+                                rs.getString("ProductName"),
+                                getCategoryByID(rs.getInt("CategoryID")),
+                                rs.getString("Brand"),
+                                rs.getInt("StockQuantity"),
+                                rs.getTimestamp("ImportDate"),
+                                rs.getString("ImageURL")
+                        );
+
+                        productList.add(product);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return productList;
+    }
+
+    public int getTotalProducts() {
+        int total = 0;
+
+        if (connection == null) {
+            System.err.println("Database connection is null!");
+            return total;
+        }
+
+        String sql = "SELECT COUNT(*) FROM Products";
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return total;
+    }
+
+    public ArrayList<Products> getStockProducts(int page, int recordsPerPage, String keyword, String sortStock, String sortDate, String brand, Integer categoryID) {
+        ArrayList<Products> productList = new ArrayList<>();
+
+        if (connection == null) {
+            System.err.println("Database connection is null!");
+            return productList;
+        }
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT p.ProductID, p.ProductName, p.CategoryID, p.Brand, p.StockQuantity, p.ImageURL, "
+                + "(SELECT MAX(si.ImportDate) FROM StockImportDetails sid "
+                + " JOIN StockImport si ON sid.ImportID = si.ImportID "
+                + " WHERE sid.ProductID = p.ProductID) AS LatestImportDate "
+                + "FROM Products p WHERE 1=1 "
+        );
+
+        // Lọc theo từ khóa
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append("AND (p.ProductID LIKE ? OR p.ProductName LIKE ?) ");
+        }
+
+        // Lọc theo Brand
+        if (brand != null && !brand.trim().isEmpty()) {
+            sql.append("AND p.Brand = ? ");
+        }
+
+        // Lọc theo CategoryID
+        if (categoryID != null && categoryID > 0) {
+            sql.append("AND p.CategoryID = ? ");
+        }
+
+        // Sắp xếp theo số lượng tồn kho hoặc ngày nhập
+        if (sortStock != null && (sortStock.equals("asc") || sortStock.equals("desc"))) {
+            sql.append("ORDER BY p.StockQuantity ").append(sortStock).append(" ");
+        } else if (sortDate != null && (sortDate.equals("asc") || sortDate.equals("desc"))) {
+            sql.append("ORDER BY LatestImportDate ").append(sortDate).append(" ");
+        } else {
+            sql.append("ORDER BY p.ProductID ");
+        }
+
+        // Phân trang
+        sql.append("OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+
+            // Truyền giá trị lọc vào câu lệnh SQL
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                ps.setString(paramIndex++, "%" + keyword + "%");
+                ps.setString(paramIndex++, "%" + keyword + "%");
+            }
+
+            if (brand != null && !brand.trim().isEmpty()) {
+                ps.setString(paramIndex++, brand);
+            }
+
+            if (categoryID != null && categoryID > 0) {
+                ps.setInt(paramIndex++, categoryID);
+            }
+
+            // Truyền giá trị phân trang
+            int offset = (page - 1) * recordsPerPage;
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex, recordsPerPage);
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Products product = new Products(
+                            rs.getInt("ProductID"),
+                            rs.getString("ProductName"),
+                            getCategoryByID(rs.getInt("CategoryID")),
+                            rs.getString("Brand"),
+                            rs.getInt("StockQuantity"),
+                            rs.getTimestamp("LatestImportDate"),
+                            rs.getString("ImageURL")
+                    );
+                    productList.add(product);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return productList;
     }
 
 }

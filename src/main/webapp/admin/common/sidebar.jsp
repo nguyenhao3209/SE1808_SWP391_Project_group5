@@ -48,7 +48,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="ttr-material-button">
+                    <a href="" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
                         <span class="ttr-label">My Profile</span>
                         <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
@@ -69,7 +69,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="ttr-material-button">
+                    <a href="" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
                         <span class="ttr-label">Staffs Management</span>
                         <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
@@ -79,22 +79,28 @@
                             <a href="admin/addStaff.jsp" class="ttr-material-button"><span class="ttr-label">Add Staff</span></a>
                         </li>
                         <li>
-                            <a href="admin/listStaffs" class="ttr-material-button"><span class="ttr-label">Staffs List</span></a>
+                            <a href="listStaffs" class="ttr-material-button"><span class="ttr-label">Staffs List</span></a>
                         </li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#" class="ttr-material-button">
+                    <a href="" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
                         <span class="ttr-label">Stock Management</span>
                         <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
                     </a>
                     <ul>
                         <li>
-                            <a href="admin/viewImported.jsp" class="ttr-material-button"><span class="ttr-label">Imported Invoices</span></a>
+                            <a href="viewStockProducts" class="ttr-material-button"><span class="ttr-label">View Stock Products</span></a>
                         </li>
                         <li>
-                            <a href="admin/stock_import.jsp" class="ttr-material-button"><span class="ttr-label">Stock In</span></a>
+                            <a href="viewImported" class="ttr-material-button"><span class="ttr-label">Imported Invoices</span></a>
+                        </li>
+                        <li>
+                            <a href="admin/stock_import.jsp" class="ttr-material-button"><span class="ttr-label">Stock Import</span></a>
+                        </li>
+                        <li>
+                            <a href="admin/stock_import_excel.jsp" class="ttr-material-button"><span class="ttr-label">Stock Import From Excel</span></a>
                         </li>
                     </ul>
                 </li>

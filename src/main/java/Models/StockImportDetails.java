@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package Models;
 
 import java.math.BigDecimal;
@@ -12,13 +11,37 @@ import java.math.BigDecimal;
  * @author HaoNTCE180451
  */
 public class StockImportDetails {
+
     private int importDetailID;
     private StockImport stockImport;
     private Products product;
     private int quantity;
     private BigDecimal costPrice;
+    private ProductSizes size;
 
     public StockImportDetails() {
+    }
+
+    public StockImportDetails(int importDetailID, StockImport stockImport, Products product, int quantity, BigDecimal costPrice, ProductSizes size) {
+        this.importDetailID = importDetailID;
+        this.stockImport = stockImport;
+        this.product = product;
+        this.quantity = quantity;
+        this.costPrice = costPrice;
+        this.size = size;
+    }
+
+    public StockImportDetails(Products product, int quantity, BigDecimal costPrice, ProductSizes size) {
+        this.product = product;
+        this.quantity = quantity;
+        this.costPrice = costPrice;
+        this.size = size;
+    }
+
+    public StockImportDetails(Products product, int quantity, BigDecimal costPrice) {
+        this.product = product;
+        this.quantity = quantity;
+        this.costPrice = costPrice;
     }
 
     public StockImportDetails(int importDetailID, StockImport stockImport, Products product, int quantity, BigDecimal costPrice) {
@@ -69,5 +92,12 @@ public class StockImportDetails {
         this.costPrice = costPrice;
     }
 
-   
+    public ProductSizes getSize() {
+        return size;
+    }
+
+    public void setSize(ProductSizes size) {
+        this.size = size;
+    }
+
 }

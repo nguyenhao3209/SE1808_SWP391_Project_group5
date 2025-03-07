@@ -84,7 +84,7 @@ public class LoginWithGoogle extends HttpServlet {
                 session.setAttribute("user", customer);
             }
 
-            response.sendRedirect("home.jsp");
+            response.sendRedirect("home");
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Login fail");
             request.getRequestDispatcher("login.jsp").forward(request, response);

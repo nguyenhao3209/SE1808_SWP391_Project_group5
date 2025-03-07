@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller.admin;
+package Controller;
 
-import Models.StockImport;
+import Models.ProductSizes;
+import com.google.gson.Gson;
 import dal.ProductsDAO;
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
  *
  * @author Haontce180451
  */
-public class ViewImportedServlet extends HttpServlet {
+public class ProductSizeServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +38,10 @@ public class ViewImportedServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ViewImportedServlet</title>");
+            out.println("<title>Servlet ProductSizeServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ViewImportedServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ProductSizeServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,14 +59,29 @@ public class ViewImportedServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-        ProductsDAO stockDAO = new ProductsDAO();
-        ArrayList<StockImport> stockList = stockDAO.getAllStockImports();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        String productIdStr = request.getParameter("productId");
+        System.out.println("Received productId: " + productIdStr); // Debug
 
-        request.setAttribute("stockList", stockList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("admin/imported-view.jsp");
-        dispatcher.forward(request, response);
+        if (productIdStr == null || productIdStr.trim().isEmpty()) {
+            System.out.println("Invalid productId: " + productIdStr);
+            response.getWriter().write("[]");
+            return;
+        }
+
+        try {
+            int productId = Integer.parseInt(productIdStr);
+            ProductsDAO productDAO = new ProductsDAO();
+            ArrayList<ProductSizes> productSizes = productDAO.getSizesOfProductByID(productId);
+
+            System.out.println("Fetched sizes: " + new Gson().toJson(productSizes)); // Debug
+
+            response.getWriter().write(new Gson().toJson(productSizes));
+        } catch (NumberFormatException e) {
+            System.out.println("NumberFormatException: " + e.getMessage());
+            response.getWriter().write("[]");
+        }
     }
 
     /**
@@ -80,22 +95,9 @@ public class ViewImportedServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("application/json");
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-
-        String fromDate = request.getParameter("fromDate");
-        String toDate = request.getParameter("toDate");
-        String supplier = request.getParameter("supplier");
-        String staffName = request.getParameter("staffName");
-        String status = request.getParameter("status");
-
-        ProductsDAO stockDAO = new ProductsDAO();
-        ArrayList<StockImport> stockList = stockDAO.getFilteredStock(fromDate, toDate, supplier, staffName, status);
-        request.setAttribute("stockList", stockList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("admin/imported-view.jsp");
-        dispatcher.forward(request, response);
+        processRequest(request, response);
     }
+
     /**
      * Returns a short description of the servlet.
      *

@@ -4,9 +4,9 @@
  */
 package Controller.admin;
 
-import Models.StockImport;
+import Models.Products;
+import com.google.gson.Gson;
 import dal.ProductsDAO;
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
  *
  * @author Haontce180451
  */
-public class ViewImportedServlet extends HttpServlet {
+public class SearchProductToImport extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +38,10 @@ public class ViewImportedServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ViewImportedServlet</title>");
+            out.println("<title>Servlet SearchProductToImport</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ViewImportedServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SearchProductToImport at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -57,16 +57,21 @@ public class ViewImportedServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-        ProductsDAO stockDAO = new ProductsDAO();
-        ArrayList<StockImport> stockList = stockDAO.getAllStockImports();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-        request.setAttribute("stockList", stockList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("admin/imported-view.jsp");
-        dispatcher.forward(request, response);
+        String keyword = request.getParameter("keyword");
+        if (keyword == null || keyword.trim().isEmpty()) {
+            response.getWriter().write("[]"); // Trả về mảng rỗng nếu không có từ khóa
+            return;
+        }
+
+        ProductsDAO productDAO = new ProductsDAO();
+        ArrayList<Products> productList = productDAO.getSearchProductToImport(keyword);
+
+        request.setAttribute("productList", productList);
+        request.getRequestDispatcher("/admin/ListSearch.jsp").forward(request, response);
     }
 
     /**
@@ -80,22 +85,9 @@ public class ViewImportedServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("application/json");
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-
-        String fromDate = request.getParameter("fromDate");
-        String toDate = request.getParameter("toDate");
-        String supplier = request.getParameter("supplier");
-        String staffName = request.getParameter("staffName");
-        String status = request.getParameter("status");
-
-        ProductsDAO stockDAO = new ProductsDAO();
-        ArrayList<StockImport> stockList = stockDAO.getFilteredStock(fromDate, toDate, supplier, staffName, status);
-        request.setAttribute("stockList", stockList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("admin/imported-view.jsp");
-        dispatcher.forward(request, response);
+        processRequest(request, response);
     }
+
     /**
      * Returns a short description of the servlet.
      *

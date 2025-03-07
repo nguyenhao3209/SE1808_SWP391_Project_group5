@@ -136,7 +136,7 @@ public class OrdersDAO extends DBContext {
         CustomersDAO customersDAO = new CustomersDAO();
         VoucherDAO voucherDAO = new VoucherDAO();
         StaffsDAO staffsdao = new StaffsDAO();
-        String sql = "SELECT *FROM [SE1808_SWP391_Group5].[dbo].[Orders] o\n";
+        String sql = "SELECT *FROM [SE1808_SWP391_Group5].[dbo].[Orders]\n";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -159,7 +159,7 @@ public class OrdersDAO extends DBContext {
         CustomersDAO customersDAO = new CustomersDAO();
         VoucherDAO voucherDAO = new VoucherDAO();
         StaffsDAO staffsdao = new StaffsDAO();
-        String sql = "SELECT *FROM [SE1808_SWP391_Group5].[dbo].[Orders] o\n"
+        String sql = "SELECT *FROM [SE1808_SWP391_Group5].[dbo].[Orders] \n"
                 + "where OrderID= ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -226,4 +226,6 @@ public class OrdersDAO extends DBContext {
         }
         return list;
     }
+    
+
 }
