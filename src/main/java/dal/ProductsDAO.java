@@ -1523,4 +1523,17 @@ public class ProductsDAO extends DBContext {
         return productList;
     }
 
+   public boolean updateStockQuantity(int productID, int newQuantity) {
+    String sql = "UPDATE Products SET StockQuantity = ? WHERE ProductID = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, newQuantity);
+        ps.setInt(2, productID);
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
+
 }

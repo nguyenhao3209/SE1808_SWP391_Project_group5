@@ -48,6 +48,10 @@
         <servlet-name>ViewImportedDetails</servlet-name>
         <servlet-class>Controller.admin.ViewImportedDetails</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateStockServlet</servlet-name>
+        <servlet-class>Controller.admin.UpdateStockServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>VoucherServlet</servlet-name>
         <url-pattern>/VoucherServlet</url-pattern>
@@ -135,6 +139,10 @@
     <servlet-mapping>
         <servlet-name>ViewImportedDetails</servlet-name>
         <url-pattern>/viewImportedDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateStockServlet</servlet-name>
+        <url-pattern>/updateStock</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

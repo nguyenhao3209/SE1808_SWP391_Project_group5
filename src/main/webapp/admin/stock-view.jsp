@@ -155,7 +155,10 @@
                                     <td>${stock.productName}</td>
                                     <td>${stock.category.categoryName}</td>
                                     <td>${stock.brand}</td>
-                                    <td>${stock.stockQuantity}</td>
+                                    <td>
+                                        <input type="number" class="update-stock-input" data-id="${stock.productID}" value="${stock.stockQuantity}" min="0">
+                                        <button class="update-stock-btn btn btn-sm btn-primary" data-id="${stock.productID}">Update</button>
+                                    </td>
                                     <td>${stock.importDate}</td>
                                 </tr>
                             </c:forEach>
@@ -223,7 +226,7 @@
                 $.ajax({
                     url: "stockProductsPagination",
                     type: "GET",
-                     data: { page, keyword, sortStock, sortDate, categoryID, brand },
+                    data: {page, keyword, sortStock, sortDate, categoryID, brand},
                     success: function (data) {
                         $("#stockTableContainer").html($(data).find("#stockTableContainer").html());
                         $("#pagination").html($(data).find("#pagination").html());
@@ -252,6 +255,37 @@
                     fetchFilteredData(page);
                 });
             });
+
+            $(document).ready(function () {
+                $(document).on("click", ".update-stock-btn", function () {
+                    let productID = $(this).data("id");
+                    let newQuantity = $(this).siblings(".update-stock-input").val();
+
+                    if (newQuantity < 0 || isNaN(newQuantity)) {
+                        alert("Số lượng không hợp lệ!");
+                        return;
+                    }
+
+                    $.ajax({
+                        url: "updateStock",
+                        type: "POST",
+                        data: {productID, newQuantity},
+                        success: function (response) {
+                            if (response.success) {
+                                alert("Update successfully!");
+                                fetchFilteredData(); // Làm mới bảng sau khi cập nhật
+                            } else {
+                                alert("Failled!");
+                            }
+                        },
+                        error: function (xhr) {
+                            alert("Error equirment!");
+                            console.error(xhr.responseText);
+                        }
+                    });
+                });
+            });
+
         </script>
     </body>
 </html>
