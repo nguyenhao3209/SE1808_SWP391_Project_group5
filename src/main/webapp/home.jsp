@@ -471,116 +471,37 @@
                         </div>
 
                         <div class="row">
+                            <c:if test="${not empty sessionScope.newsList}">
+                                <c:forEach var="news" items="${sessionScope.newsList}" varStatus="loop" begin="0" end="2">
+                                    <div class="col-md-4 d-flex align-items-stretch">
+                                        <div class="news-card card mb-4 shadow-sm">
+                                            <img src="${news.image}" alt="${news.title}" class="card-img-top img-fluid rounded">
+                                            <div class="card-body d-flex flex-column">
+                                                <p class="card-text"><strong><i class="bi bi-person-circle"></i> Author:</strong> ${news.author}</p>
+                                                <p class="card-text"><strong><i class="bi bi-envelope"></i> Email:</strong> ${news.staff.email}</p>
+                                                <p class="card-text"><strong><i class="bi bi-calendar"></i> Published on:</strong> ${news.publishedDate}</p>
+                                                <h3 class="card-title">${news.title}</h3>
+                                                <span class="news-date mb-3">
 
-                            <div class="col-md-4">
-
-                                <article class="column" data-aos="fade-up">
-
-                                    <figure>
-                                        <a href="#" class="image-hvr-effect">
-                                            <img src="images/post-img1.jpg" alt="post" class="post-image">
-                                        </a>
-                                    </figure>
-
-                                    <div class="post-item">
-                                        <div class="meta-date">Mar 30, 2021</div>
-                                        <h3><a href="#">Reading books always makes the moments happy</a></h3>
-
-                                        <div class="links-element">
-                                            <div class="categories">inspiration</div>
-                                            <div class="social-links">
-                                                <ul>
-                                                    <li>
-                                                        <a href="#"><i class="icon icon-facebook"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#"><i class="icon icon-twitter"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#"><i class="icon icon-behance-square"></i></a>
-                                                    </li>
-                                                </ul>
+                                                </span>
+                                                <a href="news-list?action=view&id=${news.newsID}" class="btn read-more-btn btn-primary mt-auto">
+                                                    <i class="bi bi-book"></i> Read More
+                                                </a>
                                             </div>
-                                        </div><!--links-element-->
-
+                                        </div>
                                     </div>
-                                </article>
-
-                            </div>
-                            <div class="col-md-4">
-
-                                <article class="column" data-aos="fade-up" data-aos-delay="200">
-                                    <figure>
-                                        <a href="#" class="image-hvr-effect">
-                                            <img src="images/post-img2.jpg" alt="post" class="post-image">
-                                        </a>
-                                    </figure>
-                                    <div class="post-item">
-                                        <div class="meta-date">Mar 29, 2021</div>
-                                        <h3><a href="#">Reading books always makes the moments happy</a></h3>
-
-                                        <div class="links-element">
-                                            <div class="categories">inspiration</div>
-                                            <div class="social-links">
-                                                <ul>
-                                                    <li>
-                                                        <a href="#"><i class="icon icon-facebook"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#"><i class="icon icon-twitter"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#"><i class="icon icon-behance-square"></i></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div><!--links-element-->
-
-                                    </div>
-                                </article>
-
-                            </div>
-                            <div class="col-md-4">
-
-                                <article class="column" data-aos="fade-up" data-aos-delay="400">
-                                    <figure>
-                                        <a href="#" class="image-hvr-effect">
-                                            <img src="images/post-img3.jpg" alt="post" class="post-image">
-                                        </a>
-                                    </figure>
-                                    <div class="post-item">
-                                        <div class="meta-date">Feb 27, 2021</div>
-                                        <h3><a href="#">Reading books always makes the moments happy</a></h3>
-
-                                        <div class="links-element">
-                                            <div class="categories">inspiration</div>
-                                            <div class="social-links">
-                                                <ul>
-                                                    <li>
-                                                        <a href="#"><i class="icon icon-facebook"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#"><i class="icon icon-twitter"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#"><i class="icon icon-behance-square"></i></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div><!--links-element-->
-
-                                    </div>
-                                </article>
-
-                            </div>
-
+                                </c:forEach>
+                            </c:if>
+                            <c:if test="${empty newsList}">
+                                <p class="text-center">No news available.</p>
+                            </c:if>
                         </div>
 
                         <div class="row">
-
                             <div class="btn-wrap align-center">
-                                <a href="#" class="btn btn-outline-accent btn-accent-arrow" tabindex="0">Read All Articles<i
-                                        class="icon icon-ns-arrow-right"></i></a>
+                                <a href="news-list" class="btn btn-outline-accent btn-accent-arrow" tabindex="0">
+                                    Read All Articles <i class="bi bi-arrow-right"></i>
+                                </a>
                             </div>
                         </div>
 

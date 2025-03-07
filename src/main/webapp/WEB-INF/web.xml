@@ -9,12 +9,44 @@
         <servlet-class>Controller.ViewVouchersServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>FilterFeedbackServlet</servlet-name>
+        <servlet-class>Controller.FilterFeedbackServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ImportStockServlet</servlet-name>
+        <servlet-class>Controller.admin.ImportStockServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewStockServlet</servlet-name>
+        <servlet-class>Controller.admin.ViewStockServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ViewImportedServlet</servlet-name>
         <servlet-class>Controller.admin.ViewImportedServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
         <servlet-class>Controller.HomeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CartServlet</servlet-name>
+        <servlet-class>Controller.CartServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PaymentServlet</servlet-name>
+        <servlet-class>Controller.PaymentServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddToCartServlet</servlet-name>
+        <servlet-class>Controller.AddToCartServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductDetailsServlet</servlet-name>
+        <servlet-class>Controller.ProductDetailsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminController</servlet-name>
+        <servlet-class>Controller.AdminController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SearchProductToImport</servlet-name>
@@ -52,26 +84,35 @@
         <servlet-name>UpdateStockServlet</servlet-name>
         <servlet-class>Controller.admin.UpdateStockServlet</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>VoucherServlet</servlet-name>
         <url-pattern>/VoucherServlet</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>CartServlet</servlet-name>
-        <servlet-class>Controller.CartServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>PaymentServlet</servlet-name>
-        <servlet-class>Controller.PaymentServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>AddToCartServlet</servlet-name>
-        <servlet-class>Controller.AddToCartServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ProductDetailsServlet</servlet-name>
-        <servlet-class>Controller.ProductDetailsServlet</servlet-class>
-    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewVouchersServlet</servlet-name>
+        <url-pattern>/ViewVouchersServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterFeedbackServlet</servlet-name>
+        <url-pattern>/filter-feedback</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportStockServlet</servlet-name>
+        <url-pattern>/importStock</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewStockServlet</servlet-name>
+        <url-pattern>/viewStock</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewImportedServlet</servlet-name>
+        <url-pattern>/viewImported</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CartServlet</servlet-name>
         <url-pattern>/cart</url-pattern>
@@ -88,25 +129,9 @@
         <servlet-name>AddToCartServlet</servlet-name>
         <url-pattern>/addToCart</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>AdminController</servlet-name>
-        <servlet-class>Controller.AdminController</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>AdminController</servlet-name>
         <url-pattern>/admin</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ViewVouchersServlet</servlet-name>
-        <url-pattern>/ViewVouchersServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ViewImportedServlet</servlet-name>
-        <url-pattern>/viewImported</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>HomeServlet</servlet-name>
-        <url-pattern>/home</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SearchProductToImport</servlet-name>
@@ -144,6 +169,7 @@
         <servlet-name>UpdateStockServlet</servlet-name>
         <url-pattern>/updateStock</url-pattern>
     </servlet-mapping>
+
     <session-config>
         <session-timeout>
             30

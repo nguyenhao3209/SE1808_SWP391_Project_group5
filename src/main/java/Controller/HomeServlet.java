@@ -5,8 +5,10 @@
 
 package Controller;
 
+import Models.News;
 import Models.Products;
 import Models.Slider;
+import dal.NewsDAO;
 import dal.ProductsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,14 +18,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author Haontce180451
  */
 public class HomeServlet extends HttpServlet {
-   
+   private NewsDAO newsDAO;
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        newsDAO = new NewsDAO(); // Initialize the NewsDAO object
+    }
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -58,36 +64,20 @@ public class HomeServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            HttpSession session = request.getSession();
-            ProductsDAO productDAO = new ProductsDAO();
+    throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        ProductsDAO productDAO = new ProductsDAO();
+        ArrayList<Slider> slide = productDAO.getAllSliders();
+//        ArrayList<Products> saleList = productDAO.getTop8();
 
-            // Lấy danh sách slider
-            ArrayList<Slider> slide = productDAO.getAllSliders();
-            session.setAttribute("slides", slide);
-
-            // Lấy danh mục sản phẩm được chọn từ request
-            String categoryID = request.getParameter("categoryID");
-
-            // Nếu categoryID null, mặc định lấy danh mục đầu tiên (VD: Racket - ID = 1)
-            List<Object[]> saleList;
-            if (categoryID == null) {
-                categoryID = "1"; // Mặc định chọn danh mục đầu tiên
-            }
-            saleList = productDAO.getTop8();
-
-            session.setAttribute("saleList", saleList);
-            session.setAttribute("check_click_category", categoryID); // Lưu trạng thái danh mục đã chọn
-
-            request.getRequestDispatcher("home.jsp").forward(request, response);
-        } catch (NumberFormatException e) {
-            System.out.println("Lỗi chuyển đổi categoryID: " + e.getMessage());
-            response.sendRedirect("error.jsp");
-        } catch (Exception e) {
-            System.out.println("Lỗi trong HomeController: " + e);
-            response.sendRedirect("error.jsp");
-        }
+        session.setAttribute("slides", slide);
+//        session.setAttribute("saleList", saleList);
+        
+        ArrayList<News> newsList = (ArrayList<News>) newsDAO.getNewsList();
+        session.setAttribute("newsList", newsList);
+        //request.setAttribute("newsList", newsList);
+        //request.getRequestDispatcher("newsList.jsp").forward(request, response);
+        request.getRequestDispatcher("home.jsp").forward(request, response);
     } 
 
     /** 

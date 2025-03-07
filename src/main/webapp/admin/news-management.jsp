@@ -236,6 +236,29 @@
                 color: #fff;
                 border-color: #007bff;
             }
+            .news-card-actions {
+                position: absolute;
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+                background-color: #ffffff;
+                border-top: 1px solid #e0e0e0;
+                border-radius: 0 0 15px 15px;
+                box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            .news-card {
+                position: relative;
+                padding-bottom: 80px; /* Đảm bảo có đủ không gian cho các nút */
+            }
+
+            .news-card-content {
+                margin-bottom: 80px; /* Đảm bảo nội dung không bị che bởi các nút */
+            }
         </style>
     </head>
 
@@ -256,12 +279,6 @@
                 </div>
                 <div class="container news-list">
                     <h1 class="text-center">News</h1>
-                    <!-- Add News Button -->
-                    <div class="text-end mb-3">
-                        <a href="add-news" class="btn btn-primary" onclick="return confirmAdd()">
-                            <i class="fas fa-plus-circle"></i> Add News
-                        </a>
-                    </div>
                     <div class="news-grid">
                     <c:if test="${not empty newsList}">
                         <c:forEach var="news" items="${newsList}" varStatus="loop">
@@ -276,7 +293,7 @@
                                     <i class="fas fa-futbol sport-icon"></i> <!-- Biểu tượng thể thao -->
 
                                     <!-- Action Buttons -->
-                                    <div class="d-flex gap-2">
+                                    <div class="news-card-actions">
                                         <a href="news-management?action=view&id=${news.newsID}" class="btn read-more-btn">
                                             <i class="fas fa-book-open"></i> Read More
                                         </a>
@@ -324,59 +341,55 @@
         <script src="admin/assets/vendors/calendar/fullcalendar.js"></script>
         <script src="admin/assets/vendors/switcher/switcher.js"></script>
         <script>
-                                                function confirmDelete() {
-                                                    return confirm("Do you want to delete this news?");
-                                                }
+            function confirmDelete() {
+                return confirm("Do you want to delete this news?");
+            }
 
-                                                function confirmAdd() {
-                                                    return confirm("Do you want to add a new news?");
-                                                }
+            function confirmUpdate() {
+                return confirm("Do you want to update this news?");
+            }
 
-                                                function confirmUpdate() {
-                                                    return confirm("Do you want to update this news?");
-                                                }
+            // Pagination Script
+            document.addEventListener("DOMContentLoaded", function () {
+                const newsCards = document.querySelectorAll('.news-card');
+                const itemsPerPage = 6;
+                const totalPages = Math.ceil(newsCards.length / itemsPerPage);
+                const paginationContainer = document.getElementById('pagination');
 
-                                                // Pagination Script
-                                                document.addEventListener("DOMContentLoaded", function () {
-                                                    const newsCards = document.querySelectorAll('.news-card');
-                                                    const itemsPerPage = 6;
-                                                    const totalPages = Math.ceil(newsCards.length / itemsPerPage);
-                                                    const paginationContainer = document.getElementById('pagination');
+                function showPage(page) {
+                    newsCards.forEach((card, index) => {
+                        const cardPage = Math.floor(index / itemsPerPage) + 1;
+                        if (cardPage === page) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                }
 
-                                                    function showPage(page) {
-                                                        newsCards.forEach((card, index) => {
-                                                            const cardPage = Math.floor(index / itemsPerPage) + 1;
-                                                            if (cardPage === page) {
-                                                                card.style.display = 'block';
-                                                            } else {
-                                                                card.style.display = 'none';
-                                                            }
-                                                        });
-                                                    }
+                function createPaginationButtons() {
+                    paginationContainer.innerHTML = '';
+                    for (let i = 1; i <= totalPages; i++) {
+                        const button = document.createElement('button');
+                        button.innerText = i;
+                        button.addEventListener('click', () => {
+                            showPage(i);
+                            setActiveButton(button);
+                        });
+                        paginationContainer.appendChild(button);
+                    }
+                    setActiveButton(paginationContainer.firstChild);
+                }
 
-                                                    function createPaginationButtons() {
-                                                        paginationContainer.innerHTML = '';
-                                                        for (let i = 1; i <= totalPages; i++) {
-                                                            const button = document.createElement('button');
-                                                            button.innerText = i;
-                                                            button.addEventListener('click', () => {
-                                                                showPage(i);
-                                                                setActiveButton(button);
-                                                            });
-                                                            paginationContainer.appendChild(button);
-                                                        }
-                                                        setActiveButton(paginationContainer.firstChild);
-                                                    }
+                function setActiveButton(button) {
+                    const buttons = paginationContainer.querySelectorAll('button');
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                }
 
-                                                    function setActiveButton(button) {
-                                                        const buttons = paginationContainer.querySelectorAll('button');
-                                                        buttons.forEach(btn => btn.classList.remove('active'));
-                                                        button.classList.add('active');
-                                                    }
-
-                                                    showPage(1);
-                                                    createPaginationButtons();
-                                                });
+                showPage(1);
+                createPaginationButtons();
+            });
         </script>
     </body>
 </html>
