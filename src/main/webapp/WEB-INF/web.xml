@@ -40,6 +40,42 @@
         <servlet-name>CategoryServlet</servlet-name>
         <servlet-class>Controller.admin.CategoryServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SearchProductToImport</servlet-name>
+        <servlet-class>Controller.admin.SearchProductToImport</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProductSizeServlet</servlet-name>
+        <servlet-class>Controller.ProductSizeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SaveStockImportServlet</servlet-name>
+        <servlet-class>Controller.admin.SaveStockImportServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReadExcelFileToImportServlet</servlet-name>
+        <servlet-class>Controller.admin.ReadExcelFileToImportServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StockImportServlet</servlet-name>
+        <servlet-class>Controller.admin.StockImportServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewStockProductsListServlet</servlet-name>
+        <servlet-class>Controller.admin.ViewStockProductsListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>StockPaginationServlet</servlet-name>
+        <servlet-class>Controller.admin.StockPaginationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewImportedDetails</servlet-name>
+        <servlet-class>Controller.admin.ViewImportedDetails</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateStockServlet</servlet-name>
+        <servlet-class>Controller.admin.UpdateStockServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>VoucherServlet</servlet-name>
         <url-pattern>/VoucherServlet</url-pattern>
@@ -119,6 +155,42 @@
     <servlet-mapping>
         <servlet-name>CategoryServlet</servlet-name>
         <url-pattern>/CategoryServlet</url-pattern>
+        </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchProductToImport</servlet-name>
+        <url-pattern>/searchProductToImport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductSizeServlet</servlet-name>
+        <url-pattern>/productSize</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SaveStockImportServlet</servlet-name>
+        <url-pattern>/saveStockImport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReadExcelFileToImportServlet</servlet-name>
+        <url-pattern>/readExcel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StockImportServlet</servlet-name>
+        <url-pattern>/stockImport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewStockProductsListServlet</servlet-name>
+        <url-pattern>/viewStockProducts</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StockPaginationServlet</servlet-name>
+        <url-pattern>/stockProductsPagination</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewImportedDetails</servlet-name>
+        <url-pattern>/viewImportedDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateStockServlet</servlet-name>
+        <url-pattern>/updateStock</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

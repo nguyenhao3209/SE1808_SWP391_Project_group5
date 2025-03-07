@@ -17,11 +17,11 @@
             color: #333;
         }
 
-        /* Tiêu ?? */
+        /* Tiï¿½u ?? */
         h5 {
             margin-top: 15px;
-            font-size: 18px; /* Nh? h?n m?t chút */
-            color: #E0A96D; /* Màu xanh lá nh? */
+            font-size: 18px; /* Nh? h?n m?t chï¿½t */
+            color: #E0A96D; /* Mï¿½u xanh lï¿½ nh? */
             border-left: 4px solid #5ABA68;
             padding-left: 8px;
             display: flex;
@@ -33,7 +33,7 @@
             color: #5ABA68;
         }
 
-        /* Thông tin ??n hàng */
+        /* Thï¿½ng tin ??n hï¿½ng */
         p {
             font-size: 14px; /* Nh? h?n */
             margin: 6px 0;
@@ -62,7 +62,7 @@
 
         /* Header c?a b?ng */
         .table th {
-            background-color: 	#C49A6C; /* Màu xanh lá nh? */
+            background-color: 	#C49A6C; /* Mï¿½u xanh lï¿½ nh? */
             color: #fff;
             font-weight: 600;
             padding: 10px; /* Gi?m padding */
@@ -71,7 +71,7 @@
             font-size: 14px;
         }
 
-        /* Dòng c?a b?ng */
+        /* Dï¿½ng c?a b?ng */
         .table td {
             border-bottom: 1px solid #dee2e6;
             padding: 8px; /* Gi?m padding */
@@ -79,7 +79,7 @@
             font-size: 14px;
         }
 
-        /* Dòng xen k? */
+        /* Dï¿½ng xen k? */
         .table tbody tr:nth-child(even) {
             background-color: #eceae0;
         }
@@ -90,7 +90,7 @@
             transition: 0.3s ease-in-out;
         }
 
-        /* Hi?u ?ng góc bo */
+        /* Hi?u ?ng gï¿½c bo */
         .table th:first-child, .table td:first-child {
             border-left: none;
         }

@@ -4,21 +4,25 @@
  */
 package Controller.admin;
 
+import Models.Category;
+import Models.Products;
 import dal.ProductsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
- * @author HuyLVQCE180656
+ * @author Haontce180451
  */
-@WebServlet(name = "DeleteProduct", urlPatterns = {"/deleteProduct"})
-public class DeleteProduct extends HttpServlet {
+public class ViewStockProductsListServlet extends HttpServlet {
+
+    private static final int RECORDS_PER_PAGE = 10;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,10 +41,10 @@ public class DeleteProduct extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DeleteProduct</title>");
+            out.println("<title>Servlet ViewStockProductsListServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DeleteProduct at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ViewStockProductsListServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,29 +62,27 @@ public class DeleteProduct extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Lấy productId từ request
-        String productId = request.getParameter("productId");
-
-        // Kiểm tra productId có hợp lệ không
-        if (productId != null && !productId.isEmpty()) {
-            try {
-                int id = Integer.parseInt(productId);
-
-                // Gọi DAO để xóa sản phẩm
-                ProductsDAO dao = new ProductsDAO();
-                dao.deleteProductById(id);
-
-                // Sau khi xóa, chuyển hướng về trang danh sách sản phẩm
-                response.sendRedirect("listProducts?success=true");
-
-            } catch (NumberFormatException e) {
-                // Nếu productId không hợp lệ, chuyển hướng với thông báo lỗi
-                response.sendRedirect("listProducts?error=invalid_id");
-            }
-        } else {
-            // Nếu productId không tồn tại trong request, chuyển hướng về danh sách
-            response.sendRedirect("listProducts?error=missing_id");
+        int page = 1; // Mặc định trang đầu tiên
+        if (request.getParameter("page") != null) {
+            page = Integer.parseInt(request.getParameter("page"));
         }
+
+        ProductsDAO productsDAO = new ProductsDAO();
+        ArrayList<Products> stockList = productsDAO.getStockProducts(page, RECORDS_PER_PAGE);
+        List<Category> categoryList = productsDAO.getAllCategory();
+        List<String> brandList = productsDAO.getAllBrand();
+        
+        int totalRecords = productsDAO.getTotalProducts();
+        int totalPages = (int) Math.ceil(totalRecords * 1.0 / RECORDS_PER_PAGE);
+        request.setAttribute("brandList", brandList);
+        request.setAttribute("categoryList", categoryList);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("stockList", stockList);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+
+        request.getRequestDispatcher("/admin/stock-view.jsp").forward(request, response);
     }
 
     /**
@@ -94,6 +96,7 @@ public class DeleteProduct extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
     }
 
     /**

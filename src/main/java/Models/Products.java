@@ -7,6 +7,7 @@ package Models;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
@@ -25,11 +26,22 @@ public class Products {
     private Date createdAt;
     private Date updatedAt;
     private BigDecimal discountProduct;
+    private Timestamp importDate;
 
     private int numberOfFeedbacks;
     private double avgRating;
 
     public Products() {
+    }
+
+    public Products(int productID, String productName, Category category, String brand, int stockQuantity, Timestamp importDate, String imageURL) {
+        this.productID = productID;
+        this.productName = productName;
+        this.category = category;
+        this.brand = brand;
+        this.stockQuantity = stockQuantity;
+        this.importDate = importDate;
+        this.imageURL = imageURL;
     }
 
     public Products(int productID, String productName, BigDecimal price, int stockQuantity, String brand, Category category, String description, String imageURL, Date createdAt, Date updatedAt, BigDecimal discountProduct) {
@@ -167,6 +179,14 @@ public class Products {
             return price.subtract(price.multiply(discountProduct).divide(BigDecimal.valueOf(100)));
         }
         return price;
+    }
+
+    public Timestamp getImportDate() {
+        return importDate;
+    }
+
+    public void setImportDate(Timestamp importDate) {
+        this.importDate = importDate;
     }
 
 }

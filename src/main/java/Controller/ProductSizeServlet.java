@@ -2,28 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller.admin;
+package Controller;
 
-import Models.Products;
+import Models.ProductSizes;
+import com.google.gson.Gson;
 import dal.ProductsDAO;
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  *
- * @author HuyLVQCE180656
+ * @author Haontce180451
  */
-@WebServlet(name = "SearchServlet", urlPatterns = {"/searchServletAdmin"})
-public class SearchServlet extends HttpServlet {
-
-    private static final int ITEMS_PER_PAGE = 20;
+public class ProductSizeServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +38,10 @@ public class SearchServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SearchServlet</title>");
+            out.println("<title>Servlet ProductSizeServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SearchServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ProductSizeServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,56 +59,29 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ProductsDAO productsDAO = new ProductsDAO();
-        String searchInput = request.getParameter("searchQuery");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        String productIdStr = request.getParameter("productId");
+        System.out.println("Received productId: " + productIdStr); // Debug
 
-        // Nếu không có input, mặc định là rỗng để tránh lỗi truy vấn
-        if (searchInput == null) {
-            searchInput = "";
+        if (productIdStr == null || productIdStr.trim().isEmpty()) {
+            System.out.println("Invalid productId: " + productIdStr);
+            response.getWriter().write("[]");
+            return;
         }
 
-        // Đếm tổng số sản phẩm tìm thấy
-        int count_item = productsDAO.countSearchResults(searchInput);
-        int totalPages = (int) Math.ceil((double) count_item / ITEMS_PER_PAGE); // Tổng số trang
-
-        // Lấy trang hiện tại từ request (mặc định là trang 1)
-        String pageParam = request.getParameter("page");
-        int currentPage;
         try {
-            currentPage = (pageParam != null) ? Integer.parseInt(pageParam) : 1;
+            int productId = Integer.parseInt(productIdStr);
+            ProductsDAO productDAO = new ProductsDAO();
+            ArrayList<ProductSizes> productSizes = productDAO.getSizesOfProductByID(productId);
+
+            System.out.println("Fetched sizes: " + new Gson().toJson(productSizes)); // Debug
+
+            response.getWriter().write(new Gson().toJson(productSizes));
         } catch (NumberFormatException e) {
-            currentPage = 1;
+            System.out.println("NumberFormatException: " + e.getMessage());
+            response.getWriter().write("[]");
         }
-
-        // Đảm bảo `currentPage` không vượt quá tổng số trang
-        if (currentPage < 1) {
-            currentPage = 1;
-        }
-        if (currentPage > totalPages) {
-            currentPage = totalPages;
-        }
-
-        // Tính OFFSET (số sản phẩm cần bỏ qua)
-        int offset = (currentPage - 1) * ITEMS_PER_PAGE;
-
-        // Xác định phạm vi trang hiển thị (hiển thị tối đa 10 trang liên tiếp)
-        int pageGroupSize = 10;
-        int startPage = ((currentPage - 1) / pageGroupSize) * pageGroupSize + 1;
-        int endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
-
-        // Gọi hàm tìm kiếm sản phẩm có phân trang
-        List<Products> searchResult = productsDAO.searchProductsByName(searchInput, offset, ITEMS_PER_PAGE);
-
-        // Gửi dữ liệu đến JSP
-        request.setAttribute("searchQuery", searchInput);
-        request.setAttribute("productList", searchResult);
-        request.setAttribute("startPage", startPage);
-        request.setAttribute("endPage", endPage);
-        request.setAttribute("currentPage", currentPage);
-        request.setAttribute("totalPages", totalPages);
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("admin/listProducts.jsp");
-        dispatcher.forward(request, response);
     }
 
     /**

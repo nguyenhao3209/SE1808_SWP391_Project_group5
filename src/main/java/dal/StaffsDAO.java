@@ -24,10 +24,15 @@ public class StaffsDAO extends DBContext {
     private PreparedStatement ps = null;
     private ResultSet rs = null;
 
-    public List<Staffs> getAllStaffs() {
+    public List<Staffs> getAllStaffs(String gender, String status) {
         List<Staffs> staffs = new ArrayList<>();
         String sql = "SELECT StaffID, StaffName, Email, Phone, Gender, Status, Address FROM Staffs Where [Status] != 'DELETED'";
-
+        if (!gender.equalsIgnoreCase("all")) {
+            sql = sql + " and Gender =" + "'" + gender + "'";
+        }
+        if (!status.equalsIgnoreCase("all")) {
+            sql = sql + " and Status =" + "'" + status + "'";
+        }
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();

@@ -4,21 +4,24 @@
  */
 package Controller.admin;
 
+import Models.Products;
 import dal.ProductsDAO;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 
 /**
  *
- * @author HuyLVQCE180656
+ * @author Haontce180451
  */
-@WebServlet(name = "DeleteProduct", urlPatterns = {"/deleteProduct"})
-public class DeleteProduct extends HttpServlet {
+public class StockPaginationServlet extends HttpServlet {
+
+    private static final int ITEMS_PER_PAGE = 10;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,16 +34,17 @@ public class DeleteProduct extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         response.setContentType("text/html;charset=UTF-8");
         try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DeleteProduct</title>");
+            out.println("<title>Servlet StockPaginationServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DeleteProduct at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet StockPaginationServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -56,31 +60,27 @@ public class DeleteProduct extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // Lấy productId từ request
-        String productId = request.getParameter("productId");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int page = Integer.parseInt(request.getParameter("page"));
+        int recordsPerPage = 10;
+        String keyword = request.getParameter("keyword");
+        String sortStock = request.getParameter("sortStock");
+        String sortDate = request.getParameter("sortDate");
+        String categoryIDParam = request.getParameter("categoryID");
+        Integer categoryID = (categoryIDParam != null && !categoryIDParam.isEmpty()) ? Integer.parseInt(categoryIDParam) : null;
 
-        // Kiểm tra productId có hợp lệ không
-        if (productId != null && !productId.isEmpty()) {
-            try {
-                int id = Integer.parseInt(productId);
+        String brand = request.getParameter("brand");
+        System.out.println(categoryID + " " + brand);
+        ProductsDAO stockDAO = new ProductsDAO();
+        ArrayList<Products> stockList = stockDAO.getStockProducts(page, recordsPerPage, keyword, sortStock, sortDate, brand, categoryID);
+        int totalRecords = stockDAO.getTotalProducts();
+        int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
 
-                // Gọi DAO để xóa sản phẩm
-                ProductsDAO dao = new ProductsDAO();
-                dao.deleteProductById(id);
+        request.setAttribute("stockList", stockList);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
 
-                // Sau khi xóa, chuyển hướng về trang danh sách sản phẩm
-                response.sendRedirect("listProducts?success=true");
-
-            } catch (NumberFormatException e) {
-                // Nếu productId không hợp lệ, chuyển hướng với thông báo lỗi
-                response.sendRedirect("listProducts?error=invalid_id");
-            }
-        } else {
-            // Nếu productId không tồn tại trong request, chuyển hướng về danh sách
-            response.sendRedirect("listProducts?error=missing_id");
-        }
+        request.getRequestDispatcher("admin/stock-view.jsp").forward(request, response);
     }
 
     /**
@@ -94,6 +94,7 @@ public class DeleteProduct extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     /**

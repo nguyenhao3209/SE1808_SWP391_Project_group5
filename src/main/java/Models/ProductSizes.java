@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package Models;
 
 /**
@@ -10,6 +9,7 @@ package Models;
  * @author HaoNTCE180451
  */
 public class ProductSizes {
+
     private int sizeID;
     private Products product;
     private String size;
@@ -24,7 +24,13 @@ public class ProductSizes {
         this.size = size;
         this.stockQuantity = stockQuantity;
     }
-    
+
+    public ProductSizes(int sizeID, String size, int stockQuantity) {
+        this.sizeID = sizeID;
+        this.size = size;
+        this.stockQuantity = stockQuantity;
+    }
+
     public ProductSizes(Products product, String size, int stockQuantity) {
         this.product = product;
         this.size = size;
@@ -48,6 +54,10 @@ public class ProductSizes {
     }
 
     public String getSize() {
+        return size;
+    }
+
+    public String getName() {
         return size;
     }
 

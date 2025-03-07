@@ -18,8 +18,18 @@ public class StockImport {
     private String supplier;
     private Timestamp importDate;
     private BigDecimal totalCost;
+    private String status;
 
     public StockImport() {
+    }
+
+    public StockImport(int importID, Staffs staff, String supplier, Timestamp importDate, BigDecimal totalCost, String status) {
+        this.importID = importID;
+        this.staff = staff;
+        this.supplier = supplier;
+        this.importDate = importDate;
+        this.totalCost = totalCost;
+        this.status = status;
     }
 
     public StockImport(int importID, Staffs staff, String supplier, Timestamp importDate, BigDecimal totalCost) {
@@ -68,6 +78,14 @@ public class StockImport {
 
     public void setTotalCost(BigDecimal totalCost) {
         this.totalCost = totalCost;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

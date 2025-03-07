@@ -55,7 +55,37 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
-
+        <style>
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                background-color: rgba(0, 0, 0, 0.5);
+                align-items: center;
+                justify-content: center;
+            }
+            .modal-content {
+                background-color: #fff;
+                padding: 20px;
+                width: 60%;
+                max-width: 600px;
+                border-radius: 10px;
+                position: relative;
+                box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+            }
+            .close {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                font-size: 24px;
+                cursor: pointer;
+            }
+        </style>
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
         <jsp:include page="../admin/common/header.jsp"></jsp:include>
@@ -63,6 +93,15 @@
 
             <main class="ttr-wrapper">
                 <h1>Imported invoices</h1>
+                <div id="details-modal" class="modal">
+                    <div class="modal-content">
+                        <span id="close-modal" class="close">&times;</span>
+                        <h2>Import Details</h2>
+                        <div id="details-modal-body">
+                            <!-- Dữ liệu chi tiết sẽ hiển thị ở đây -->
+                        </div>
+                    </div>
+                </div>
                 <!-- Filter Form -->
                 <form id="filter-form" method="POST" action="viewImported" onsubmit="return validateDateRange()">
                     <label for="fromDate">From Date:</label>
@@ -70,14 +109,23 @@
 
                     <label for="toDate">To Date:</label>
                     <input type="date" id="toDate" name="toDate">
-
+                    <br/>
                     <label for="supplier">Supplier:</label>
                     <input type="text" id="supplier" name="supplier" placeholder="Enter supplier name">
 
                     <label for="staffName">Staff Name:</label>
                     <input type="text" id="staffName" name="staffName" placeholder="Enter staff name">
-
-                    <button type="submit">Search</button>
+                    <br/>
+                    <div>
+                        <label for="status">Status:</label>
+                        <select id="status" name="status">
+                            <option value="">--Select Status--</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <button type="submit">Apply</button>
                 </form>
 
                 <!-- Table for Stock Import -->
@@ -89,6 +137,7 @@
                             <th>Supplier</th>
                             <th>Import Date</th>
                             <th>Total Cost</th>
+                            <th>Status</th>
                             <th>Details</th>
                         </tr>
                     </thead>
@@ -100,6 +149,7 @@
                             <td>${stock.supplier}</td>
                             <td>${stock.importDate}</td>
                             <td>${stock.totalCost}</td>
+                            <td>${stock.status}</td>
                             <td>
                                 <button class="view-details" data-id="${stock.importID}">View Details</button>
                             </td>
@@ -129,15 +179,37 @@
         <script src="admin/assets/vendors/calendar/fullcalendar.js"></script>
         <script src="admin/assets/vendors/switcher/switcher.js"></script>
         <script>
-                    function validateDateRange() {
-                        let fromDate = document.getElementById("fromDate").value;
-                        let toDate = document.getElementById("toDate").value;
-                        if (fromDate && toDate && fromDate > toDate) {
-                            alert("From Date cannot be greater than To Date!");
-                            return false;
-                        }
-                        return true;
-                    }
+                    document.addEventListener("DOMContentLoaded", function () {
+                        $("#details-modal").hide();
+                        $(".view-details").on("click", function () {
+                            let importID = $(this).data("id");
+                            // AJAX request to fetch the import details
+                            $.ajax({
+                                url: "viewImportedDetails",
+                                type: "GET",
+                                data: {importID: importID},
+                                success: function (response) {
+                                    $("#details-modal-body").html(response);
+                                    $("#details-modal").fadeIn(); // Show modal with fade-in effect
+                                },
+                                error: function () {
+                                    alert("Error fetching details. Please try again.");
+                                }
+                            });
+                        });
+
+                        // Close modal when clicking on close button
+                        $("#close-modal").on("click", function () {
+                            $("#details-modal").fadeOut(); // Hide modal
+                        });
+
+                        // Close modal when clicking outside of it
+                        $("#details-modal").on("click", function (event) {
+                            if ($(event.target).is("#details-modal")) {
+                                $("#details-modal").fadeOut(); // Hide modal
+                            }
+                        });
+                    });
         </script>
     </body>
 </html>

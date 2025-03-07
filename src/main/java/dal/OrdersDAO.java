@@ -239,8 +239,8 @@ public class OrdersDAO extends DBContext {
         CustomersDAO customersDAO = new CustomersDAO();
         VoucherDAO voucherDAO = new VoucherDAO();
         StaffsDAO staffsdao = new StaffsDAO();
-
-        String sql = "SELECT * FROM [SE1808_SWP391_Group5].[dbo].[Orders] o WHERE OrderID= ?";
+        String sql = "SELECT *FROM [SE1808_SWP391_Group5].[dbo].[Orders] o\n"
+                + "where OrderID= ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, id);

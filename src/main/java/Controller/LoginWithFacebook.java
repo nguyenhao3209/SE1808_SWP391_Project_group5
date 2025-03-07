@@ -78,7 +78,7 @@ public class LoginWithFacebook extends HttpServlet {
                 session.setAttribute("user", user);
             }
 
-            response.sendRedirect("home.jsp");
+            response.sendRedirect("home");
         } catch (Exception e) {
             request.setAttribute("errorMessage", "Login fail");
             request.getRequestDispatcher("login.jsp").forward(request, response);

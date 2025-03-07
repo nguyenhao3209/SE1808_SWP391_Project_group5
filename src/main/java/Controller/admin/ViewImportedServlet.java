@@ -88,14 +88,14 @@ public class ViewImportedServlet extends HttpServlet {
         String toDate = request.getParameter("toDate");
         String supplier = request.getParameter("supplier");
         String staffName = request.getParameter("staffName");
+        String status = request.getParameter("status");
 
         ProductsDAO stockDAO = new ProductsDAO();
-        ArrayList<StockImport> stockList = stockDAO.getFilteredStock(fromDate, toDate, supplier, staffName);
+        ArrayList<StockImport> stockList = stockDAO.getFilteredStock(fromDate, toDate, supplier, staffName, status);
         request.setAttribute("stockList", stockList);
         RequestDispatcher dispatcher = request.getRequestDispatcher("admin/imported-view.jsp");
         dispatcher.forward(request, response);
     }
-
     /**
      * Returns a short description of the servlet.
      *
