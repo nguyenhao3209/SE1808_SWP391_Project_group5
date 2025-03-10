@@ -245,8 +245,8 @@
                                                placeholder="Enter your phone number" required>
                                     </c:when>
                                     <c:otherwise>
-                                        ${sessionScope.user.phone}
-                                        <input type="hidden" name="phoneNumber" value="${sessionScope.user.phone}">
+                                       
+                                        <input type="text" name="phoneNumber" value="${sessionScope.user.phone}" required>
                                     </c:otherwise>
                                 </c:choose>
                             </td>
@@ -260,8 +260,8 @@
                                                placeholder="Enter your address" required>
                                     </c:when>
                                     <c:otherwise>
-                                        ${sessionScope.user.address}
-                                        <input type="hidden" name="address" value="${sessionScope.user.address}">
+                                      
+                                        <input type="text" name="address" value="${sessionScope.user.address}" required>
                                     </c:otherwise>
                                 </c:choose>
                             </td>

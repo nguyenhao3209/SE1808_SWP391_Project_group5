@@ -6,6 +6,7 @@
 package Controller;
 
 import Models.Customers;
+import dal.CustomersDAO;
 import dal.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -59,6 +60,7 @@ public class AdminController extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
+
         UserDAO userDao = new UserDAO();
         //OrderDAO orderDao = new OrderDAO();
 
@@ -86,9 +88,8 @@ public class AdminController extends HttpServlet {
             return;
         }
 
-        System.out.println("Customer Id: " + customerId);
 
-        UserDAO userDao = new UserDAO();
+        CustomersDAO userDao = new CustomersDAO();
         Customers user = userDao.getCustomerByID(customerId);
 
         if (user == null) {

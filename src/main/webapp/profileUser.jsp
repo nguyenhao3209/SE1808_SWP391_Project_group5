@@ -2,13 +2,23 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-
-
+<style>
+    .avatar-preview {
+        display: block;
+        margin: 20px auto;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #ff7f50;
+        box-shadow: 0 4px 10px rgba(255, 127, 80, 0.3);
+    }
+</style>
 <div class="profile-container">
-        <h3>Customer Profile</h3>
+    <h3>Customer Profile</h3>
 
 
-    <img src="${sessionScope.viewedUser.avatar}" class="avatar-preview" alt="User Avatar">
+    <img src="${sessionScope.viewedUser.avatar}" id="avatarPreview" class="avatar-preview" alt="User Avatar">
 
     <table class="profile-details">
         <tr>

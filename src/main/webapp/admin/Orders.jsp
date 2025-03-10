@@ -103,7 +103,9 @@
                                         <th>Date</th>
                                         <th>Status</th>
                                         <th>Total Amount</th>
+                                        <th>StatusDL</th>
                                         <th>Actions</th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -111,15 +113,20 @@
                                     <tr>
                                         <td>${orders.orderID}</td>
                                         <td>${orders.customer.customerName}</td>
-                                        <td>${orders.customer.phone}</td>
+                                        <td>${orders.phone}</td>
                                         <td>${orders.createAt}</td>
                                         <td class="order-status">${orders.status.trim()}</td>
                                         <td>$${orders.totalPrice}</td>
+                                        <td>${orders.statusDL}</td>
                                         <td>
                                             <button class="btn btn-primary view-order-btn" data-orderid="${orders.orderID}">
                                                 View
                                             </button>
+                                            <button class="btn btn-primary update-order-btn" data-orderid="${orders.orderID}">
+                                                Update
+                                            </button>
                                         </td>
+                                        
 
                                     </tr>
                                 </c:forEach>
@@ -132,13 +139,13 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="orderDetailModalLabel">Order Details</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="window.location.href='OrdersServlet'"></button>
                             </div>
                             <div class="modal-body" id="orderDetailModalBody">
                                 <!-- Nội dung Order Details sẽ được load vào đây -->
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="window.location.href='OrdersServlet'">Close</button>
                             </div>
                         </div>
                     </div>
@@ -213,6 +220,23 @@
                             let orderID = this.getAttribute("data-orderid");
 
                             fetch("OrderDetailServlet?orderID=" + orderID)
+                                    .then(response => response.text()) // Đảm bảo response là HTML
+                                    .then(data => {
+                                        document.getElementById("orderDetailModalBody").innerHTML = data;
+                                        let orderDetailModal = new bootstrap.Modal(document.getElementById("orderDetailModal"));
+                                        orderDetailModal.show();
+                                    })
+                                    .catch(error => console.error("Error:", error));
+                        });
+                    });
+                });
+                
+                document.addEventListener("DOMContentLoaded", function () {
+                    document.querySelectorAll(".update-order-btn").forEach(button => {
+                        button.addEventListener("click", function () {
+                            let orderID = this.getAttribute("data-orderid");
+
+                            fetch("OrderUpdateServlet?orderID=" + orderID)
                                     .then(response => response.text()) // Đảm bảo response là HTML
                                     .then(data => {
                                         document.getElementById("orderDetailModalBody").innerHTML = data;
