@@ -47,7 +47,7 @@
     <servlet>
         <servlet-name>AdminController</servlet-name>
         <servlet-class>Controller.AdminController</servlet-class>
-     </servlet>
+    </servlet>
     <servlet>
         <servlet-name>CheckVoucherServlet</servlet-name>
         <servlet-class>Controller.CheckVoucherServlet</servlet-class>
@@ -96,7 +96,6 @@
         <servlet-name>UpdateStockServlet</servlet-name>
         <servlet-class>Controller.admin.UpdateStockServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>VoucherServlet</servlet-name>
         <url-pattern>/VoucherServlet</url-pattern>
@@ -146,30 +145,6 @@
         <url-pattern>/admin</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ViewVouchersServlet</servlet-name>
-        <url-pattern>/ViewVouchersServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>FilterFeedbackServlet</servlet-name>
-        <url-pattern>/filter-feedback</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ImportStockServlet</servlet-name>
-        <url-pattern>/importStock</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ViewStockServlet</servlet-name>
-        <url-pattern>/viewStock</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ViewImportedServlet</servlet-name>
-        <url-pattern>/viewImported</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>HomeServlet</servlet-name>
-        <url-pattern>/home</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>CheckVoucherServlet</servlet-name>
         <url-pattern>/CheckVoucherServlet</url-pattern>
     </servlet-mapping>
@@ -180,7 +155,7 @@
     <servlet-mapping>
         <servlet-name>CategoryServlet</servlet-name>
         <url-pattern>/CategoryServlet</url-pattern>
-        </servlet-mapping>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SearchProductToImport</servlet-name>
         <url-pattern>/searchProductToImport</url-pattern>
@@ -217,10 +192,7 @@
         <servlet-name>UpdateStockServlet</servlet-name>
         <url-pattern>/updateStock</url-pattern>
     </servlet-mapping>
-
     <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
+        <session-timeout>30</session-timeout>
     </session-config>
 </web-app>

@@ -1,7 +1,12 @@
 <%-- Document : sidebar Created on : Sep 22, 2024, 6:36:55 PM Author : Admin --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<<<<<<< HEAD
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
+=======
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+>>>>>>> 284a547bdaa1c38925e8d8f109e022d64e43e229
 
 
 <div class="ttr-sidebar">
@@ -17,18 +22,26 @@
         <!-- sidebar menu start -->
         <nav class="ttr-sidebar-navi">
             <ul>
+                <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                 <li>
                     <a href="dashboard" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-home"></i></span>
                         <span class="ttr-label">Dashboard</span>
                     </a>
                 </li>
+<<<<<<< HEAD
                 <li>
+=======
+                </c:if>
+                <c:if test="${sessionScope.user.role eq 'ADMIN'}">
+                 <li>
+>>>>>>> 284a547bdaa1c38925e8d8f109e022d64e43e229
                     <a href="contact-list" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-email"></i></span>
                         <span class="ttr-label">Contact</span>
                     </a>
                 </li>
+                </c:if>
                 <li>
                     <a href="admin/review.jsp" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-comments"></i></span>
@@ -66,6 +79,7 @@
                     </a>
                 </li>
                 <c:if test="${sessionScope.user.role eq 'ADMIN'}">
+<<<<<<< HEAD
                     <li>
                         <a href="#" class="ttr-material-button">
                             <span class="ttr-icon"><i class="ti-user"></i></span>
@@ -83,7 +97,26 @@
                             </li>
                         </ul>
                     </li>
+=======
+                <c:if test="${sessionScope.user.role eq 'ADMIN'}">
+                <li>
+                    <a href="#" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-user"></i></span>
+                        <span class="ttr-label">Staffs Management</span>
+                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="admin/addStaff.jsp" class="ttr-material-button"><span class="ttr-label">Add Staff</span></a>
+                        </li>
+                        <li>
+                            <a href="listStaffs" class="ttr-material-button"><span class="ttr-label">Staffs List</span></a>
+                        </li>
+                    </ul>
+                </li>
+>>>>>>> 284a547bdaa1c38925e8d8f109e022d64e43e229
                 </c:if>
+                <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                 <li>
                     <a href="" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
@@ -162,6 +195,7 @@
                 </li>
 
                 <li class="ttr-seperate"></li>
+                </c:if>
             </ul>
             <!-- sidebar menu end -->
         </nav>
