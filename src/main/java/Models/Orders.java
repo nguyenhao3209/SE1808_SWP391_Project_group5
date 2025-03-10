@@ -22,15 +22,15 @@ public class Orders {
     private String paymentMethod;
     private BigDecimal totalPrice;
     private Date createAt;
+    private String statusDL;
+    private String address;
+    private String phone;
 
             
     public Orders() {
     }
 
-
-    
-    
-    public Orders(int orderID, Customers customer, Staffs staff, Vouchers voucher, String status, String paymentMethod, BigDecimal totalPrice, Date createAt) {
+    public Orders(int orderID, Customers customer, Staffs staff, Vouchers voucher, String status, String paymentMethod, BigDecimal totalPrice, Date createAt, String statusDL, String address, String phone) {
         this.orderID = orderID;
         this.customer = customer;
         this.staff = staff;
@@ -39,7 +39,25 @@ public class Orders {
         this.paymentMethod = paymentMethod;
         this.totalPrice = totalPrice;
         this.createAt = createAt;
+        this.statusDL = statusDL;
+        this.address = address;
+        this.phone = phone;
     }
+
+
+    
+    
+//    public Orders(int orderID, Customers customer, Staffs staff, Vouchers voucher, String status, String paymentMethod, BigDecimal totalPrice, Date createAt, String statusDL) {
+//        this.orderID = orderID;
+//        this.customer = customer;
+//        this.staff = staff;
+//        this.voucher = voucher;
+//        this.status = status;
+//        this.paymentMethod = paymentMethod;
+//        this.totalPrice = totalPrice;
+//        this.createAt = createAt;
+//        this.statusDL = statusDL;
+//    }
     
     public Orders(Customers customer, Vouchers voucher, String status, String paymentMethod, BigDecimal totalPrice) {
         this.customer = customer;
@@ -59,6 +77,30 @@ public class Orders {
     public Orders(int orderID, String status) {
         this.orderID = orderID;
         this.status = status;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getStatusDL() {
+        return statusDL;
+    }
+
+    public void setStatusDL(String statusDL) {
+        this.statusDL = statusDL;
     }
     
     public int getOrderID() {

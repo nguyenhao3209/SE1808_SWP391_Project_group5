@@ -265,7 +265,7 @@ public class CustomersDAO extends DBContext {
     }
     
     
-    Customers getCustomerByID(String id) {
+    public Customers getCustomerByID(String id) {
         Customers user = null;
         String query = "SELECT * FROM Customers WHERE CustomerID = ? ";
         try {

@@ -6,7 +6,7 @@
     </servlet>
     <servlet>
         <servlet-name>ViewVouchersServlet</servlet-name>
-        <servlet-class>Controller.ViewVouchersServlet</servlet-class>
+        <servlet-class>Cowntroller.ViewVouchersServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>FilterFeedbackServlet</servlet-name>
@@ -111,14 +111,6 @@
     <servlet-mapping>
         <servlet-name>ImportStockServlet</servlet-name>
         <url-pattern>/importStock</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ViewStockServlet</servlet-name>
-        <url-pattern>/viewStock</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ViewImportedServlet</servlet-name>
-        <url-pattern>/viewImported</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>

@@ -41,9 +41,9 @@ public class OrdersDAO extends DBContext {
         // Bảng Orders (OrderID, CustomerID, StaffID, VoucherID, Status, PaymentMethod, TotalPrice, CreatedAt)
         // Sử dụng OUTPUT INSERTED.OrderID để lấy OrderID sau khi chèn
         String orderSql = "INSERT INTO [dbo].[Orders] "
-                + "(CustomerID, StaffID, VoucherID, Status, PaymentMethod, TotalPrice) "
+                + "(CustomerID, StaffID, VoucherID, Status, PaymentMethod, TotalPrice, Address, Phone) "
                 + "OUTPUT INSERTED.OrderID "
-                + "VALUES (?, NULL, ?, ?, ?, ?)";
+                + "VALUES (?, NULL, ?, ?, ?, ?,?,?)";
 
         // Bảng OrderDetails (OrderDetailID, OrderID, ProductID, Price, Quantity)
         String orderItemSql = "INSERT INTO [dbo].[OrderDetails] (OrderID, ProductID, Price, Quantity) "
@@ -73,6 +73,9 @@ public class OrdersDAO extends DBContext {
             psOrder.setString(4, order.getPaymentMethod());
             // TotalPrice
             psOrder.setBigDecimal(5, order.getTotalPrice());
+            
+            psOrder.setString(6, order.getAddress());
+            psOrder.setString(7, order.getPhone());
 
             // Lấy OrderID vừa chèn
             ResultSet rs = psOrder.executeQuery();
@@ -222,7 +225,10 @@ public class OrdersDAO extends DBContext {
                         rs.getString("Status"),
                         rs.getString("PaymentMethod"),
                         rs.getBigDecimal("TotalPrice"),
-                        rs.getDate("CreatedAt")
+                        rs.getDate("CreatedAt"),
+                        rs.getString("StatusDL"),
+                        rs.getString("Address"),
+                        rs.getString("Phone")
                 );
                 list.add(od);
             }
@@ -259,6 +265,9 @@ public class OrdersDAO extends DBContext {
                 order.setPaymentMethod(rs.getString("PaymentMethod"));
                 order.setTotalPrice(rs.getBigDecimal("TotalPrice"));
                 order.setCreateAt(rs.getDate("CreatedAt"));
+                order.setStatusDL(rs.getString("StatusDL"));
+                order.setPhone(rs.getString("Phone"));
+                order.setAddress(rs.getString("Address"));
 
             }
             rs.close();
@@ -344,7 +353,10 @@ public class OrdersDAO extends DBContext {
                         rs.getString("Status"),
                         rs.getString("PaymentMethod"),
                         rs.getBigDecimal("TotalPrice"),
-                        rs.getDate("CreatedAt")
+                        rs.getDate("CreatedAt"),
+                        rs.getString("StatusDL"),
+                        rs.getString("Address"),
+                        rs.getString("Phone")
                 );
                 list.add(od);
             }
@@ -429,6 +441,22 @@ public class OrdersDAO extends DBContext {
             e.printStackTrace();
         }
         return list;
+    }
+    
+    public void updateOrder(Orders order) {
+        String sql = "UPDATE Orders SET Phone = ?, Status = ?, StatusDL = ?, Address = ? WHERE OrderID = ?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, order.getPhone());
+            ps.setString(2, order.getStatus());
+            ps.setString(3, order.getStatusDL());
+            ps.setString(4, order.getAddress());
+            ps.setInt(5, order.getOrderID());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

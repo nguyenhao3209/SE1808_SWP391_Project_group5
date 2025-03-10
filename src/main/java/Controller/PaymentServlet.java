@@ -88,8 +88,12 @@ public class PaymentServlet extends HttpServlet {
         }
 
         // Tạo Orders (status = "pending" tuỳ bạn)
+        String address = request.getParameter("address");
+        String phone = request.getParameter("phoneNumber");
+        
         Orders order = new Orders(customer, "pending", paymentMethod, totalPrice);
-
+        order.setPhone(phone);
+        order.setAddress(address);
         // == Xử lý voucher (nếu có) ==
         Integer selectedVoucherID = (Integer) session.getAttribute("selectedVoucherID");
         if (selectedVoucherID != null) {
