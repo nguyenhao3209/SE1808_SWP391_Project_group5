@@ -28,12 +28,14 @@ public class OrdersDAO extends DBContext {
 
     /**
      * Chèn 1 đơn hàng (Orders) và danh sách OrderDetails (sản phẩm trong đơn).
-     * Bảng Orders đã có cột VoucherID, StaffID, v.v.
-     * Tuỳ logic, bạn có thể set StaffID = null nếu chưa có nhân viên phụ trách.
+     * Bảng Orders đã có cột VoucherID, StaffID, v.v. Tuỳ logic, bạn có thể set
+     * StaffID = null nếu chưa có nhân viên phụ trách.
      *
-     * @param order            Đối tượng Orders (chứa Customer, Voucher, PaymentMethod, v.v.)
-     * @param orderItemsList   Danh sách OrderDetails (sản phẩm, số lượng, đơn giá)
-     * @return orderId         ID của đơn hàng vừa chèn, 0 nếu thất bại
+     * @param order Đối tượng Orders (chứa Customer, Voucher, PaymentMethod,
+     * v.v.)
+     * @param orderItemsList Danh sách OrderDetails (sản phẩm, số lượng, đơn
+     * giá)
+     * @return orderId ID của đơn hàng vừa chèn, 0 nếu thất bại
      */
     public int insertOrder(Orders order, ArrayList<OrderDetails> orderItemsList) {
         int orderId = 0;
@@ -43,14 +45,16 @@ public class OrdersDAO extends DBContext {
         String orderSql = "INSERT INTO [dbo].[Orders] "
                 + "(CustomerID, StaffID, VoucherID, Status, PaymentMethod, TotalPrice, Address, Phone) "
                 + "OUTPUT INSERTED.OrderID "
-                + "VALUES (?, NULL, ?, ?, ?, ?,?,?)";
+                + "VALUES (?, NULL, ?, ?, ?, ?, ?, ?)";
 
         // Bảng OrderDetails (OrderDetailID, OrderID, ProductID, Price, Quantity)
-        String orderItemSql = "INSERT INTO [dbo].[OrderDetails] (OrderID, ProductID, Price, Quantity) "
-                + "VALUES (?, ?, ?, ?)";
+        String orderItemSql = "INSERT INTO [dbo].[OrderDetails] (OrderID, ProductID, Price, Quantity, SizeID) "
+                + "VALUES (?, ?, ?, ?, ?)";
 
         // Giảm số lượng tồn kho
         String updateStockSql = "UPDATE [dbo].[Products] SET StockQuantity = StockQuantity - ? WHERE ProductID = ?";
+
+        String updateProductSizeStockSql = "UPDATE [dbo].[ProductSizes] SET StockQuantity = StockQuantity - ? WHERE ProductID = ? AND SizeID = ?";
 
         try {
             // 1) Chèn Orders trước
@@ -73,14 +77,14 @@ public class OrdersDAO extends DBContext {
             psOrder.setString(4, order.getPaymentMethod());
             // TotalPrice
             psOrder.setBigDecimal(5, order.getTotalPrice());
-            
+
             psOrder.setString(6, order.getAddress());
             psOrder.setString(7, order.getPhone());
 
             // Lấy OrderID vừa chèn
             ResultSet rs = psOrder.executeQuery();
             if (rs.next()) {
-                orderId = rs.getInt(1); 
+                orderId = rs.getInt(1);
             } else {
                 throw new SQLException("Không lấy được OrderID sau khi chèn Orders.");
             }
@@ -90,6 +94,7 @@ public class OrdersDAO extends DBContext {
             // 2) Chèn các OrderDetails
             PreparedStatement psOrderItem = connection.prepareStatement(orderItemSql);
             PreparedStatement psUpdateStock = connection.prepareStatement(updateStockSql);
+            PreparedStatement psUpdateProductSizeStock = connection.prepareStatement(updateProductSizeStockSql);
 
             for (OrderDetails item : orderItemsList) {
                 // OrderID
@@ -100,12 +105,25 @@ public class OrdersDAO extends DBContext {
                 psOrderItem.setBigDecimal(3, item.getPrice());
                 // Quantity
                 psOrderItem.setInt(4, item.getQuantity());
+                if (item.getSize() != null) {
+                    psOrderItem.setInt(5, item.getSize().getSizeID());
+                } else {
+                    psOrderItem.setInt(5, java.sql.Types.INTEGER);
+                }
                 psOrderItem.executeUpdate();
 
                 // Giảm tồn kho
                 psUpdateStock.setInt(1, item.getQuantity());
                 psUpdateStock.setInt(2, item.getProduct().getProductID());
                 psUpdateStock.executeUpdate();
+
+                // Giảm tồn kho trong ProductSize (nếu có SizeID)
+                if (item.getSize() != null) {
+                    psUpdateProductSizeStock.setInt(1, item.getQuantity());
+                    psUpdateProductSizeStock.setInt(2, item.getProduct().getProductID());
+                    psUpdateProductSizeStock.setInt(3, item.getSize().getSizeID());
+                    psUpdateProductSizeStock.executeUpdate();
+                }
             }
             psOrderItem.close();
             psUpdateStock.close();
@@ -117,21 +135,21 @@ public class OrdersDAO extends DBContext {
     }
 
     /**
-     * getCountOrdersByUserVoucher - Đếm số đơn hàng mà user đã dùng 1 voucherID cụ thể.
-     * Dùng để kiểm tra maxUsagePerUser.
+     * getCountOrdersByUserVoucher - Đếm số đơn hàng mà user đã dùng 1 voucherID
+     * cụ thể. Dùng để kiểm tra maxUsagePerUser.
      *
-     * @param customerId  Mã khách hàng (VD: "CUS123")
-     * @param voucherID   Mã voucher (int)
+     * @param customerId Mã khách hàng (VD: "CUS123")
+     * @param voucherID Mã voucher (int)
      * @return Số đơn hàng mà user đã áp voucher này
      */
     public int getCountOrdersByUserVoucher(String customerId, int voucherID) {
         String sql = "SELECT COUNT(*) AS cnt "
-                   + "FROM Orders "
-                   + "WHERE CustomerID = ? AND VoucherID = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                + "FROM Orders "
+                + "WHERE CustomerID = ? AND VoucherID = ?";
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, customerId);
             ps.setInt(2, voucherID);
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt("cnt");
                 }
@@ -442,7 +460,7 @@ public class OrdersDAO extends DBContext {
         }
         return list;
     }
-    
+
     public void updateOrder(Orders order) {
         String sql = "UPDATE Orders SET Phone = ?, Status = ?, StatusDL = ?, Address = ? WHERE OrderID = ?";
         try {

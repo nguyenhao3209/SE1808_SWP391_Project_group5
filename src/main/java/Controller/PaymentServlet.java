@@ -80,9 +80,16 @@ public class PaymentServlet extends HttpServlet {
                         .multiply(BigDecimal.valueOf(item.getQuantity()));
                 totalPrice = totalPrice.add(itemTotal);
 
-                OrderDetails orderItem = new OrderDetails(item.getProduct(),
+                OrderDetails orderItem = null;
+                if(item.getProduct().getCategory().getCategoryName().equals("Shoes") || item.getProduct().getCategory().getCategoryName().equals("Clothes")){
+                    orderItem = new OrderDetails(item.getProduct(),
+                        item.getQuantity(),
+                        item.getProduct().getFinalPrice(), item.getProductSizes());
+                } else {
+                    orderItem = new OrderDetails(item.getProduct(),
                         item.getQuantity(),
                         item.getProduct().getFinalPrice());
+                }
                 orderItemsList.add(orderItem);
             }
         }
