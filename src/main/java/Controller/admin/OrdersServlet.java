@@ -15,6 +15,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -76,8 +77,28 @@ public class OrdersServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        OrdersDAO ordersDAO = new OrdersDAO();
+        // Lấy các giá trị từ form lọc
+        String search = request.getParameter("search"); 
+        String status = request.getParameter("status"); 
+        String minPrice = request.getParameter("minPrice");
+        String maxPrice = request.getParameter("maxPrice");
+        String startDateStr = request.getParameter("startDate");
+        String endDateStr = request.getParameter("endDate");
+        
+
+        Date startDate = (startDateStr != null && !startDateStr.isEmpty()) ? Date.valueOf(startDateStr) : null;
+        Date endDate = (endDateStr != null && !endDateStr.isEmpty()) ? Date.valueOf(endDateStr) : null;
+        System.out.println(startDate);
+        System.out.println(endDate);
+        // Lấy danh sách đơn hàng sau khi lọc
+        List<Orders> orders = ordersDAO.getFilteredOrders(search, status, minPrice, maxPrice, startDate, endDate);
+
+        // Gửi danh sách orders về JSP
+        request.setAttribute("orders", orders);
+        request.getRequestDispatcher("admin/Orders.jsp").forward(request, response);
     }
+    
 
     /** 
      * Returns a short description of the servlet.

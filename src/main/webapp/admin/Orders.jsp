@@ -80,10 +80,25 @@
                         </div>
 
                         <div class="content-body">
-                            <div class="filter-section">
+                            <form method="POST" action="OrdersServlet">
+                                <div class="filter-section">
+                                    <input type="text" class="form-control" name="search" placeholder="Search by Customer Name...">
+                                    <select name="status" class="form-select">
+                                        <option value="">All</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
+                                    <input type="number" class="form-control" name="minPrice" placeholder="Min Price">
+                                    <input type="number" class="form-control" name="maxPrice" placeholder="Max Price">
+                                    <input type="date" class="form-control" name="startDate" placeholder="Start Day">
+                                    <input type="date" class="form-control" name="endDate" placeholder="End Day">
+                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                </div>
+                            </form>
+<!--                            <div class="filter-section">
                                 <input type="text" class="form-control" id="searchInput" placeholder="Search by Customer Name...">
                                 <select id="statusFilter" class="form-select" placeholder="Status">
-                                    <option value="">All</option> <!-- Chọn tất cả -->
+                                    <option value="">All</option>  Chọn tất cả 
                                     <option value="Pending">Pending</option>
                                     <option value="Completed">Completed</option>
                                 </select>
@@ -92,7 +107,7 @@
                                 <input type="number" class="form-control" placeholder="Max Price">
                                 <input type="date" class="form-control" placeholder="Start Day">
                                 <input type="date" class="form-control" placeholder="End Day">
-                            </div>
+                            </div>-->
 
                             <table class="table table-striped">
                                 <thead>
@@ -105,7 +120,7 @@
                                         <th>Total Amount</th>
                                         <th>StatusDL</th>
                                         <th>Actions</th>
-                                        
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -126,7 +141,7 @@
                                                 Update
                                             </button>
                                         </td>
-                                        
+
 
                                     </tr>
                                 </c:forEach>
@@ -139,13 +154,13 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="orderDetailModalLabel">Order Details</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="window.location.href='OrdersServlet'"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="window.location.href = 'OrdersServlet'"></button>
                             </div>
                             <div class="modal-body" id="orderDetailModalBody">
                                 <!-- Nội dung Order Details sẽ được load vào đây -->
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="window.location.href='OrdersServlet'">Close</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="window.location.href = 'OrdersServlet'">Close</button>
                             </div>
                         </div>
                     </div>
@@ -230,7 +245,7 @@
                         });
                     });
                 });
-                
+
                 document.addEventListener("DOMContentLoaded", function () {
                     document.querySelectorAll(".update-order-btn").forEach(button => {
                         button.addEventListener("click", function () {
