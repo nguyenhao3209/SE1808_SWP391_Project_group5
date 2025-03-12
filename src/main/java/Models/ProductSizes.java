@@ -37,6 +37,10 @@ public class ProductSizes {
         this.stockQuantity = stockQuantity;
     }
 
+    public ProductSizes(Products product, String size) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     public int getSizeID() {
         return sizeID;
     }

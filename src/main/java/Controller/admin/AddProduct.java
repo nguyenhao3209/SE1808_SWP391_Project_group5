@@ -22,6 +22,8 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -30,6 +32,8 @@ import java.nio.file.StandardCopyOption;
 @MultipartConfig
 @WebServlet(name = "AddProduct", urlPatterns = {"/addProduct"})
 public class AddProduct extends HttpServlet {
+
+    List<String> sizeList = null;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -87,19 +91,41 @@ public class AddProduct extends HttpServlet {
             // Lấy dữ liệu từ form
             String productName = request.getParameter("productName");
             String description = request.getParameter("description");
-            String stockQuantityStr = request.getParameter("stockQuantity");
             String brand = request.getParameter("brand");
             String categoryIDStr = request.getParameter("categoryID");
             String priceStr = request.getParameter("price");
             String discountProductStr = request.getParameter("discountProduct");
+
+            // Chuyển đổi dữ liệu
+            int categoryID = Integer.parseInt(categoryIDStr);
+            BigDecimal price = new BigDecimal(priceStr);
+            BigDecimal discountProduct = (discountProductStr == null || discountProductStr.isEmpty())
+                    ? BigDecimal.ZERO
+                    : new BigDecimal(discountProductStr);
+
+            boolean hasSize = !(categoryID == 1 || categoryID == 5);
+            List<String> sizeList = new ArrayList<>();
+
+            if (hasSize) {
+                String[] sizes = request.getParameterValues("sizes[]");
+
+                if (sizes == null) {
+                    request.setAttribute("message", "Vui lòng nhập đầy đủ kích thước!");
+                    request.getRequestDispatcher("admin/addProduct.jsp").forward(request, response);
+                    return;
+                }
+
+                for (int i = 0; i < sizes.length; i++) {
+                    sizeList.add(sizes[i].trim());
+                }
+            }
+
             // Xử lý ảnh upload
-            String check_path = check_file(Integer.valueOf(categoryIDStr));
+            String check_path = check_file(categoryID);
             Part filePart = request.getPart("imageFile");
             String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-//            String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
             String path_file_img = "img/" + check_path + "/" + brand;
             String uploadPath = getServletContext().getRealPath("") + File.separator + path_file_img;
-            System.out.println("uploadPath: " + uploadPath);
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
@@ -107,26 +133,15 @@ public class AddProduct extends HttpServlet {
             String filePath = uploadPath + File.separator + fileName;
             filePart.write(filePath);
 
-            // Kiểm tra giá trị null hoặc rỗng
+            // Kiểm tra thông tin bắt buộc
             if (productName == null || productName.trim().isEmpty()
                     || description == null || description.trim().isEmpty()
-                    || stockQuantityStr == null || stockQuantityStr.trim().isEmpty()
-                    || brand == null || brand.trim().isEmpty()
-                    || categoryIDStr == null || categoryIDStr.trim().isEmpty()
-                    || priceStr == null || priceStr.trim().isEmpty()) {
+                    || brand == null || brand.trim().isEmpty()) {
 
                 request.setAttribute("message", "Vui lòng điền đầy đủ thông tin!");
                 request.getRequestDispatcher("admin/addProduct.jsp").forward(request, response);
                 return;
             }
-
-            // Chuyển đổi dữ liệu
-            int stockQuantity = Integer.parseInt(stockQuantityStr);
-            int categoryID = Integer.parseInt(categoryIDStr);
-            BigDecimal price = new BigDecimal(priceStr);
-            BigDecimal discountProduct = (discountProductStr == null || discountProductStr.isEmpty())
-                    ? BigDecimal.ZERO
-                    : new BigDecimal(discountProductStr);
 
             // Tạo đối tượng sản phẩm
             Category category = new Category();
@@ -135,16 +150,34 @@ public class AddProduct extends HttpServlet {
             Products product = new Products();
             product.setProductName(productName);
             product.setDescription(description);
-            product.setStockQuantity(stockQuantity);
             product.setBrand(brand);
             product.setCategory(category);
             product.setPrice(price);
             product.setDiscountProduct(discountProduct);
             product.setImageURL(fileName); // Lưu đường dẫn ảnh
 
-            // Thêm sản phẩm vào database
+            // Thêm sản phẩm vào database và lấy productID
             ProductsDAO productDAO = new ProductsDAO();
-            productDAO.addProduct(product);
+            int productID = productDAO.addProduct(product);
+            // Nếu category không phải Accessory, thêm từng size vào bảng ProductSize
+            if (hasSize) {
+                for (int i = 0; i < sizeList.size(); i++) {
+                    productDAO.addProductSize(productID, sizeList.get(i));
+                }
+            }
+
+            // Xử lý Specifications
+            List<String> specNames = new ArrayList<>();
+            List<String> specValues = new ArrayList<>();
+
+            String[] specNameArray = request.getParameterValues("specNames[]");
+            String[] specValueArray = request.getParameterValues("specValues[]");
+
+            if (specNameArray != null && specValueArray != null && specNameArray.length == specValueArray.length) {
+                for (int i = 0; i < specNameArray.length; i++) {
+                    productDAO.addProductSpecifications(productID, specNameArray[i], specValueArray[i]);
+                }
+            }
 
             // Nếu không có lỗi, xem như thành công
             request.getSession().setAttribute("message", "Sản phẩm đã được thêm thành công!");
@@ -173,7 +206,7 @@ public class AddProduct extends HttpServlet {
                 path = "Bag";
                 break;
             case 5:
-                path = "Accesory";
+                path = "Accessory";
                 break;
             default:
                 System.out.println("Default case: Không khớp");

@@ -92,7 +92,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Description</label>
                                         <div class="col-sm-7">
-                                            <textarea class="form-control" name="description" required></textarea>
+                                            <textarea class="form-control" name="description" required>${product.description}</textarea>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -104,7 +104,8 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Category</label>
                                         <div class="col-sm-7">
-                                            <select class="form-control" name="categoryID" disabled="true">
+                                            <!--disabled="true"-->
+                                            <select class="form-control" name="categoryID">
                                                 <option value="1" ${product.category.categoryID == 1 ? "selected" : ""}>Racket</option>
                                                 <option value="2" ${product.category.categoryID == 2 ? "selected" : ""}>Shoes</option>
                                                 <option value="3" ${product.category.categoryID == 3 ? "selected" : ""}>Clothes</option>
@@ -113,22 +114,52 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <c:if test="${product.category.categoryName eq 'Shoes' || product.category.categoryName eq 'Clothes'}">
+                                        <div id="sizeInputs">
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Sizes</label>
+                                                <div class="col-sm-7">
+                                                    <div id="sizeContainer">
+                                                        <c:forEach var="size" items="${sizes}">
+                                                            <div class="row size-entry mt-2">
+                                                                <div class="col-sm-10">
+                                                                    <input type="hidden" name="sizeIDs[]" value="${size.sizeID}">
+                                                                    <input class="form-control" type="text" name="sizes[]" value="${size.size}">
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <button type="button" class="btn btn-danger" onclick="removeEntry(this)">X</button>
+                                                                </div>
+                                                            </div>
+                                                        </c:forEach>
+                                                    </div>
+
+                                                    <button type="button" class="btn btn-primary mt-2" onclick="addSize()">+ Add Size</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:if>
+
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Price</label>
                                         <div class="col-sm-7">
-                                            <input class="form-control" type="number" step="0.01" name="price" required>
+                                            <input class="form-control" type="number" step="0.01" name="price" value="${product.price}" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Discount Percent</label>
                                         <div class="col-sm-7">
-                                            <input class="form-control" type="number" step="0.01" name="discountProduct" value="0">
+                                            <input class="form-control" type="number" step="0.01" name="discountProduct" value="${product.discountProduct}" required>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Current Image</label>
                                         <div class="col-sm-7 text-center"> <!-- Căn giữa bằng Bootstrap -->
-                                            <img src="${product.imageURL}" alt="Product Image" width="150" class="d-block mx-auto">
+                                            <c:if test="${product.category.categoryName eq 'Accessory'}">
+                                                <img src="./img/${product.category.categoryName}/${product.getImageURL()}">
+                                            </c:if>
+                                            <c:if test="${product.category.categoryName ne 'Accessory'}">
+                                                <img src="./img/${product.category.getCategoryName()}/${product.brand}/${product.imageURL}">
+                                            </c:if>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -136,6 +167,29 @@
                                         <div class="col-sm-7">
                                             <input class="form-control" type="file" name="imageFile" accept="image/*">
                                             <input type="hidden" name="oldImageURL" value="${product.imageURL}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Specifications</label>
+                                        <div class="col-sm-7">
+                                            <div id="specificationsContainer">
+                                                <c:forEach var="spec" items="${specs}">
+                                                    <div class="row spec-entry mt-2">
+                                                        <div class="col-sm-5">
+                                                             <input type="hidden" name="specIDs[]" value="${spec.specificationID}"> <!-- Hidden field -->
+                                                            <input class="form-control" type="text" name="specNames[]" value="${spec.key}" required>
+                                                        </div>
+                                                        <div class="col-sm-5">
+                                                            <input class="form-control" type="text" name="specValues[]" value="${spec.value}" required>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <button type="button" class="btn btn-danger" onclick="removeEntry(this)">X</button>
+                                                        </div>
+                                                    </div>
+                                                </c:forEach>
+                                            </div>
+
+                                            <button type="button" class="btn btn-primary mt-2" onclick="addSpecification()">+ Add Specification</button>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -152,6 +206,61 @@
                 </div>
             </div>
         </main>
+
+        <script>
+            function toggleSizeInputs() {
+                var category = document.getElementById("categorySelect").value;
+                var sizeInputs = document.getElementById("sizeInputs");
+
+                sizeInputs.style.display = (category !== "1" && category !== "5" && category !== "") ? "block" : "none";
+            }
+
+            function addSize() {
+                var container = document.getElementById("sizeContainer");
+
+                var newEntry = document.createElement("div");
+                newEntry.classList.add("row", "size-entry", "mt-2");
+
+                newEntry.innerHTML = `
+<div class="col-sm-10">
+<input class="form-control" type="text" name="sizes[]" placeholder="Enter size" required>
+</div>
+<div class="col-sm-2">
+<button type="button" class="btn btn-danger" onclick="removeEntry(this)">X</button>
+</div>
+`;
+
+                container.appendChild(newEntry);
+            }
+
+            function addSpecification() {
+                var container = document.getElementById("specificationsContainer");
+
+                var newEntry = document.createElement("div");
+                newEntry.classList.add("row", "spec-entry", "mt-2");
+
+                newEntry.innerHTML = `
+<div class="col-sm-5">
+<input class="form-control" type="text" name="specNames[]" placeholder="Specification Name" required>
+</div>
+<div class="col-sm-5">
+<input class="form-control" type="text" name="specValues[]" placeholder="Specification Value" required>
+</div>
+<div class="col-sm-2">
+<button type="button" class="btn btn-danger" onclick="removeEntry(this)">X</button>
+</div>
+`;
+
+                container.appendChild(newEntry);
+            }
+
+            function removeEntry(button) {
+                var entry = button.closest(".row");
+                if (entry) {
+                    entry.remove();
+                }
+            }
+        </script>
 
         <div class="ttr-overlay"></div>
 
