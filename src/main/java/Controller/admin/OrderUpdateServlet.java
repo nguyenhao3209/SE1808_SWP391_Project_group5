@@ -5,6 +5,7 @@
 package Controller.admin;
 
 import Models.Orders;
+import Models.Staffs;
 import dal.OrdersDAO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  *
@@ -81,6 +83,9 @@ public class OrderUpdateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //String userName = request.getParameter("userName");
+        HttpSession session = request.getSession();
+        Staffs staff = (Staffs) session.getAttribute("user");
+        
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         String orderIDN = request.getParameter("orderID");
@@ -89,6 +94,7 @@ public class OrderUpdateServlet extends HttpServlet {
         String statusDL = request.getParameter("statusDL");
         
         Orders order = new Orders();
+        order.setStaff(staff);
         order.setAddress(address);
         order.setPhone(phone);
         order.setOrderID(orderID);

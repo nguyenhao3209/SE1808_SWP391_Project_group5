@@ -340,14 +340,6 @@ public class OrdersDAO extends DBContext {
         return list;
     }
 
-    public static void main(String[] args) {
-        OrdersDAO odao = new OrdersDAO();
-        List<OrderDetails> list = odao.getOdersDetailByID(1006);
-        for (OrderDetails orderDetails : list) {
-            System.out.println(orderDetails.getProduct().getProductID());
-        }
-    }
-
     public List<Orders> getOrdersByCustomerID(String id) {
         ArrayList<Orders> list = new ArrayList<>();
         CustomersDAO customersDAO = new CustomersDAO();
@@ -462,18 +454,110 @@ public class OrdersDAO extends DBContext {
     }
 
     public void updateOrder(Orders order) {
-        String sql = "UPDATE Orders SET Phone = ?, Status = ?, StatusDL = ?, Address = ? WHERE OrderID = ?";
+        String sql = "UPDATE Orders SET Phone = ?, Status = ?, StatusDL = ?, Address = ?, StaffID = ? WHERE OrderID = ?";
         try {
+            Staffs staff = order.getStaff();
             ps = connection.prepareStatement(sql);
             ps.setString(1, order.getPhone());
             ps.setString(2, order.getStatus());
             ps.setString(3, order.getStatusDL());
             ps.setString(4, order.getAddress());
             ps.setInt(5, order.getOrderID());
+            ps.setString(6, staff.getStaffID());
 
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public List<Orders> getFilteredOrders(String search, String status, String minPrice, String maxPrice, Date startDate, Date endDate) {
+
+        ArrayList<Orders> list = new ArrayList<>();
+        CustomersDAO customersDAO = new CustomersDAO();
+        VoucherDAO voucherDAO = new VoucherDAO();
+        StaffsDAO staffsdao = new StaffsDAO();
+
+        String sql = "SELECT * FROM [SE1808_SWP391_Group5].[dbo].[Orders] o "
+                + "JOIN [SE1808_SWP391_Group5].[dbo].[Customers] c ON o.CustomerID = c.CustomerID "
+                + "WHERE 1=1 ";
+
+        if (search != null && !search.trim().isEmpty()) {
+            sql += " AND c.CustomerName LIKE ?";
+        }
+        if (status != null && !status.trim().isEmpty()) {
+            sql += " AND o.Status LIKE ?";
+        }
+        if (minPrice != null && !minPrice.trim().isEmpty()) {
+            sql += " AND o.TotalPrice >= ?";
+        }
+        if (maxPrice != null && !maxPrice.trim().isEmpty()) {
+            sql += " AND o.TotalPrice <= ?";
+        }
+        if (startDate != null) {
+            sql += " AND o.CreatedAt >= ?";
+        }
+        if (endDate != null) {
+            sql += " AND o.CreatedAt <= ?";
+        }
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            int index = 1;
+            if (search != null && !search.trim().isEmpty()) {
+                ps.setString(index++, "%" + search + "%");
+            }
+            if (status != null && !status.trim().isEmpty()) {
+                ps.setString(index++, status);
+            }
+            if (minPrice != null && !minPrice.trim().isEmpty()) {
+                ps.setBigDecimal(index++, new BigDecimal(minPrice));
+            }
+            if (maxPrice != null && !maxPrice.trim().isEmpty()) {
+                ps.setBigDecimal(index++, new BigDecimal(maxPrice));
+            }
+            if (startDate != null) {
+                ps.setDate(index++, new java.sql.Date(startDate.getTime()));
+            }
+            if (endDate != null) {
+                ps.setDate(index++, new java.sql.Date(endDate.getTime()));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Customers customers = customersDAO.getCustomerByID(rs.getString("CustomerID"));
+                Vouchers voucher = voucherDAO.getVoucherById(rs.getInt("VoucherID"));
+                Staffs staff = staffsdao.getStaffByID(rs.getString("StaffID"));
+                Orders od = new Orders(
+                        rs.getInt("OrderID"),
+                        customers,
+                        staff,
+                        voucher,
+                        rs.getString("Status"),
+                        rs.getString("PaymentMethod"),
+                        rs.getBigDecimal("TotalPrice"),
+                        rs.getDate("CreatedAt"),
+                        rs.getString("StatusDL"),
+                        rs.getString("Address"),
+                        rs.getString("Phone")
+                );
+                list.add(od);
+            }
+            rs.close();
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+
+    }
+
+    public static void main(String[] args) {
+        OrdersDAO odao = new OrdersDAO();
+        List<Orders> list = odao.getFilteredOrders(null, null, null, null, null, null);
+        for (Orders orders : list) {
+            System.out.println(orders.getOrderID());
         }
     }
 
