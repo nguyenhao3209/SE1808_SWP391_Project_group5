@@ -85,6 +85,7 @@ public class OrdersServlet extends HttpServlet {
         String maxPrice = request.getParameter("maxPrice");
         String startDateStr = request.getParameter("startDate");
         String endDateStr = request.getParameter("endDate");
+        String statusDL = request.getParameter("statusDL"); 
         
 
         Date startDate = (startDateStr != null && !startDateStr.isEmpty()) ? Date.valueOf(startDateStr) : null;
@@ -92,7 +93,7 @@ public class OrdersServlet extends HttpServlet {
         System.out.println(startDate);
         System.out.println(endDate);
         // Lấy danh sách đơn hàng sau khi lọc
-        List<Orders> orders = ordersDAO.getFilteredOrders(search, status, minPrice, maxPrice, startDate, endDate);
+        List<Orders> orders = ordersDAO.getFilteredOrders(search, status, minPrice, maxPrice, startDate, endDate, statusDL);
 
         // Gửi danh sách orders về JSP
         request.setAttribute("orders", orders);

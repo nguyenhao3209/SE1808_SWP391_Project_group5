@@ -29,7 +29,7 @@ public class Orders {
             
     public Orders() {
     }
-
+    
     public Orders(int orderID, Customers customer, Staffs staff, Vouchers voucher, String status, String paymentMethod, BigDecimal totalPrice, Date createAt, String statusDL, String address, String phone) {
         this.orderID = orderID;
         this.customer = customer;
@@ -43,9 +43,6 @@ public class Orders {
         this.address = address;
         this.phone = phone;
     }
-
-
-    
     
 //    public Orders(int orderID, Customers customer, Staffs staff, Vouchers voucher, String status, String paymentMethod, BigDecimal totalPrice, Date createAt, String statusDL) {
 //        this.orderID = orderID;

@@ -85,131 +85,153 @@
                 font-size: 24px;
                 cursor: pointer;
             }
-        </style>
-    </head>
-    <body class="ttr-opened-sidebar ttr-pinned-sidebar">
-        <jsp:include page="../admin/common/header.jsp"></jsp:include>
-        <jsp:include page="../admin/common/sidebar.jsp"></jsp:include>
 
-            <main class="ttr-wrapper">
-                <h1>Imported invoices</h1>
-                <div id="details-modal" class="modal">
-                    <div class="modal-content">
-                        <span id="close-modal" class="close">&times;</span>
-                        <h2>Import Details</h2>
-                        <div id="details-modal-body">
-                            <!-- Dữ liệu chi tiết sẽ hiển thị ở đây -->
-                        </div>
+            .gap-2 > * {
+                margin-right: 8px;
+            }
+            .gap-2 > *:last-child {
+                margin-right: 0;
+            }
+        </style>
+
+    </style>
+</head>
+<body class="ttr-opened-sidebar ttr-pinned-sidebar">
+    <jsp:include page="../admin/common/header.jsp"></jsp:include>
+    <jsp:include page="../admin/common/sidebar.jsp"></jsp:include>
+
+        <main class="ttr-wrapper">
+            <h1>Imported invoices</h1>
+            <div id="details-modal" class="modal">
+                <div class="modal-content">
+                    <span id="close-modal" class="close">&times;</span>
+                    <h2>Import Details</h2>
+                    <div id="details-modal-body">
+                        <!-- Dữ liệu chi tiết sẽ hiển thị ở đây -->
                     </div>
                 </div>
-                <!-- Filter Form -->
-                <form id="filter-form" method="POST" action="viewImported" onsubmit="return validateDateRange()">
-                    <label for="fromDate">From Date:</label>
-                    <input type="date" id="fromDate" name="fromDate">
+            </div>
+            <!-- Filter Form -->
+            <!-- Filter Form -->
+            <form id="filter-form" method="POST" action="viewImported" onsubmit="return validateDateRange()" class="d-flex align-items-center gap-2 mb-3">
+                <label for="fromDate" class="me-2">From Date:</label>
+                <input type="date" id="fromDate" name="fromDate" class="form-control me-3">
 
-                    <label for="toDate">To Date:</label>
-                    <input type="date" id="toDate" name="toDate">
-                    <br/>
-                    <label for="supplier">Supplier:</label>
-                    <input type="text" id="supplier" name="supplier" placeholder="Enter supplier name">
+                <label for="toDate" class="me-2">To Date:</label>
+                <input type="date" id="toDate" name="toDate" class="form-control me-3">
 
-                    <label for="staffName">Staff Name:</label>
-                    <input type="text" id="staffName" name="staffName" placeholder="Enter staff name">
-                    <br/>
-                    <div>
-                        <label for="status">Status:</label>
-                        <select id="status" name="status">
-                            <option value="">--Select Status--</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Completed">Completed</option>
-                            <option value="Cancelled">Cancelled</option>
-                        </select>
-                    </div>
-                    <button type="submit">Apply</button>
-                </form>
+                <label for="supplier" class="me-2">Supplier:</label>
+                <input type="text" id="supplier" name="supplier" placeholder="Enter supplier name" class="form-control me-3">
 
-                <!-- Table for Stock Import -->
-                <table border="1" class="table">
-                    <thead>
-                        <tr>
-                            <th>Import ID</th>
-                            <th>Staff ID</th>
-                            <th>Supplier</th>
-                            <th>Import Date</th>
-                            <th>Total Cost</th>
-                            <th>Status</th>
-                            <th>Details</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach var="stock" items="${stockList}">
-                        <tr>
-                            <td>${stock.importID}</td>
-                            <td>${stock.staff.staffID}</td>
-                            <td>${stock.supplier}</td>
-                            <td>${stock.importDate}</td>
-                            <td>${stock.totalCost}</td>
-                            <td>${stock.status}</td>
-                            <td>
-                                <button class="view-details" data-id="${stock.importID}">View Details</button>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </main>
-        <!-- External JavaScripts -->
-        <script src="admin/assets/js/jquery.min.js"></script>
-        <script src="admin/assets/vendors/bootstrap/js/popper.min.js"></script>
-        <script src="admin/assets/vendors/bootstrap/js/bootstrap.min.js"></script>
-        <script src="admin/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
-        <script src="admin/assets/vendors/bootstrap-touchspin/jquery.bootstrap-touchspin.js"></script>
-        <script src="admin/assets/vendors/magnific-popup/magnific-popup.js"></script>
-        <script src="admin/assets/vendors/counter/waypoints-min.js"></script>
-        <script src="admin/assets/vendors/counter/counterup.min.js"></script>
-        <script src="admin/assets/vendors/imagesloaded/imagesloaded.js"></script>
-        <script src="admin/assets/vendors/masonry/masonry.js"></script>
-        <script src="admin/assets/vendors/masonry/filter.js"></script>
-        <script src="admin/assets/vendors/owl-carousel/owl.carousel.js"></script>
-        <script src="admin/assets/vendors/scroll/scrollbar.min.js"></script>
-        <script src="admin/assets/js/functions.js"></script>
-        <script src="admin/assets/vendors/chart/chart.min.js"></script>
-        <script src="admin/assets/js/admin.js"></script>
-        <script src="admin/assets/vendors/calendar/moment.min.js"></script>
-        <script src="admin/assets/vendors/calendar/fullcalendar.js"></script>
-        <script src="admin/assets/vendors/switcher/switcher.js"></script>
-        <script>
-                    document.addEventListener("DOMContentLoaded", function () {
-                        $("#details-modal").hide();
-                        $(".view-details").on("click", function () {
-                            let importID = $(this).data("id");
-                            // AJAX request to fetch the import details
-                            $.ajax({
-                                url: "viewImportedDetails",
-                                type: "GET",
-                                data: {importID: importID},
-                                success: function (response) {
-                                    $("#details-modal-body").html(response);
-                                    $("#details-modal").fadeIn(); // Show modal with fade-in effect
-                                },
-                                error: function () {
-                                    alert("Error fetching details. Please try again.");
-                                }
-                            });
-                        });
+                <label for="staffName" class="me-2">Staff Name:</label>
+                <input type="text" id="staffName" name="staffName" placeholder="Enter staff name" class="form-control me-3">
 
-                        // Close modal when clicking on close button
-                        $("#close-modal").on("click", function () {
-                            $("#details-modal").fadeOut(); // Hide modal
-                        });
+                <label for="status" class="me-2">Status:</label>
+                <select id="status" name="status" class="form-select me-3">
+                    <option value="">--Select Status--</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
 
-                        // Close modal when clicking outside of it
-                        $("#details-modal").on("click", function (event) {
-                            if ($(event.target).is("#details-modal")) {
-                                $("#details-modal").fadeOut(); // Hide modal
+                <button type="submit" class="btn btn-primary">Apply</button>
+            </form>
+
+
+            <!-- Table for Stock Import -->
+            <table border="1" class="table">
+                <thead>
+                    <tr>
+                        <th>Import ID</th>
+                        <th>Staff ID</th>
+                        <th>Supplier</th>
+                        <th>Import Date</th>
+                        <th>Total Cost</th>
+                        <th>Status</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <c:forEach var="stock" items="${stockList}">
+                    <tr>
+                        <td>${stock.importID}</td>
+                        <td>${stock.staff.staffID}</td>
+                        <td>${stock.supplier}</td>
+                        <td>${stock.importDate}</td>
+                        <td>${stock.totalCost}</td>
+                        <td>${stock.status}</td>
+                        <td>
+                            <button class="view-details" data-id="${stock.importID}">View Details</button>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+    </main>
+    <!-- External JavaScripts -->
+    <script src="admin/assets/js/jquery.min.js"></script>
+    <script src="admin/assets/vendors/bootstrap/js/popper.min.js"></script>
+    <script src="admin/assets/vendors/bootstrap/js/bootstrap.min.js"></script>
+    <script src="admin/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+    <script src="admin/assets/vendors/bootstrap-touchspin/jquery.bootstrap-touchspin.js"></script>
+    <script src="admin/assets/vendors/magnific-popup/magnific-popup.js"></script>
+    <script src="admin/assets/vendors/counter/waypoints-min.js"></script>
+    <script src="admin/assets/vendors/counter/counterup.min.js"></script>
+    <script src="admin/assets/vendors/imagesloaded/imagesloaded.js"></script>
+    <script src="admin/assets/vendors/masonry/masonry.js"></script>
+    <script src="admin/assets/vendors/masonry/filter.js"></script>
+    <script src="admin/assets/vendors/owl-carousel/owl.carousel.js"></script>
+    <script src="admin/assets/vendors/scroll/scrollbar.min.js"></script>
+    <script src="admin/assets/js/functions.js"></script>
+    <script src="admin/assets/vendors/chart/chart.min.js"></script>
+    <script src="admin/assets/js/admin.js"></script>
+    <script src="admin/assets/vendors/calendar/moment.min.js"></script>
+    <script src="admin/assets/vendors/calendar/fullcalendar.js"></script>
+    <script src="admin/assets/vendors/switcher/switcher.js"></script>
+    <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    $("#details-modal").hide();
+                    $(".view-details").on("click", function () {
+                        let importID = $(this).data("id");
+                        // AJAX request to fetch the import details
+                        $.ajax({
+                            url: "viewImportedDetails",
+                            type: "GET",
+                            data: {importID: importID},
+                            success: function (response) {
+                                $("#details-modal-body").html(response);
+                                $("#details-modal").fadeIn(); // Show modal with fade-in effect
+                            },
+                            error: function () {
+                                alert("Error fetching details. Please try again.");
                             }
                         });
                     });
-        </script>
-    </body>
+
+                    // Close modal when clicking on close button
+                    $("#close-modal").on("click", function () {
+                        $("#details-modal").fadeOut(); // Hide modal
+                    });
+
+                    // Close modal when clicking outside of it
+                    $("#details-modal").on("click", function (event) {
+                        if ($(event.target).is("#details-modal")) {
+                            $("#details-modal").fadeOut(); // Hide modal
+                        }
+                    });
+                });
+
+                function validateDateRange() {
+                    const fromDate = document.getElementById("fromDate").value;
+                    const toDate = document.getElementById("toDate").value;
+
+                    if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
+                        alert("To Date cannot be earlier than From Date.");
+                        return false;
+                    }
+
+                    return true;
+                }
+    </script>
+</body>
 </html>

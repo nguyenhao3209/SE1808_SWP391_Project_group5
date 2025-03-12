@@ -78,21 +78,6 @@ public class OrderDetailServlet extends HttpServlet {
 
     }
 
-    public static void main(String[] args) {
-        OrdersDAO ordersDAO = new OrdersDAO();
-        Orders order = ordersDAO.getOderByID(1006);
-        List<OrderDetails> orderDetails = ordersDAO.getOdersDetailByID(1006);
-        for (OrderDetails orderDetail : orderDetails) {
-            System.out.println(orderDetail.getPrice());
-        }
-        for (OrderDetails od : orderDetails) {
-    System.out.println("Product ID: " + od.getProduct().getProductID());
-    System.out.println("Product Name: " + od.getProduct().getProductName());
-    System.out.println("Quantity: " + od.getQuantity());
-    System.out.println("Price: " + od.getPrice());
-}
-    }
-
     /**
      * Handles the HTTP <code>POST</code> method.
      *

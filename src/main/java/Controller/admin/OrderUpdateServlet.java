@@ -101,6 +101,7 @@ public class OrderUpdateServlet extends HttpServlet {
         order.setStatusDL(statusDL);
         order.setStatus(status);
         OrdersDAO dao = new OrdersDAO();
+        System.out.println(order.toString());
         dao.updateOrder(order);
 //        request.getRequestDispatcher("OrdersServlet").forward(request, response);
         response.sendRedirect("OrdersServlet");

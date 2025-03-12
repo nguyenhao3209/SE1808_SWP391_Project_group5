@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <welcome-file-list>
+        <welcome-file>home</welcome-file>
+    </welcome-file-list>
     <servlet>
         <servlet-name>VoucherServlet</servlet-name>
         <servlet-class>Controller.VoucherServlet</servlet-class>
@@ -19,10 +22,6 @@
     <servlet>
         <servlet-name>ViewStockServlet</servlet-name>
         <servlet-class>Controller.admin.ViewStockServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ViewImportedServlet</servlet-name>
-        <servlet-class>Controller.admin.ViewImportedServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
@@ -95,6 +94,10 @@
     <servlet>
         <servlet-name>UpdateStockServlet</servlet-name>
         <servlet-class>Controller.admin.UpdateStockServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewImportedServlet</servlet-name>
+        <servlet-class>Controller.admin.ViewImportedServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>VoucherServlet</servlet-name>
@@ -183,6 +186,10 @@
     <servlet-mapping>
         <servlet-name>UpdateStockServlet</servlet-name>
         <url-pattern>/updateStock</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewImportedServlet</servlet-name>
+        <url-pattern>/viewImported</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

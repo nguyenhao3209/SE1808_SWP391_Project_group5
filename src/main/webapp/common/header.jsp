@@ -37,27 +37,27 @@
     <div class="top-content p-0">
         <div class="container-fluid">
             <div class="row" style="display: flex;">
-                <div class="col-md-10">
+                <div class="col-md-9">
                     <div class="row">
 
-                        <div class="col-md-2 pt-2">
+                        <div class="col-md-2 pt-2 pb-2">
                             <div class="main-logo"">
-                                <a style="height: 14vh;" href="./home"><img width="100px" src="img/logo4.png" alt="logo"></a>
+                                <a href="./home"><img width="150px" src="img/logo4.png" alt="logo"></a>
                             </div>
 
                         </div>
 
-                        <div class="col-md-10">
+                        <div class="col-md-10  pt-3 pb-3">
 
                             <nav id="navbar">
-                                <div class="main-menu stellarnav pt-2 pb-2">
-                                    <ul class="menu-list">
-                                        <li class="menu-item active"><a href="home">Home</a></li>
-                                        <li class="menu-item"><a href="searchServlet" class="nav-link">Products</a></li>
-                                        <li class="menu-item"><a href="cart" class="nav-link">Cart</a></li>
-                                        <li class="menu-item"><a href="ViewVouchersServlet" class="nav-link">Vouchers</a></li>
-                                        <li class="menu-item"><a href="contact.jsp" class="nav-link">Contact</a></li>
-                                        <li class="menu-item"><a href="news-list" class="nav-link">Articles</a></li>
+                                <div class="main-menu stellarnav">
+                                    <ul class="menu-list align-items-center">
+                                        <li class="menu-item active"><a style="font-size: 20px;" href="home">Home</a></li>
+                                        <li class="menu-item "><a style="font-size: 20px;" href="searchServlet" class="nav-link">Products</a></li>
+                                        <li class="menu-item "><a style="font-size: 20px;" href="cart" class="nav-link">Cart</a></li>
+                                        <li class="menu-item "><a style="font-size: 20px;" href="ViewVouchersServlet" class="nav-link">Vouchers</a></li>
+                                        <li class="menu-item "><a style="font-size: 20px;" href="contact.jsp" class="nav-link">Contact</a></li>
+                                        <li class="menu-item "><a style="font-size: 20px;" href="news-list" class="nav-link">Articles</a></li>
                                     </ul>
 
                                     <div class="hamburger">
@@ -74,8 +74,8 @@
                     </div>
 
                 </div>
-                <div class="col-md-2">
-                    <div class="right-element">
+                <div class="col-md-3">
+                    <div class="right-element pt-3 pb-3">
                         <c:choose>
                             <c:when test="${sessionScope.user != null}">
                                 <!--<nav id="navbar">-->

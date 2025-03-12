@@ -81,14 +81,14 @@ public class PaymentServlet extends HttpServlet {
                 totalPrice = totalPrice.add(itemTotal);
 
                 OrderDetails orderItem = null;
-                if(item.getProduct().getCategory().getCategoryName().equals("Shoes") || item.getProduct().getCategory().getCategoryName().equals("Clothes")){
+                if (item.getProduct().getCategory().getCategoryName().equals("Shoes") || item.getProduct().getCategory().getCategoryName().equals("Clothes")) {
                     orderItem = new OrderDetails(item.getProduct(),
-                        item.getQuantity(),
-                        item.getProduct().getFinalPrice(), item.getProductSizes());
+                            item.getQuantity(),
+                            item.getProduct().getFinalPrice(), item.getProductSizes());
                 } else {
                     orderItem = new OrderDetails(item.getProduct(),
-                        item.getQuantity(),
-                        item.getProduct().getFinalPrice());
+                            item.getQuantity(),
+                            item.getProduct().getFinalPrice());
                 }
                 orderItemsList.add(orderItem);
             }
@@ -97,10 +97,11 @@ public class PaymentServlet extends HttpServlet {
         // Tạo Orders (status = "pending" tuỳ bạn)
         String address = request.getParameter("address");
         String phone = request.getParameter("phoneNumber");
-        
-        Orders order = new Orders(customer, "pending", paymentMethod, totalPrice);
+
+        Orders order = new Orders(customer, "PENDING", paymentMethod, totalPrice);
         order.setPhone(phone);
         order.setAddress(address);
+        order.setStatusDL("PENDING");
         // == Xử lý voucher (nếu có) ==
         Integer selectedVoucherID = (Integer) session.getAttribute("selectedVoucherID");
         if (selectedVoucherID != null) {
@@ -125,13 +126,6 @@ public class PaymentServlet extends HttpServlet {
 
         // Insert order + orderItems
         OrdersDAO orderDAO = new OrdersDAO();
-        int orderId = orderDAO.insertOrder(order, orderItemsList);
-        if (orderId == 0) {
-            request.setAttribute("error", "Cannot create order. Please try again.");
-            request.getRequestDispatcher("cart.jsp").forward(request, response);
-            return;
-        }
-
         // Xoá item trong DB, set cartList = null
         if (currentCart != null) {
             for (Cart item : currentCart) {
@@ -163,12 +157,33 @@ public class PaymentServlet extends HttpServlet {
         // Tuỳ theo paymentMethod
         if (!"VNPay".equalsIgnoreCase(paymentMethod)) {
             // COD -> forward sang confirmation.jsp
+            order.setStatus("PENDING");
+            int orderId = orderDAO.insertOrder(order, orderItemsList);
+            if (orderId == 0) {
+                request.setAttribute("error", "Cannot create order. Please try again.");
+                request.getRequestDispatcher("cart.jsp").forward(request, response);
+                return;
+            }
             request.setAttribute("paymentMethod", paymentMethod);
             request.getRequestDispatcher("confirmation.jsp").forward(request, response);
         } else {
             if (!paymentMethod.equals("VNPay")) {
+                order.setStatus("PENDING");
+                int orderId = orderDAO.insertOrder(order, orderItemsList);
+                if (orderId == 0) {
+                    request.setAttribute("error", "Cannot create order. Please try again.");
+                    request.getRequestDispatcher("cart.jsp").forward(request, response);
+                    return;
+                }
                 request.getRequestDispatcher("confirmation.jsp").forward(request, response);
             } else {
+                order.setStatus("COMPLETED");
+                int orderId = orderDAO.insertOrder(order, orderItemsList);
+                if (orderId == 0) {
+                    request.setAttribute("error", "Cannot create order. Please try again.");
+                    request.getRequestDispatcher("cart.jsp").forward(request, response);
+                    return;
+                }
                 // VNPay
                 String vnp_Version = "2.1.0";
                 String vnp_Command = "pay";

@@ -77,56 +77,24 @@
                             <div class="widget-box">
                                 <div class="email-wrapper">
                                     <div class="email-menu-bar">
-                                        <!--                                    <div class="compose-mail">
-                                                                                <a href="mailbox-compose.html" class="btn btn-block">Compose</a>
-                                                                            </div>-->
                                         <div class="email-menu-bar-inner">
                                             <ul>
                                                 <li class="active"><a href="contact-list"><i class="fa fa-envelope-o"></i>Inbox <span class="badge badge-success">8</span></a></li>
-                                                <li><a href="mailbox.html"><i class="fa fa-send-o"></i>Sent</a></li>
-                                                <li><a href="mailbox.html"><i class="fa fa-file-text-o"></i>Drafts <span class="badge badge-warning">8</span></a></li>
-                                                <li><a href="mailbox.html"><i class="fa fa-cloud-upload"></i>Outbox <span class="badge badge-danger">8</span></a></li>
-                                                <li><a href="mailbox.html"><i class="fa fa-trash-o"></i>Trash</a></li>
                                             </ul>
                                         </div>
                                     </div>
                                     <div class="mail-list-container">
                                         <div class="mail-toolbar">
-                                            <!--                                        <div class="check-all">
-                                                                                        <div class="custom-control custom-checkbox checkbox-st1">
-                                                                                            <input type="checkbox" class="custom-control-input" id="check1">
-                                                                                            <label class="custom-control-label" for="check1"></label>
-                                                                                        </div>
-                                                                                    </div>-->
                                             <div class="mail-search-bar">
                                                 <form action="contact-list" method="get" style="display: flex">
                                                     <input type="text" class="form-control" placeholder="Search" value="${txtSearch}" name="txtSearch"/>
                                                 <button type="submit" class="btn btn-primary" style="margin-left: 6px">Search</button></form>
                                         </div>
-                                        <!--                                        <div class="dropdown all-msg-toolbar">
-                                                                                    <span class="btn btn-info-icon" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></span>
-                                                                                    <ul class="dropdown-menu">
-                                                                                        <li><a href="#"><i class="fa fa-trash-o"></i> Delete</a></li>
-                                                                                        <li><a href="#"><i class="fa fa-arrow-down"></i> Archive</a></li>
-                                                                                        <li><a href="#"><i class="fa fa-clock-o"></i> Snooze</a></li>
-                                                                                        <li><a href="#"><i class="fa fa-envelope-open"></i> Mark as unread</a></li>
-                                                                                    </ul>
-                                                                                </div> -->
-                                        <!--                                        <div class="next-prev-btn">
-                                                                                    <a href="#"><i class="fa fa-angle-left"></i></a>
-                                                                                    <a href="#"><i class="fa fa-angle-right"></i></a>
-                                                                                </div>-->
                                     </div>
                                     <div class="mail-box-list">
                                         <c:forEach items="${listP}" var="o"> 
                                            
                                             <div class="mail-list-info"> 
-                                                <!--                                            <div class="checkbox-list">
-                                                                                                <div class="custom-control custom-checkbox checkbox-st1">
-                                                                                                    <input type="checkbox" class="custom-control-input" id="check2">
-                                                                                                    <label class="custom-control-label" for="check2"></label>
-                                                                                                </div>
-                                                                                            </div>-->
                                                 <div class="mail-rateing">
                                                     <span><i class="fa fa-star-o"></i></span>
                                                 </div>
@@ -141,9 +109,7 @@
                                                 </div>
                                                 <ul class="mailbox-toolbar">
                                                     <li data-toggle="tooltip" title="Delete"><i class="fa fa-trash-o"></i></li>
-                                                    <!--                                                <li data-toggle="tooltip" title="Archive"><i class="fa fa-arrow-down"></i></li>
-                                                                                                    <li data-toggle="tooltip" title="Snooze"><i class="fa fa-clock-o"></i></li>
-                                                                                                    <li data-toggle="tooltip" title="Mark as unread"><i class="fa fa-envelope-open"></i></li>-->
+                                              
                                                 </ul>
                                             </div>
                                                 

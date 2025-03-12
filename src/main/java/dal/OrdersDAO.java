@@ -43,9 +43,9 @@ public class OrdersDAO extends DBContext {
         // Bảng Orders (OrderID, CustomerID, StaffID, VoucherID, Status, PaymentMethod, TotalPrice, CreatedAt)
         // Sử dụng OUTPUT INSERTED.OrderID để lấy OrderID sau khi chèn
         String orderSql = "INSERT INTO [dbo].[Orders] "
-                + "(CustomerID, StaffID, VoucherID, Status, PaymentMethod, TotalPrice, Address, Phone) "
+                + "(CustomerID, StaffID, VoucherID, Status, PaymentMethod, TotalPrice, Address, Phone, StatusDL) "
                 + "OUTPUT INSERTED.OrderID "
-                + "VALUES (?, NULL, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?)";
 
         // Bảng OrderDetails (OrderDetailID, OrderID, ProductID, Price, Quantity)
         String orderItemSql = "INSERT INTO [dbo].[OrderDetails] (OrderID, ProductID, Price, Quantity, SizeID) "
@@ -80,6 +80,7 @@ public class OrdersDAO extends DBContext {
 
             psOrder.setString(6, order.getAddress());
             psOrder.setString(7, order.getPhone());
+            psOrder.setString(8, order.getStatusDL());
 
             // Lấy OrderID vừa chèn
             ResultSet rs = psOrder.executeQuery();
@@ -462,8 +463,8 @@ public class OrdersDAO extends DBContext {
             ps.setString(2, order.getStatus());
             ps.setString(3, order.getStatusDL());
             ps.setString(4, order.getAddress());
-            ps.setInt(5, order.getOrderID());
-            ps.setString(6, staff.getStaffID());
+            ps.setString(5, staff.getStaffID());
+            ps.setInt(6, order.getOrderID());
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -471,7 +472,7 @@ public class OrdersDAO extends DBContext {
         }
     }
 
-    public List<Orders> getFilteredOrders(String search, String status, String minPrice, String maxPrice, Date startDate, Date endDate) {
+    public List<Orders> getFilteredOrders(String search, String status, String minPrice, String maxPrice, Date startDate, Date endDate,String statusDL) {
 
         ArrayList<Orders> list = new ArrayList<>();
         CustomersDAO customersDAO = new CustomersDAO();
@@ -500,6 +501,10 @@ public class OrdersDAO extends DBContext {
         if (endDate != null) {
             sql += " AND o.CreatedAt <= ?";
         }
+        
+        if (statusDL != null && !statusDL.trim().isEmpty()) {
+            sql += " AND o.StatusDL LIKE ?";
+        }
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -522,6 +527,9 @@ public class OrdersDAO extends DBContext {
             }
             if (endDate != null) {
                 ps.setDate(index++, new java.sql.Date(endDate.getTime()));
+            }
+            if (statusDL != null && !statusDL.trim().isEmpty()) {
+                ps.setString(index++, statusDL);
             }
 
             ResultSet rs = ps.executeQuery();
@@ -555,10 +563,6 @@ public class OrdersDAO extends DBContext {
 
     public static void main(String[] args) {
         OrdersDAO odao = new OrdersDAO();
-        List<Orders> list = odao.getFilteredOrders(null, null, null, null, null, null);
-        for (Orders orders : list) {
-            System.out.println(orders.getOrderID());
-        }
     }
 
 }

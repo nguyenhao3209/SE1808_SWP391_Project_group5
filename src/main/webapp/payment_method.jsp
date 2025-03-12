@@ -35,7 +35,7 @@
         <style>
             body {
                 background-color: #f8f9fa;
-                font-family: 'Arial', sans-serif;
+                font-family: 'Arial', sans-serif !important;
             }
             .container {
                 display: flex;
@@ -181,9 +181,12 @@
                         <c:forEach var="item" items="${sessionScope.cartList}">
                             <tr>
                                 <td>
-                                    <img width="80px"
-                                         src="./img/${item.product.category.categoryName}/${item.product.getImageURL()}"
-                                         alt="${item.product.productName}">
+                                    <c:if test="${item.product.category.categoryName eq 'Accessory'}">
+                                        <img width="100px" src="./img/${item.product.category.categoryName}/${item.product.getImageURL()}" alt="${item.product.productName}">
+                                    </c:if>
+                                    <c:if test="${item.product.category.categoryName ne 'Accessory'}">
+                                        <img width="100px" src="./img/${item.product.category.categoryName}/${item.product.brand}/${item.product.getImageURL()}" alt="${item.product.productName}">
+                                    </c:if>
                                 </td>
                                 <td>
                                     ${item.product.productName}

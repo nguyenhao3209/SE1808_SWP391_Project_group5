@@ -53,6 +53,21 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
+        <style>
+            .filter-section .form-control, .filter-section {
+                min-width: 180px;
+                margin-right: 4px;
+            }
+
+            .filter-section button {
+                margin-left: 4px;
+            }
+
+            .filter-section {
+                margin-bottom: 16px;
+            }
+        </style>
+
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
         <!-- Sidebar -->
@@ -81,33 +96,27 @@
 
                         <div class="content-body">
                             <form method="POST" action="OrdersServlet">
-                                <div class="filter-section">
-                                    <input type="text" class="form-control" name="search" placeholder="Search by Customer Name...">
-                                    <select name="status" class="form-select">
+                                <div class="filter-section d-flex flex-wrap gap-2 align-items-center">
+                                    <input type="text" class="form-control w-auto" name="search" placeholder="Search by Customer Name...">
+                                    <select name="status" class="w-auto">
                                         <option value="">All</option>
                                         <option value="Pending">Pending</option>
                                         <option value="Completed">Completed</option>
                                     </select>
-                                    <input type="number" class="form-control" name="minPrice" placeholder="Min Price">
-                                    <input type="number" class="form-control" name="maxPrice" placeholder="Max Price">
-                                    <input type="date" class="form-control" name="startDate" placeholder="Start Day">
-                                    <input type="date" class="form-control" name="endDate" placeholder="End Day">
+                                    <input style="width: 140px !important;" type="number" class="form-control w-auto" name="minPrice" placeholder="Min Price">
+                                    <input style="width: 140px !important;" type="number" class="form-control w-auto" name="maxPrice" placeholder="Max Price">
+                                    <input type="date" class="form-control w-auto" name="startDate" placeholder="Start Day">
+                                    <input type="date" class="form-control w-auto" name="endDate" placeholder="End Day">
+                                    <select name="statusDL" class="w-auto">
+                                        <option value="">All</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Completed">Completed</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
                                     <button type="submit" class="btn btn-primary">Filter</button>
                                 </div>
-                            </form>
-<!--                            <div class="filter-section">
-                                <input type="text" class="form-control" id="searchInput" placeholder="Search by Customer Name...">
-                                <select id="statusFilter" class="form-select" placeholder="Status">
-                                    <option value="">All</option>  Chọn tất cả 
-                                    <option value="Pending">Pending</option>
-                                    <option value="Completed">Completed</option>
-                                </select>
 
-                                <input type="number" class="form-control" placeholder="Min Price">
-                                <input type="number" class="form-control" placeholder="Max Price">
-                                <input type="date" class="form-control" placeholder="Start Day">
-                                <input type="date" class="form-control" placeholder="End Day">
-                            </div>-->
+                            </form>
 
                             <table class="table table-striped">
                                 <thead>

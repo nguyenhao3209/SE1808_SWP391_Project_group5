@@ -115,10 +115,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="statusDL">StatusDL</label>
+                    <label for="statusDL">Status Delivery</label>
                     <select name="statusDL" required>
                         <option value="PACK" ${order.statusDL == 'PACK' ? 'selected' : ''}>PACK</option>
                         <option value="DELIVERY" ${order.statusDL == 'DELIVERY' ? 'selected' : ''}>DELIVERY</option>
+                        <option value="CANCELLED" ${order.statusDL == 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
                     </select>
                 </div>
 
@@ -126,7 +127,7 @@
                     <label for="status">Status</label>
                     <select name="status" required>
                         <option value="PENDING" ${order.status == 'PENDING' ? 'selected' : ''}>PENDING</option>
-                        <option value="COMMIT" ${order.status == 'COMMIT' ? 'selected' : ''}>COMMIT</option>
+                        <option value="COMPLETED" ${order.status == 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
                     </select>
                 </div>
 

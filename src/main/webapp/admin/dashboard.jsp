@@ -198,156 +198,19 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Your Profile Views Chart END-->
-                    <div class="col-lg-4 m-b30">
-                        <div class="widget-box">
-                            <div class="wc-title">
-                                <h4>Notifications</h4>
-                            </div>
-                            <div class="widget-inner">
-                                <div class="noti-box-list">
-                                    <ul>
-                                        <li>
-                                            <span class="notification-icon dashbg-gray">
-                                                <i class="fa fa-check"></i>
-                                            </span>
-                                            <span class="notification-text">
-                                                <span>Sneha Jogi</span> sent you a message.
-                                            </span>
-                                            <span class="notification-time">
-                                                <a href="#" class="fa fa-close"></a>
-                                                <span> 02:14</span>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="notification-icon dashbg-yellow">
-                                                <i class="fa fa-shopping-cart"></i>
-                                            </span>
-                                            <span class="notification-text">
-                                                <a href="#">Your order is placed</a> sent you a message.
-                                            </span>
-                                            <span class="notification-time">
-                                                <a href="#" class="fa fa-close"></a>
-                                                <span> 7 Min</span>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="notification-icon dashbg-red">
-                                                <i class="fa fa-bullhorn"></i>
-                                            </span>
-                                            <span class="notification-text">
-                                                <span>Your item is shipped</span> sent you a message.
-                                            </span>
-                                            <span class="notification-time">
-                                                <a href="#" class="fa fa-close"></a>
-                                                <span> 2 May</span>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="notification-icon dashbg-green">
-                                                <i class="fa fa-comments-o"></i>
-                                            </span>
-                                            <span class="notification-text">
-                                                <a href="#">Sneha Jogi</a> sent you a message.
-                                            </span>
-                                            <span class="notification-time">
-                                                <a href="#" class="fa fa-close"></a>
-                                                <span> 14 July</span>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <span class="notification-icon dashbg-primary">
-                                                <i class="fa fa-file-word-o"></i>
-                                            </span>
-                                            <span class="notification-text">
-                                                <span>Sneha Jogi</span> sent you a message.
-                                            </span>
-                                            <span class="notification-time">
-                                                <a href="#" class="fa fa-close"></a>
-                                                <span> 15 Min</span>
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-lg-4 m-b30">
                         <div class="widget-box">
                             <div class="wc-title">
                                 <h4>Number of orders sold ${yearSelect}</h4>
                             </div>
                             <div class="widget-inner">
-                                <!--                                <div class="new-user-list">
-                                                                    <ul>
-                                                                        <li>
-                                                                            <span class="new-users-pic">
-                                                                                <img src="admin/assets/images/testimonials/pic1.jpg" alt=""/>
-                                                                            </span>
-                                                                            <span class="new-users-text">
-                                                                                <a href="#" class="new-users-name">Anna Strong </a>
-                                                                                <span class="new-users-info">Visual Designer,Google Inc </span>
-                                                                            </span>
-                                                                            <span class="new-users-btn">
-                                                                                <a href="#" class="btn button-sm outline">Follow</a>
-                                                                            </span>
-                                                                        </li>
-                                                                        <li>
-                                                                            <span class="new-users-pic">
-                                                                                <img src="admin/assets/images/testimonials/pic2.jpg" alt=""/>
-                                                                            </span>
-                                                                            <span class="new-users-text">
-                                                                                <a href="#" class="new-users-name"> Milano Esco </a>
-                                                                                <span class="new-users-info">Product Designer, Apple Inc </span>
-                                                                            </span>
-                                                                            <span class="new-users-btn">
-                                                                                <a href="#" class="btn button-sm outline">Follow</a>
-                                                                            </span>
-                                                                        </li>
-                                                                        <li>
-                                                                            <span class="new-users-pic">
-                                                                                <img src="admin/assets/images/testimonials/pic1.jpg" alt=""/>
-                                                                            </span>
-                                                                            <span class="new-users-text">
-                                                                                <a href="#" class="new-users-name">Nick Bold  </a>
-                                                                                <span class="new-users-info">Web Developer, Facebook Inc </span>
-                                                                            </span>
-                                                                            <span class="new-users-btn">
-                                                                                <a href="#" class="btn button-sm outline">Follow</a>
-                                                                            </span>
-                                                                        </li>
-                                                                        <li>
-                                                                            <span class="new-users-pic">
-                                                                                <img src="admin/assets/images/testimonials/pic2.jpg" alt=""/>
-                                                                            </span>
-                                                                            <span class="new-users-text">
-                                                                                <a href="#" class="new-users-name">Wiltor Delton </a>
-                                                                                <span class="new-users-info">Project Manager, Amazon Inc </span>
-                                                                            </span>
-                                                                            <span class="new-users-btn">
-                                                                                <a href="#" class="btn button-sm outline">Follow</a>
-                                                                            </span>
-                                                                        </li>
-                                                                        <li>
-                                                                            <span class="new-users-pic">
-                                                                                <img src="admin/assets/images/testimonials/pic3.jpg" alt=""/>
-                                                                            </span>
-                                                                            <span class="new-users-text">
-                                                                                <a href="#" class="new-users-name">Nick Stone </a>
-                                                                                <span class="new-users-info">Project Manager, Amazon Inc  </span>
-                                                                            </span>
-                                                                            <span class="new-users-btn">
-                                                                                <a href="#" class="btn button-sm outline">Follow</a>
-                                                                            </span>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>-->
+
                                 <canvas id="myPieChart" width="400" height="400"></canvas>
 
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-8 m-b30">
+                    <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="wc-title">
                                 <h4>Top 10 employees with the most sales ${yearSelect}</h4>
@@ -523,175 +386,175 @@
         
                 </script>-->
         <script type="text/javascript">
-                                        var data = [];
+                                    var data = [];
             <c:forEach items="${revenue}" var="t">
-                                        data.push(`${t}`);
+                                    data.push(`${t}`);
             </c:forEach>
-                                        var areaData = {
-                                            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                                            datasets: [{
-                                                    label: 'Revenue',
-                                                    data: data,
-                                                    backgroundColor: [
-                                                        "rgba(255, 99, 132, 0.5)", // ??
-                                                        "rgba(54, 162, 235, 0.5)", // Xanh d??ng
-                                                        "rgba(255, 206, 86, 0.5)", // Vàng
-                                                        "rgba(75, 192, 192, 0.5)", // Xanh ng?c
-                                                        "rgba(153, 102, 255, 0.5)", // Tím
-                                                        "rgba(255, 159, 64, 0.5)", // Cam
-                                                        "rgba(231, 76, 60, 0.5)", // ?? ??m
-                                                        "rgba(46, 204, 113, 0.5)", // Xanh lá
-                                                        "rgba(241, 196, 15, 0.5)", // Vàng sáng
-                                                        "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
-                                                        "rgba(155, 89, 182, 0.5)", // Tím ??m
-                                                        "rgba(243, 156, 18, 0.5)"   // Cam ??m
-                                                    ],
-                                                    borderColor: [
-                                                        "rgba(255, 99, 132, 0.5)", // ??
-                                                        "rgba(54, 162, 235, 0.5)", // Xanh d??ng
-                                                        "rgba(255, 206, 86, 0.5)", // Vàng
-                                                        "rgba(75, 192, 192, 0.5)", // Xanh ng?c
-                                                        "rgba(153, 102, 255, 0.5)", // Tím
-                                                        "rgba(255, 159, 64, 0.5)", // Cam
-                                                        "rgba(231, 76, 60, 0.5)", // ?? ??m
-                                                        "rgba(46, 204, 113, 0.5)", // Xanh lá
-                                                        "rgba(241, 196, 15, 0.5)", // Vàng sáng
-                                                        "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
-                                                        "rgba(155, 89, 182, 0.5)", // Tím ??m
-                                                        "rgba(243, 156, 18, 0.5)"   // Cam ??m
-                                                    ],
-                                                    borderWidth: 1,
-                                                    fill: true, // 3: no fill
-                                                }]
-                                        };
+                                    var areaData = {
+                                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                                        datasets: [{
+                                                label: 'Revenue',
+                                                data: data,
+                                                backgroundColor: [
+                                                    "rgba(255, 99, 132, 0.5)", // ??
+                                                    "rgba(54, 162, 235, 0.5)", // Xanh d??ng
+                                                    "rgba(255, 206, 86, 0.5)", // Vàng
+                                                    "rgba(75, 192, 192, 0.5)", // Xanh ng?c
+                                                    "rgba(153, 102, 255, 0.5)", // Tím
+                                                    "rgba(255, 159, 64, 0.5)", // Cam
+                                                    "rgba(231, 76, 60, 0.5)", // ?? ??m
+                                                    "rgba(46, 204, 113, 0.5)", // Xanh lá
+                                                    "rgba(241, 196, 15, 0.5)", // Vàng sáng
+                                                    "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
+                                                    "rgba(155, 89, 182, 0.5)", // Tím ??m
+                                                    "rgba(243, 156, 18, 0.5)"   // Cam ??m
+                                                ],
+                                                borderColor: [
+                                                    "rgba(255, 99, 132, 0.5)", // ??
+                                                    "rgba(54, 162, 235, 0.5)", // Xanh d??ng
+                                                    "rgba(255, 206, 86, 0.5)", // Vàng
+                                                    "rgba(75, 192, 192, 0.5)", // Xanh ng?c
+                                                    "rgba(153, 102, 255, 0.5)", // Tím
+                                                    "rgba(255, 159, 64, 0.5)", // Cam
+                                                    "rgba(231, 76, 60, 0.5)", // ?? ??m
+                                                    "rgba(46, 204, 113, 0.5)", // Xanh lá
+                                                    "rgba(241, 196, 15, 0.5)", // Vàng sáng
+                                                    "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
+                                                    "rgba(155, 89, 182, 0.5)", // Tím ??m
+                                                    "rgba(243, 156, 18, 0.5)"   // Cam ??m
+                                                ],
+                                                borderWidth: 1,
+                                                fill: true, // 3: no fill
+                                            }]
+                                    };
 
-                                        var areaOptions = {
-                                            plugins: {
-                                                filler: {
-                                                    propagate: true
-                                                }
-                                            },
-                                            scales: {
-                                                yAxes: [{
-                                                        gridLines: {
-                                                            color: "rgba(204, 204, 204,0.1)"
-                                                        }
-                                                    }],
-                                                xAxes: [{
-                                                        gridLines: {
-                                                            color: "rgba(204, 204, 204,0.1)"
-                                                        }
-                                                    }]
+                                    var areaOptions = {
+                                        plugins: {
+                                            filler: {
+                                                propagate: true
                                             }
-                                        }
-
-                                        if ($("#lineChart").length) {
-                                            var lineChartCanvas = $("#lineChart").get(0).getContext("2d");
-                                            var lineChart = new Chart(lineChartCanvas, {
-                                                type: 'line',
-                                                data: areaData,
-                                                options: areaOptions
-                                            });
-                                        }
-                                        var dataPieChart = [];
-            <c:forEach items="${numberOfOrdersList}" var="t">
-                                        dataPieChart.push(`${t}`);
-            </c:forEach>
-                                        var areaData1 = {
-                                            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                                            datasets: [{
-                                                    label: 'Number of orders',
-                                                    data: dataPieChart,
-                                                    backgroundColor: [
-                                                        "rgba(255, 99, 132, 0.5)", // ??
-                                                        "rgba(54, 162, 235, 0.5)", // Xanh d??ng
-                                                        "rgba(255, 206, 86, 0.5)", // Vàng
-                                                        "rgba(75, 192, 192, 0.5)", // Xanh ng?c
-                                                        "rgba(153, 102, 255, 0.5)", // Tím
-                                                        "rgba(255, 159, 64, 0.5)", // Cam
-                                                        "rgba(231, 76, 60, 0.5)", // ?? ??m
-                                                        "rgba(46, 204, 113, 0.5)", // Xanh lá
-                                                        "rgba(241, 196, 15, 0.5)", // Vàng sáng
-                                                        "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
-                                                        "rgba(155, 89, 182, 0.5)", // Tím ??m
-                                                        "rgba(243, 156, 18, 0.5)"   // Cam ??m
-                                                    ],
-                                                    borderColor: [
-                                                        "rgba(255, 99, 132, 0.5)", // ??
-                                                        "rgba(54, 162, 235, 0.5)", // Xanh d??ng
-                                                        "rgba(255, 206, 86, 0.5)", // Vàng
-                                                        "rgba(75, 192, 192, 0.5)", // Xanh ng?c
-                                                        "rgba(153, 102, 255, 0.5)", // Tím
-                                                        "rgba(255, 159, 64, 0.5)", // Cam
-                                                        "rgba(231, 76, 60, 0.5)", // ?? ??m
-                                                        "rgba(46, 204, 113, 0.5)", // Xanh lá
-                                                        "rgba(241, 196, 15, 0.5)", // Vàng sáng
-                                                        "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
-                                                        "rgba(155, 89, 182, 0.5)", // Tím ??m
-                                                        "rgba(243, 156, 18, 0.5)"   // Cam ??m
-                                                    ],
-                                                    borderWidth: 1,
-                                                    fill: true, // 3: no fill
+                                        },
+                                        scales: {
+                                            yAxes: [{
+                                                    gridLines: {
+                                                        color: "rgba(204, 204, 204,0.1)"
+                                                    }
+                                                }],
+                                            xAxes: [{
+                                                    gridLines: {
+                                                        color: "rgba(204, 204, 204,0.1)"
+                                                    }
                                                 }]
-                                        };
-                                        if ($("#myPieChart").length) {
-                                            var lineChartCanvas = $("#myPieChart").get(0).getContext("2d");
-                                            var lineChart = new Chart(lineChartCanvas, {
-                                                type: 'pie',
-                                                data: areaData1
-                                            });
                                         }
-                                        var staffNames = [];
-                                        var orderCounts = [];
+                                    }
+
+                                    if ($("#lineChart").length) {
+                                        var lineChartCanvas = $("#lineChart").get(0).getContext("2d");
+                                        var lineChart = new Chart(lineChartCanvas, {
+                                            type: 'line',
+                                            data: areaData,
+                                            options: areaOptions
+                                        });
+                                    }
+                                    var dataPieChart = [];
+            <c:forEach items="${numberOfOrdersList}" var="t">
+                                    dataPieChart.push(`${t}`);
+            </c:forEach>
+                                    var areaData1 = {
+                                        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                                        datasets: [{
+                                                label: 'Number of orders',
+                                                data: dataPieChart,
+                                                backgroundColor: [
+                                                    "rgba(255, 99, 132, 0.5)", // ??
+                                                    "rgba(54, 162, 235, 0.5)", // Xanh d??ng
+                                                    "rgba(255, 206, 86, 0.5)", // Vàng
+                                                    "rgba(75, 192, 192, 0.5)", // Xanh ng?c
+                                                    "rgba(153, 102, 255, 0.5)", // Tím
+                                                    "rgba(255, 159, 64, 0.5)", // Cam
+                                                    "rgba(231, 76, 60, 0.5)", // ?? ??m
+                                                    "rgba(46, 204, 113, 0.5)", // Xanh lá
+                                                    "rgba(241, 196, 15, 0.5)", // Vàng sáng
+                                                    "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
+                                                    "rgba(155, 89, 182, 0.5)", // Tím ??m
+                                                    "rgba(243, 156, 18, 0.5)"   // Cam ??m
+                                                ],
+                                                borderColor: [
+                                                    "rgba(255, 99, 132, 0.5)", // ??
+                                                    "rgba(54, 162, 235, 0.5)", // Xanh d??ng
+                                                    "rgba(255, 206, 86, 0.5)", // Vàng
+                                                    "rgba(75, 192, 192, 0.5)", // Xanh ng?c
+                                                    "rgba(153, 102, 255, 0.5)", // Tím
+                                                    "rgba(255, 159, 64, 0.5)", // Cam
+                                                    "rgba(231, 76, 60, 0.5)", // ?? ??m
+                                                    "rgba(46, 204, 113, 0.5)", // Xanh lá
+                                                    "rgba(241, 196, 15, 0.5)", // Vàng sáng
+                                                    "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
+                                                    "rgba(155, 89, 182, 0.5)", // Tím ??m
+                                                    "rgba(243, 156, 18, 0.5)"   // Cam ??m
+                                                ],
+                                                borderWidth: 1,
+                                                fill: true, // 3: no fill
+                                            }]
+                                    };
+                                    if ($("#myPieChart").length) {
+                                        var lineChartCanvas = $("#myPieChart").get(0).getContext("2d");
+                                        var lineChart = new Chart(lineChartCanvas, {
+                                            type: 'pie',
+                                            data: areaData1
+                                        });
+                                    }
+                                    var staffNames = [];
+                                    var orderCounts = [];
 
             <c:forEach items="${topStaffs}" var="staff">
-                                        staffNames.push("${staff['StaffID']} - ${staff['StaffName']}");
-                                            orderCounts.push(${staff['OrderCount']});
+                                    staffNames.push("${staff['StaffID']} - ${staff['StaffName']}");
+                                        orderCounts.push(${staff['OrderCount']});
             </c:forEach>;
-                                            var areaData2 = {
-                                                labels: staffNames,
-                                                datasets: [{
-                                                        label: 'Number of orders',
-                                                        data: orderCounts,
-                                                        backgroundColor: [
-                                                            "rgba(255, 99, 132, 0.5)", // ??
-                                                            "rgba(54, 162, 235, 0.5)", // Xanh d??ng
-                                                            "rgba(255, 206, 86, 0.5)", // Vàng
-                                                            "rgba(75, 192, 192, 0.5)", // Xanh ng?c
-                                                            "rgba(153, 102, 255, 0.5)", // Tím
-                                                            "rgba(255, 159, 64, 0.5)", // Cam
-                                                            "rgba(231, 76, 60, 0.5)", // ?? ??m
-                                                            "rgba(46, 204, 113, 0.5)", // Xanh lá
-                                                            "rgba(241, 196, 15, 0.5)", // Vàng sáng
-                                                            "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
-                                                            "rgba(155, 89, 182, 0.5)", // Tím ??m
-                                                            "rgba(243, 156, 18, 0.5)"   // Cam ??m
-                                                        ],
-                                                        borderColor: [
-                                                            "rgba(255, 99, 132, 0.5)", // ??
-                                                            "rgba(54, 162, 235, 0.5)", // Xanh d??ng
-                                                            "rgba(255, 206, 86, 0.5)", // Vàng
-                                                            "rgba(75, 192, 192, 0.5)", // Xanh ng?c
-                                                            "rgba(153, 102, 255, 0.5)", // Tím
-                                                            "rgba(255, 159, 64, 0.5)", // Cam
-                                                            "rgba(231, 76, 60, 0.5)", // ?? ??m
-                                                            "rgba(46, 204, 113, 0.5)", // Xanh lá
-                                                            "rgba(241, 196, 15, 0.5)", // Vàng sáng
-                                                            "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
-                                                            "rgba(155, 89, 182, 0.5)", // Tím ??m
-                                                            "rgba(243, 156, 18, 0.5)"   // Cam ??m
-                                                        ],
-                                                        borderWidth: 1,
-                                                        fill: true, // 3: no fill
-                                                    }]
-                                            };
-                                            if ($("#myBarChart").length) {
-                                                var lineChartCanvas = $("#myBarChart").get(0).getContext("2d");
-                                                var lineChart = new Chart(lineChartCanvas, {
-                                                    type: 'bar',
-                                                    data: areaData2
-                                                });
-                                            }
+                                        var areaData2 = {
+                                            labels: staffNames,
+                                            datasets: [{
+                                                    label: 'Number of orders',
+                                                    data: orderCounts,
+                                                    backgroundColor: [
+                                                        "rgba(255, 99, 132, 0.5)", // ??
+                                                        "rgba(54, 162, 235, 0.5)", // Xanh d??ng
+                                                        "rgba(255, 206, 86, 0.5)", // Vàng
+                                                        "rgba(75, 192, 192, 0.5)", // Xanh ng?c
+                                                        "rgba(153, 102, 255, 0.5)", // Tím
+                                                        "rgba(255, 159, 64, 0.5)", // Cam
+                                                        "rgba(231, 76, 60, 0.5)", // ?? ??m
+                                                        "rgba(46, 204, 113, 0.5)", // Xanh lá
+                                                        "rgba(241, 196, 15, 0.5)", // Vàng sáng
+                                                        "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
+                                                        "rgba(155, 89, 182, 0.5)", // Tím ??m
+                                                        "rgba(243, 156, 18, 0.5)"   // Cam ??m
+                                                    ],
+                                                    borderColor: [
+                                                        "rgba(255, 99, 132, 0.5)", // ??
+                                                        "rgba(54, 162, 235, 0.5)", // Xanh d??ng
+                                                        "rgba(255, 206, 86, 0.5)", // Vàng
+                                                        "rgba(75, 192, 192, 0.5)", // Xanh ng?c
+                                                        "rgba(153, 102, 255, 0.5)", // Tím
+                                                        "rgba(255, 159, 64, 0.5)", // Cam
+                                                        "rgba(231, 76, 60, 0.5)", // ?? ??m
+                                                        "rgba(46, 204, 113, 0.5)", // Xanh lá
+                                                        "rgba(241, 196, 15, 0.5)", // Vàng sáng
+                                                        "rgba(52, 152, 219, 0.5)", // Xanh n??c bi?n
+                                                        "rgba(155, 89, 182, 0.5)", // Tím ??m
+                                                        "rgba(243, 156, 18, 0.5)"   // Cam ??m
+                                                    ],
+                                                    borderWidth: 1,
+                                                    fill: true, // 3: no fill
+                                                }]
+                                        };
+                                        if ($("#myBarChart").length) {
+                                            var lineChartCanvas = $("#myBarChart").get(0).getContext("2d");
+                                            var lineChart = new Chart(lineChartCanvas, {
+                                                type: 'bar',
+                                                data: areaData2
+                                            });
+                                        }
         </script>
         <script>
             function changeYear(selectElement) {

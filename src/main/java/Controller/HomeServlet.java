@@ -6,6 +6,7 @@ package Controller;
 
 import Models.News;
 import Models.Slider;
+import Models.Staffs;
 import dal.NewsDAO;
 import dal.ProductsDAO;
 import java.io.IOException;
@@ -23,9 +24,8 @@ import java.util.List;
  * @author Haontce180451
  */
 public class HomeServlet extends HttpServlet {
-
+    
     private NewsDAO newsDAO;
-
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -69,7 +69,10 @@ public class HomeServlet extends HttpServlet {
             newsDAO = new NewsDAO();
             HttpSession session = request.getSession();
             ProductsDAO productDAO = new ProductsDAO();
-
+            Staffs staff = (Staffs) session.getAttribute("user");
+            if (staff != null) {
+                session.removeAttribute("user");
+            }
             // Lấy danh sách slider
             ArrayList<Slider> slide = productDAO.getAllSliders();
             session.setAttribute("slides", slide);
@@ -84,7 +87,7 @@ public class HomeServlet extends HttpServlet {
             }
             saleList = productDAO.getTop8();
             ArrayList<News> newsList = newsDAO.getNewsList();
-
+            
             session.setAttribute("newsList", newsList);
             session.setAttribute("saleList", saleList);
             session.setAttribute("check_click_category", categoryID); // Lưu trạng thái danh mục đã chọn
@@ -110,7 +113,7 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        doGet(request, response);
     }
 
     /**
