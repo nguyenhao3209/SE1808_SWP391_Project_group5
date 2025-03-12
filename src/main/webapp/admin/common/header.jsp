@@ -17,8 +17,8 @@
         <div class="ttr-logo-box">
             <div>
                 <a href="dashboard" class="ttr-logo">
-                    <img class="ttr-logo-mobile" alt="" src="img/logo4.png" width="30" height="30">
-                    <img class="ttr-logo-desktop" alt="" src="img/logo4.png" width="160" height="27">
+                    <img class="ttr-logo-mobile" alt="" src="img/logoAdmin.jpg" width="30" height="30">
+                    <img class="ttr-logo-desktop" alt="" src="img/logoAdmin.jpg" width="160" height="27">
                 </a>
             </div>
         </div>
