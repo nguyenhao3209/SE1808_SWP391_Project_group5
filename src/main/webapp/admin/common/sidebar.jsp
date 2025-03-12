@@ -6,7 +6,7 @@
     <div class="ttr-sidebar-wrapper content-scroll">
         <!-- side menu logo start -->
         <div class="ttr-sidebar-logo">
-            <a href="./dashboard">BADMINTON</a>
+            <a class="m-1" href="./dashboard"><img alt="" src="img/logoItem.jpg" width="122"></a>
             <div class="ttr-sidebar-toggle-button">
                 <i class="ti-arrow-left"></i>
             </div>
