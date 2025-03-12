@@ -229,6 +229,8 @@
                 toastr.error(`${errorMessage}`, 'Error', {timeOut: 1000});
             </script>
         </c:if>
+        <c:remove var="message" scope="session"/>
+        <c:remove var="errorMessage" scope="session"/>
     </body>
 
 </html>

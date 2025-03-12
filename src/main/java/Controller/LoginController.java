@@ -121,7 +121,7 @@ public class LoginController extends HttpServlet {
                     // Điều hướng dựa vào vai trò người dùng
                     if (user != null) {
                         session.setAttribute("user", user);
-                        response.sendRedirect("home.jsp");
+                        response.sendRedirect("home");
                     } else {
                         session.setAttribute("user", staff);
                         response.sendRedirect("dashboard");

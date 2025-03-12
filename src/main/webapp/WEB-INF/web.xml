@@ -6,7 +6,7 @@
     </servlet>
     <servlet>
         <servlet-name>ViewVouchersServlet</servlet-name>
-        <servlet-class>Cowntroller.ViewVouchersServlet</servlet-class>
+        <servlet-class>Controller.ViewVouchersServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>FilterFeedbackServlet</servlet-name>

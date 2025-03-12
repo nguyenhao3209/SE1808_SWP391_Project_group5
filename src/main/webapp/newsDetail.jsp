@@ -5,7 +5,31 @@
     <head>
         <title>${news.title}</title>
         <!-- Bootstrap CSS -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+        <!-- Thư viện Font Awesome để sử dụng các icon -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!-- All PLUGINS CSS ============================================= -->
+        <link rel="stylesheet" type="text/css" href="assets/css/assets.css">
+
+        <!-- TYPOGRAPHY ============================================= -->
+        <link rel="stylesheet" type="text/css" href="assets/css/typography.css">
+
+        <!-- SHORTCODES ============================================= -->
+        <link rel="stylesheet" type="text/css" href="assets/css/shortcodes/shortcodes.css">
+
+        <!-- STYLESHEETS ============================================= -->
+        <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+        <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="icomoon/icomoon.css">
+        <link rel="stylesheet" type="text/css" href="css/vendor.css">
+        <link rel="stylesheet" type="text/css" href="style.css">
         <!-- Custom Styles -->
         <style>
             /* Custom Styles for News Detail Page */
@@ -214,7 +238,13 @@
             </div>
             <a href="news-list" class="back-link"><i class="bi bi-arrow-left"></i> Back to News List</a>
         </div>
-
+        <jsp:include page="common/footer.jsp"/>
+        <script src="js/jquery-1.11.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/script.js"></script>
         <!-- Bootstrap JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     </body>

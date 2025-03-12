@@ -13,7 +13,31 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Invoice</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+        <!-- Thư viện Font Awesome để sử dụng các icon -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!-- All PLUGINS CSS ============================================= -->
+        <link rel="stylesheet" type="text/css" href="assets/css/assets.css">
+
+        <!-- TYPOGRAPHY ============================================= -->
+        <link rel="stylesheet" type="text/css" href="assets/css/typography.css">
+
+        <!-- SHORTCODES ============================================= -->
+        <link rel="stylesheet" type="text/css" href="assets/css/shortcodes/shortcodes.css">
+
+        <!-- STYLESHEETS ============================================= -->
+        <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+        <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="icomoon/icomoon.css">
+        <link rel="stylesheet" type="text/css" href="css/vendor.css">
+        <link rel="stylesheet" type="text/css" href="style.css">
         <style>
             body {
                 background-color: #f8f9fa;
@@ -87,11 +111,11 @@
         </style>
     </head>
     <body>
-         <jsp:include page="common/header.jsp"/>
+        <jsp:include page="common/header.jsp"/>
         <div class="invoice-container">
             <!-- Header with Logo -->
             <div class="invoice-header">
-                <img src="./resource/images/watchLogo.png" alt="Company Logo" width="80" height="80">
+                <img src="./img/logo4.png" alt="Company Logo" width="80" height="80">
                 <h1 class="invoice-title">Invoice</h1>
             </div>
 
@@ -134,47 +158,52 @@
                     </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="item" items="${sessionScope.cartList}" varStatus="status">
-                    <tr>
-                        <td>${status.index + 1}</td>
-                        <td>${item.product.productName}</td>
+                    <c:forEach var="item" items="${sessionScope.cartList}" varStatus="status">
+                        <tr>
+                            <td>${status.index + 1}</td>
+                            <td>${item.product.productName}</td>
+                            <td>
+                                <c:if test="${item.product.discountProduct > 0}">
+                                    <div class="product-price">
+                                        <span class="original-price"><fmt:formatNumber value="${item.product.price}" pattern="###,##0.00" />$</span><br/>
+                                        <span class="discounted-price text-success fw-bold"><fmt:formatNumber value="${String.format('%f', item.product.price * (1 - item.product.discountProduct / 100))}" pattern="###,##0.00" />$</span>
+                                    </div>
+                                </c:if>
+                                <c:if test="${item.product.discountProduct le 0}">
+                                    <div class="product-price"><fmt:formatNumber value="${item.product.price}" pattern="###,##0.00" />$</div>
+                                </c:if>
+                            </td>
+                            <td>
+                                ${item.quantity}
+                            </td>
+                            <td>
+                                <c:if test="${item.product.discountProduct > 0}">
+                                    <fmt:formatNumber value="${item.quantity * item.product.price * (1 - item.product.discountProduct / 100)}" pattern="###,##0.00" />
+                                </c:if>
+                                <c:if test="${item.product.discountProduct le 0}">
+                                    <fmt:formatNumber value="${item.quantity * item.product.price}" pattern="###,##0.00" />
+                                </c:if>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    <tr class="total-row">
+                        <td colspan="4" class="text-end">Grand Total</td>
                         <td>
-                    <c:if test="${item.product.discountProduct > 0}">
-                        <div class="product-price">
-                            <span class="original-price"><fmt:formatNumber value="${item.product.price}" pattern="###,##0.00" />$</span><br/>
-                            <span class="discounted-price text-success fw-bold"><fmt:formatNumber value="${String.format('%f', item.product.price * (1 - item.product.discountProduct / 100))}" pattern="###,##0.00" />$</span>
-                        </div>
-                    </c:if>
-                    <c:if test="${item.product.discountProduct le 0}">
-                        <div class="product-price"><fmt:formatNumber value="${item.product.price}" pattern="###,##0.00" />$</div>
-                    </c:if>
-                    </td>
-                    <td>
-                        ${item.quantity}
-                    </td>
-                    <td>
-                    <c:if test="${item.product.discountProduct > 0}">
-                        <fmt:formatNumber value="${item.quantity * item.product.price * (1 - item.product.discountProduct / 100)}" pattern="###,##0.00" />
-                    </c:if>
-                    <c:if test="${item.product.discountProduct le 0}">
-                        <fmt:formatNumber value="${item.quantity * item.product.price}" pattern="###,##0.00" />
-                    </c:if>
-                    </td>
+                            <fmt:formatNumber value="${sessionScope.brandTotal}" pattern="###,##0.00" />
+                        </td>
                     </tr>
-                </c:forEach>
-                <tr class="total-row">
-                    <td colspan="4" class="text-end">Grand Total</td>
-                    <td>
-                <fmt:formatNumber value="${sessionScope.brandTotal}" pattern="###,##0.00" />
-                </td>
-                </tr>
                 </tbody>
             </table>
 
             <!-- Thank You Section -->
             <p class="thank-you">Thank you for your purchase! We hope to see you again.</p>
         </div>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <jsp:include page="common/footer.jsp"/>
+        <script src="js/jquery-1.11.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/script.js"></script>
     </body>
 </html>

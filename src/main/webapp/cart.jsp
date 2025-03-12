@@ -17,6 +17,30 @@
         <title>Shopping Cart</title>
         <link rel="stylesheet" href="./css/Cart.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+        <!-- Thư viện Font Awesome để sử dụng các icon -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!-- All PLUGINS CSS ============================================= -->
+        <link rel="stylesheet" type="text/css" href="assets/css/assets.css">
+
+        <!-- TYPOGRAPHY ============================================= -->
+        <link rel="stylesheet" type="text/css" href="assets/css/typography.css">
+
+        <!-- SHORTCODES ============================================= -->
+        <link rel="stylesheet" type="text/css" href="assets/css/shortcodes/shortcodes.css">
+
+        <!-- STYLESHEETS ============================================= -->
+        <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+        <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="icomoon/icomoon.css">
+        <link rel="stylesheet" type="text/css" href="css/vendor.css">
+        <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
         <jsp:include page="common/header.jsp"/>
@@ -111,6 +135,7 @@
             </div>
         </form>
         <div id="notification" class="notification"></div>
+        <jsp:include page="common/footer.jsp"/>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const selectAllCheckbox = document.getElementById("select-all");
@@ -224,7 +249,12 @@
                 return confirm(`Are you sure you want to remove "` + productName + `" from your cart?`);
             }
         </script>
-
+         <script src="js/jquery-1.11.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/script.js"></script>
         <c:remove var="notification" scope="session"/>
         <c:remove var="notificationType" scope="session"/>
     </body>

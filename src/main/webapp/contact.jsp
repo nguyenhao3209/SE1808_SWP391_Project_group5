@@ -28,11 +28,6 @@
 
         <jsp:include page="common/header.jsp"/>
 
-
-
-
-
-
         <section id="subscribe">
             <div class="container">
                 <div class="row justify-content-center">
@@ -86,11 +81,6 @@
         <c:if test="${message != null}">
             <script type="text/javascript">
                 toastr.success(`${message}`, 'Success', {timeOut: 1000});
-            </script>
-        </c:if>
-        <c:if test="${errorMessage != null}">
-            <script type="text/javascript">
-                toastr.error(`${errorMessage}`, 'Error', {timeOut: 1000});
             </script>
         </c:if>
     </body>

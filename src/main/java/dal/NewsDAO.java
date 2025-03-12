@@ -88,8 +88,8 @@ public class NewsDAO extends DBContext {
         }
     }
 
-    public List<News> getNewsList() {
-        List<News> newsList = new ArrayList<>();
+    public ArrayList<News> getNewsList() {
+        ArrayList<News> newsList = new ArrayList<>();
         String sql = "SELECT n.NewsID, n.Author, n.Title, n.Content, n.PublishedDate, n.FilePath, n.ImageURL, s.StaffID, s.StaffName, s.Email "
                 + "FROM News n "
                 + "JOIN Staffs s ON n.StaffID = s.StaffID";

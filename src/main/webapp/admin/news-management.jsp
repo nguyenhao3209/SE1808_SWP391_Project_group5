@@ -297,14 +297,12 @@
                                         <a href="news-management?action=view&id=${news.newsID}" class="btn read-more-btn">
                                             <i class="fas fa-book-open"></i> Read More
                                         </a>
-                                        <c:if test="${user.role eq 'STAFF'}">
                                             <a href="update-news?id=${news.newsID}" class="btn edit-btn">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
                                             <a href="delete-news?id=${news.newsID}" class="btn delete-btn" onclick="return confirmDelete()">
                                                 <i class="fas fa-trash-alt"></i> Delete
                                             </a>
-                                        </c:if>
                                     </div>
                                 </div>
                             </div>
