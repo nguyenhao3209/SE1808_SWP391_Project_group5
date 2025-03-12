@@ -4,8 +4,11 @@
  */
 package Controller.admin;
 
+import Controller.ProductSizeServlet;
 import Models.Category;
+import Models.ProductSizes;
 import Models.Products;
+import Models.Specifications;
 import dal.ProductsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,6 +22,10 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -71,10 +78,13 @@ public class EditProduct extends HttpServlet {
             int productId = Integer.valueOf(productIdStr);
             ProductsDAO productDAO = new ProductsDAO();
             Products product = productDAO.getProductById(productId);
+            List<ProductSizes> sizes = productDAO.getSizesOfProductByID(productId);
+            List<Specifications> specs = productDAO.getSpecificationsByProductId(productId);
 
             if (product != null) {
-                System.out.println("p: "+product.getCategory().getCategoryID());
                 request.setAttribute("product", product);
+                request.setAttribute("sizes", sizes);
+                request.setAttribute("specs", specs);
                 request.getRequestDispatcher("admin/editProduct.jsp").forward(request, response);
                 return;
             }
@@ -99,9 +109,10 @@ public class EditProduct extends HttpServlet {
             String productName = request.getParameter("productName");
             String description = request.getParameter("description");
             String brand = request.getParameter("brand");
-            String categoryIDStr = request.getParameter("categoryId");
+            String categoryIDStr = request.getParameter("categoryID");
             String priceStr = request.getParameter("price");
             String discountProductStr = request.getParameter("discountProduct");
+            ProductsDAO productDAO = new ProductsDAO();
 
             // Kiểm tra dữ liệu rỗng
             if (productName == null || productName.trim().isEmpty()
@@ -122,6 +133,45 @@ public class EditProduct extends HttpServlet {
                     ? BigDecimal.ZERO
                     : new BigDecimal(discountProductStr);
 
+            boolean hasSize = (categoryID == 2 || categoryID == 3);
+
+            if (hasSize) {
+                String[] sizeIDs = request.getParameterValues("sizeIDs[]"); // Mảng ID của size còn lại trong form
+                String[] sizes = request.getParameterValues("sizes[]"); // Mảng giá trị size
+
+                ArrayList<ProductSizes> existingSizeIDs = productDAO.getSizesOfProductByID(productId); // Lấy danh sách sizeID từ DB
+
+                // Xóa các size không còn trong form
+                for (ProductSizes dbSizeID : existingSizeIDs) {
+                    boolean stillExists = false;
+                    if (sizeIDs != null) {
+                        for (String formSizeID : sizeIDs) {
+                            if (formSizeID != null && !formSizeID.isEmpty() && dbSizeID.getSizeID() == Integer.parseInt(formSizeID)) {
+                                stillExists = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!stillExists) {
+                        productDAO.deleteProductSize(dbSizeID.getSizeID()); // Xóa size không còn trong form
+                    }
+                }
+
+                // Cập nhật size cũ hoặc thêm mới
+                if (sizes != null) {
+                    for (int i = 0; i < sizes.length; i++) {
+                        String newSize = sizes[i];
+
+                        if (sizeIDs != null && i < sizeIDs.length && sizeIDs[i] != null && !sizeIDs[i].isEmpty()) {
+                            int sizeID = Integer.parseInt(sizeIDs[i]);
+                            productDAO.updateProductSizes(productId, sizeID, newSize);
+                        } else {
+                            productDAO.addProductSize(productId, newSize);
+                        }
+                    }
+                }
+            }
+
             // Xử lý ảnh upload
             String check_path = check_file(categoryID);
             Part filePart = request.getPart("imageFile");
@@ -136,12 +186,11 @@ public class EditProduct extends HttpServlet {
 
             // Kiểm tra ảnh cũ nếu không upload ảnh mới
             String imagePath;
-            ProductsDAO productDAO = new ProductsDAO();
             if (fileName != null && !fileName.isEmpty()) {
                 imagePath = path_file_img + "/" + fileName;
                 filePart.write(uploadPath + File.separator + fileName);
             } else {
-                Products existingProduct = productDAO.getProductByID(productId);
+                Products existingProduct = productDAO.getProductById(productId);
                 imagePath = existingProduct.getImageURL();
             }
 
@@ -161,6 +210,45 @@ public class EditProduct extends HttpServlet {
 
             // Cập nhật sản phẩm vào database
             productDAO.updateProduct(product);
+            // Nếu category không phải Accessory, thêm từng size vào bảng ProductSize
+
+            // Xử lý Specifications
+            String[] specIDs = request.getParameterValues("specIDs[]"); // Mảng ID của specifications còn lại trong form
+            String[] specNames = request.getParameterValues("specNames[]"); // Mảng tên specifications
+            String[] specValues = request.getParameterValues("specValues[]"); // Mảng giá trị specifications
+
+            ArrayList<Specifications> existingSpecIDs = productDAO.getSpecificationsByProductId(productId); // Lấy danh sách SpecificationID từ DB
+
+            // Xóa các specifications không còn trong form
+            for (Specifications dbSpecID : existingSpecIDs) {
+                boolean stillExists = false;
+                if (specIDs != null) {
+                    for (String formSpecID : specIDs) {
+                        if (formSpecID != null && !formSpecID.isEmpty() && dbSpecID.getSpecificationID() == Integer.parseInt(formSpecID)) {
+                            stillExists = true;
+                            break;
+                        }
+                    }
+                }
+                if (!stillExists) {
+                    productDAO.deleteProductSpecification(dbSpecID.getSpecificationID()); // Xóa specification không còn trong form
+                }
+            }
+
+            // Cập nhật specification cũ hoặc thêm mới
+            if (specNames != null && specValues != null) {
+                for (int i = 0; i < specNames.length; i++) {
+                    String specName = specNames[i];
+                    String specValue = specValues[i];
+
+                    if (specIDs != null && i < specIDs.length && specIDs[i] != null && !specIDs[i].isEmpty()) {
+                        int specID = Integer.parseInt(specIDs[i]);
+                        productDAO.updateSpecifications(productId, specName, specValue);
+                    } else {
+                        productDAO.addProductSpecifications(productId, specName, specValue);
+                    }
+                }
+            }
 
             // Chuyển hướng về trang danh sách sản phẩm
             request.getSession().setAttribute("message", "Cập nhật sản phẩm thành công!");

@@ -82,21 +82,90 @@ public class ProductsDAO extends DBContext {
         return productList;
     }
 
-    public void addProduct(Products product) {
-        String sql = "INSERT INTO Products (ProductName, Description, StockQuantity, Brand, CategoryID, Price, DiscountPercent, ImageURL) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    public int addProduct(Products product) {
+        int productID = 0; // Biến để lưu ID sản phẩm
+
+        String sql = "INSERT INTO Products (ProductName, Description, Brand, CategoryID, Price, DiscountPercent, ImageURL) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?);"
+                + " SELECT SCOPE_IDENTITY();";
 
         try {
+            // Tắt tự động commit để kiểm soát giao dịch
+            connection.setAutoCommit(false);
+
+            // Thêm Statement.RETURN_GENERATED_KEYS để lấy ID vừa thêm
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, product.getProductName());
             ps.setString(2, product.getDescription());
-            ps.setInt(3, product.getStockQuantity());
-            ps.setString(4, product.getBrand());
-            ps.setInt(5, product.getCategory().getCategoryID());
-            ps.setBigDecimal(6, product.getPrice());
-            ps.setBigDecimal(7, product.getDiscountProduct() != null ? product.getDiscountProduct() : BigDecimal.ZERO);
-            ps.setString(8, product.getImageURL());
+            ps.setString(3, product.getBrand());
+            ps.setInt(4, product.getCategory().getCategoryID());
+            ps.setBigDecimal(5, product.getPrice());
+            ps.setBigDecimal(6, product.getDiscountProduct() != null ? product.getDiscountProduct() : BigDecimal.ZERO);
+            ps.setString(7, product.getImageURL());
 
+            ResultSet affectedRows = ps.executeQuery();
+
+            // Kiểm tra xem có dòng nào được thêm không
+            if (affectedRows.next()) {
+                productID = affectedRows.getInt(1); // Lấy ID vừa được tạo
+            }
+
+            // Commit thay đổi
+            connection.commit();
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return productID; // Trả về ID của sản phẩm
+    }
+
+    public void addProductSize(int productID, String size) {
+        String sql = "INSERT INTO ProductSizes (ProductID, Size) VALUES (?, ?)";
+        try {
+            connection.setAutoCommit(false);
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ps.setString(2, size);
+
+            // Sử dụng executeUpdate thay vì executeQuery
+            int rowsAffected = ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateProductSizes(int productID, int sizeID, String newSize) {
+        String sql = "UPDATE ProductSizes SET Size = ? WHERE ProductID = ? AND SizeID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, newSize);
+            ps.setInt(2, productID);
+            ps.setInt(3, sizeID); // Dùng sizeID thay vì size
             ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addProductSpecifications(int productID, String key, String value) {
+        String sql = "INSERT INTO Specifications (ProductID, [Key], [Value]) VALUES (?, ?, ?)";
+        try {
+            connection.setAutoCommit(false);
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productID);
+            ps.setString(2, key);
+            ps.setString(3, value);
+            // Sử dụng executeUpdate thay vì executeQuery
+            int rowsAffected = ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -688,11 +757,8 @@ public class ProductsDAO extends DBContext {
                     product.setDescription(rs.getString("Description"));
                     product.setBrand(rs.getString("Brand"));
 
-                    Category category = new Category();
-                    category.setCategoryID(rs.getInt("CategoryID"));
-
                     // Gán category vào product
-                    product.setCategory(category);
+                    product.setCategory(getCategoryByID(rs.getInt("CategoryID")));
 
                     product.setPrice(rs.getBigDecimal("Price"));
                     product.setDiscountProduct(rs.getBigDecimal("DiscountPercent"));
@@ -772,6 +838,41 @@ public class ProductsDAO extends DBContext {
             e.printStackTrace();
         }
         return specifications;
+    }
+
+    public Specifications getSpecificationsByProductIdAndKey(int productId, String key) {
+        String sql = "SELECT * FROM Specifications WHERE ProductID = ? AND [Key] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productId);
+            ps.setString(2, key);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                // Tạo đối tượng Specifications từ dữ liệu truy vấn
+                Specifications specification = new Specifications();
+                specification.setSpecificationID(rs.getInt("SpecificationID"));
+                specification.setProduct(getProductById(rs.getInt("ProductID")));
+                specification.setKey(rs.getString("Key"));
+                specification.setValue(rs.getString("Value"));
+                return specification; // Trả về đối tượng Specifications đã lấy được
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // Trả về null nếu không tìm thấy
+    }
+
+    public void updateSpecifications(int productId, String specKey, String specValue) {
+        String sql = "UPDATE Specifications SET Value = ? WHERE ProductID = ? AND [Key] = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, specValue);
+            ps.setInt(2, productId);
+            ps.setString(3, specKey);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public Category getCategoryByID(int id) {
@@ -887,6 +988,31 @@ public class ProductsDAO extends DBContext {
         return productSizes;
     }
 
+//    public ArrayList<ProductSizes> getSizesByProductId(int productId) {
+//        ArrayList<ProductSizes> productSizes = new ArrayList<>();
+//        String sql = "SELECT Size FROM ProductSizes WHERE ProductID = ?";
+//
+//        try {
+//            PreparedStatement ps = connection.prepareStatement(sql);
+//            ps.setInt(1, productId);
+//            ResultSet rs = ps.executeQuery();
+//
+//            // Lấy thông tin sản phẩm một lần để tránh truy vấn dư thừa
+//            Products product = getProductById(productId);
+//
+//            while (rs.next()) {
+//                String size = rs.getString("Size");
+//                ProductSizes psObj = new ProductSizes(product, size);
+//                productSizes.add(psObj);
+//            }
+//
+//            rs.close();
+//            ps.close();
+//        } catch (SQLException e) {
+//            System.out.println("Error: " + e.getMessage());
+//        }
+//        return productSizes;
+//    }
     public ProductSizes getProductSizeByID(int sizeID) {
 
         String sql = "SELECT [SizeID], [ProductID], [Size], [StockQuantity] "
@@ -1110,6 +1236,16 @@ public class ProductsDAO extends DBContext {
         return importID;
     }
 
+    public void deleteProductSize(int sizeID) {
+        String sql = "DELETE FROM ProductSizes WHERE SizeID = ?";
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, sizeID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public ProductSizes getSize(int productID, String size) {
         String sql = "SELECT * FROM ProductSizes WHERE ProductID = ? AND Size = ?";
 
@@ -1186,6 +1322,16 @@ public class ProductsDAO extends DBContext {
         } catch (Exception e) {
         }
         return importedDetailList;
+    }
+
+    public void deleteProductSpecification(int specID) throws SQLException {
+        String sql = "DELETE FROM Specifications WHERE SpecificationID = ?";
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, specID);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void insertProductFromExcel(int importID, String[] productIDs,
@@ -1523,17 +1669,16 @@ public class ProductsDAO extends DBContext {
         return productList;
     }
 
-   public boolean updateStockQuantity(int productID, int newQuantity) {
-    String sql = "UPDATE Products SET StockQuantity = ? WHERE ProductID = ?";
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setInt(1, newQuantity);
-        ps.setInt(2, productID);
-        return ps.executeUpdate() > 0;
-    } catch (SQLException e) {
-        e.printStackTrace();
+    public boolean updateStockQuantity(int productID, int newQuantity) {
+        String sql = "UPDATE Products SET StockQuantity = ? WHERE ProductID = ?";
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, newQuantity);
+            ps.setInt(2, productID);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
-    return false;
-}
-
 
 }

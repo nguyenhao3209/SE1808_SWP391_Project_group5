@@ -84,6 +84,9 @@
                             </div>
                             <div class="widget-inner">
                                 <form class="addProduct m-b30" method="POST" action="addProduct" enctype="multipart/form-data">
+                                    <div class="col-sm-10 ml-auto">
+                                        <h4>1. Product Information</h4>
+                                    </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Product Name</label>
                                         <div class="col-sm-7">
@@ -97,12 +100,6 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Stock Quantity</label>
-                                        <div class="col-sm-7">
-                                            <input class="form-control" type="number" name="stockQuantity" required min="0">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Brand</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="text" name="brand" required>
@@ -111,7 +108,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Category</label>
                                         <div class="col-sm-7">
-                                            <select class="form-control" name="categoryID" required>
+                                            <select class="form-control" name="categoryID" required id="categorySelect" onchange="toggleSizeInputs()">
                                                 <option value="">Select Category</option>
                                                 <option value="1">Racket</option>
                                                 <option value="2">Shoes</option>
@@ -119,6 +116,25 @@
                                                 <option value="4">Bag</option>
                                                 <option value="5">Accessory</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <!-- Size Selection (Chỉ hiển thị nếu category != Accessory) -->
+                                    <div id="sizeInputs" style="display: none;">
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Sizes</label>
+                                            <div class="col-sm-7">
+                                                <div id="sizeContainer">
+                                                    <div class="row size-entry">
+                                                        <div class="col-sm-10">
+                                                            <input class="form-control" type="text" name="sizes[]" placeholder="Enter size">
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <button type="button" class="btn btn-danger" onclick="removeSize(this)">X</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-primary mt-2" onclick="addSize()">+ Add Size</button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -139,10 +155,32 @@
                                             <input class="form-control" type="file" name="imageFile" accept="image/*" required>
                                         </div>
                                     </div>
+                                    <div class="col-sm-10 ml-auto">
+                                        <h4>2. Specifications</h4>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Specifications</label>
+                                        <div class="col-sm-7">
+                                            <div id="specificationsContainer">
+                                                <div class="row spec-entry">
+                                                    <div class="col-sm-5">
+                                                        <input class="form-control" type="text" name="specNames[]" placeholder="Specification Name" required>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <input class="form-control" type="text" name="specValues[]" placeholder="Specification Value" required>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <button type="button" class="btn btn-danger" onclick="removeSpecification(this)">X</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="btn btn-primary mt-2" onclick="addSpecification()">+ Add Specification</button>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col-sm-2"></div>
                                         <div class="col-sm-7">
-                                            <button type="submit" class="btn" >Add Product</button>
+                                            <button type="submit" class="btn">Add Product</button>
                                             <button type="reset" class="btn-secondry" onclick="window.history.back()">Cancel</button>
                                         </div>
                                     </div>
@@ -153,6 +191,61 @@
                 </div>
             </div>
         </main>
+
+        <script>
+            function toggleSizeInputs() {
+                var category = document.getElementById("categorySelect").value;
+                var sizeInputs = document.getElementById("sizeInputs");
+
+                sizeInputs.style.display = (category !== "1" && category !== "5" && category !== "") ? "block" : "none";
+            }
+
+            function addSize() {
+                var container = document.getElementById("sizeContainer");
+
+                var newEntry = document.createElement("div");
+                newEntry.classList.add("row", "size-entry", "mt-2");
+
+                newEntry.innerHTML = `
+            <div class="col-sm-10">
+                <input class="form-control" type="text" name="sizes[]" placeholder="Enter size" required>
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-danger" onclick="removeEntry(this)">X</button>
+            </div>
+        `;
+
+                container.appendChild(newEntry);
+            }
+
+            function addSpecification() {
+                var container = document.getElementById("specificationsContainer");
+
+                var newEntry = document.createElement("div");
+                newEntry.classList.add("row", "spec-entry", "mt-2");
+
+                newEntry.innerHTML = `
+            <div class="col-sm-5">
+                <input class="form-control" type="text" name="specNames[]" placeholder="Specification Name" required>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" type="text" name="specValues[]" placeholder="Specification Value" required>
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-danger" onclick="removeEntry(this)">X</button>
+            </div>
+        `;
+
+                container.appendChild(newEntry);
+            }
+
+            function removeEntry(button) {
+                var entry = button.closest(".row");
+                if (entry) {
+                    entry.remove();
+                }
+            }
+        </script>
 
         <div class="ttr-overlay"></div>
 

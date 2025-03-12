@@ -1,6 +1,7 @@
 package Controller;
 
 import Models.News;
+import Models.Staffs;
 import dal.NewsDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -8,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.io.File;
@@ -30,12 +32,20 @@ public class AddNewsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("addNews.jsp").forward(request, response);
+        request.getRequestDispatcher("admin/addNews.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String staffID = request.getParameter("staffID");
+        HttpSession session = request.getSession();
+        Staffs staff = (Staffs) session.getAttribute("user");
+
+        if (staff == null) {
+            response.sendRedirect("login"); // Chuyển hướng đến trang đăng nhập nếu không có thông tin staff
+            return;
+        }
+
+        String staffID = staff.getStaffID(); // Lấy StaffID từ session
         String author = request.getParameter("author");
         String title = request.getParameter("title");
         String content = request.getParameter("content");
@@ -53,7 +63,7 @@ public class AddNewsServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Error adding news");
-            request.getRequestDispatcher("addNews.jsp").forward(request, response);
+            request.getRequestDispatcher("admin/addNews.jsp").forward(request, response);
         }
     }
 

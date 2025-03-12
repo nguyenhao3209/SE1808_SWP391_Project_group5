@@ -102,6 +102,12 @@ public class AddStaff extends HttpServlet {
             request.getRequestDispatcher("addStaff.jsp").forward(request, response);
             return;
         }
+        // Kiểm tra số điện thoại hợp lệ
+        if (!isValidPhone(phone)) {
+            request.setAttribute("errorMessage", "Invalid phone number! Phone must start with 0 and have 10 digits.");
+            request.getRequestDispatcher("addStaff.jsp").forward(request, response);
+            return;
+        }
 
         StaffsDAO staffDAO = new StaffsDAO();
 
@@ -129,6 +135,10 @@ public class AddStaff extends HttpServlet {
         staffDAO.addStaff(staff);
 
         response.sendRedirect("listStaffs");
+    }
+
+    private boolean isValidPhone(String phone) {
+        return phone != null && phone.matches("0\\d{9}");
     }
 
     /**

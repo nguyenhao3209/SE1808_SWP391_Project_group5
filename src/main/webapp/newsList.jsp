@@ -206,7 +206,7 @@
     <body>
         <jsp:include page="./common/header.jsp"/>
         <div class="container news-list">
-            <h1 class="text-center">Sports News</h1>
+            <h1 class="text-center">Sports ARTICLES</h1>
             <div class="news-grid">
                 <c:if test="${not empty sessionScope.newsList}">
                     <c:forEach var="news" items="${sessionScope.newsList}" varStatus="loop">
@@ -241,7 +241,7 @@
             // Pagination Script
             document.addEventListener("DOMContentLoaded", function () {
                 const newsCards = document.querySelectorAll('.news-card');
-                const itemsPerPage = 6; // Đã thay đổi từ 9 thành 6
+                const itemsPerPage = 6; 
                 const totalPages = Math.ceil(newsCards.length / itemsPerPage);
                 const paginationContainer = document.getElementById('pagination');
 
