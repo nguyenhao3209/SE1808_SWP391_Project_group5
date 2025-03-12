@@ -85,7 +85,6 @@
                         </ul>
                     </li>
                 </c:if>
-                <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                     <li>
                         <a href="" class="ttr-material-button">
                             <span class="ttr-icon"><i class="ti-package"></i></span>
@@ -181,7 +180,6 @@
                     </li>
 
                     <li class="ttr-seperate"></li>
-                    </c:if>
             </ul>
             <!-- sidebar menu end -->
         </nav>

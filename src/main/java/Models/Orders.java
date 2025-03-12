@@ -73,6 +73,13 @@ public class Orders {
         this.paymentMethod = paymentMethod;
         this.totalPrice = totalPrice;
     }
+    public Orders(Customers customer, Staffs staff, String status, String paymentMethod, BigDecimal totalPrice) {
+        this.customer = customer;
+        this.staff = staff;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
+        this.totalPrice = totalPrice;
+    }
 
     public Orders(int orderID, String status) {
         this.orderID = orderID;
