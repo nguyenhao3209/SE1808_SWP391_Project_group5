@@ -4,6 +4,7 @@
  */
 package Controller;
 
+import Models.Customers;
 import Models.News;
 import Models.Slider;
 import Models.Staffs;
@@ -24,7 +25,7 @@ import java.util.List;
  * @author Haontce180451
  */
 public class HomeServlet extends HttpServlet {
-    
+
     private NewsDAO newsDAO;
 
     /**
@@ -69,9 +70,11 @@ public class HomeServlet extends HttpServlet {
             newsDAO = new NewsDAO();
             HttpSession session = request.getSession();
             ProductsDAO productDAO = new ProductsDAO();
-            Staffs staff = (Staffs) session.getAttribute("user");
-            if (staff != null) {
+            Object user = session.getAttribute("user");
+
+            if (user instanceof Staffs) {
                 session.removeAttribute("user");
+                // Xử lý logic cho nhân viên
             }
             // Lấy danh sách slider
             ArrayList<Slider> slide = productDAO.getAllSliders();
@@ -87,7 +90,7 @@ public class HomeServlet extends HttpServlet {
             }
             saleList = productDAO.getTop8();
             ArrayList<News> newsList = newsDAO.getNewsList();
-            
+
             session.setAttribute("newsList", newsList);
             session.setAttribute("saleList", saleList);
             session.setAttribute("check_click_category", categoryID); // Lưu trạng thái danh mục đã chọn
