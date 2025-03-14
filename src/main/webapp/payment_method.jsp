@@ -17,7 +17,7 @@
 
         <!-- TYPOGRAPHY ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/typography.css">
-
+        <link rel="shortcut icon" type="image/x-icon" href="img/iconHome.webp" />
         <!-- SHORTCODES ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/shortcodes/shortcodes.css">
 

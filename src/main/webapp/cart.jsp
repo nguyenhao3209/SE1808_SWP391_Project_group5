@@ -26,7 +26,7 @@
 
         <!-- TYPOGRAPHY ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/typography.css">
-
+        <link rel="shortcut icon" type="image/x-icon" href="img/iconHome.webp" />
         <!-- SHORTCODES ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/shortcodes/shortcodes.css">
 
@@ -249,7 +249,7 @@
                 return confirm(`Are you sure you want to remove "` + productName + `" from your cart?`);
             }
         </script>
-         <script src="js/jquery-1.11.0.min.js"></script>
+        <script src="js/jquery-1.11.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>

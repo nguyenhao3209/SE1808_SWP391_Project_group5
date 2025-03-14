@@ -14,14 +14,14 @@
         <title>Edit Profile</title>
         <!-- Th? vi?n Font Awesome ?? s? d?ng c?c icon -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        
-        
-               	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 
-       <link rel="stylesheet" type="text/css" href="css/normalize.css">
-	<link rel="stylesheet" type="text/css" href="icomoon/icomoon.css">
-	<link rel="stylesheet" type="text/css" href="css/vendor.css">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+        <link rel="shortcut icon" type="image/x-icon" href="img/iconHome.webp" />
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="icomoon/icomoon.css">
+        <link rel="stylesheet" type="text/css" href="css/vendor.css">
         <link rel="stylesheet" type="text/css" href="style.css"><!-- comment -->
         <style>
 
@@ -33,7 +33,7 @@
                 border-radius: 15px;
                 box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
                 transition: all 0.3s ease-in-out;
-                margin-top: 50px;  
+                margin-top: 50px;
             }
 
             .container.edit-profile:hover {
@@ -85,7 +85,7 @@
                 border-radius: 50%;
                 object-fit: cover;
                 border: 4px solid #ff7f50;
-               box-shadow: 0 4px 10px rgba(255, 127, 80, 0.3);
+                box-shadow: 0 4px 10px rgba(255, 127, 80, 0.3);
             }
 
             button[type="submit"], button[type="button"] {
@@ -101,7 +101,7 @@
                 cursor: pointer;
                 margin-top: 10px;
                 transition: all 0.3s ease;
-               box-shadow: 0 4px 10px rgba(255, 127, 80, 0.3);
+                box-shadow: 0 4px 10px rgba(255, 127, 80, 0.3);
             }
 
             button[type="submit"]:hover, button[type="button"]:hover {
@@ -152,7 +152,7 @@
                     <label for="email">Email</label>
                     <input type="email" name="email" value="${sessionScope.user.email}" readonly="">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="gender">Gender</label>
                     <select name="gender" class="form-control">
@@ -183,11 +183,11 @@
             </form>
 
             <!-- N?t quay v? trang ch? -->
-<!--            <form action="home.jsp" method="get">
-                <button type="button" onclick="location.href = 'home.jsp'">Back to Home</button>
-            </form>-->
+            <!--            <form action="home.jsp" method="get">
+                            <button type="button" onclick="location.href = 'home.jsp'">Back to Home</button>
+                        </form>-->
         </div>
-                <jsp:include page="common/footer.jsp"/>
+        <jsp:include page="common/footer.jsp"/>
         <script>
             // Hi?n th? preview ?nh ngay sau khi ng??i d?ng ch?n file
             function previewAvatar(event) {

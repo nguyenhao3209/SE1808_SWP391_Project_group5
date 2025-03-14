@@ -5,6 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<header>
+    <title>SEEW BADMINTON SHOP</title>
+</header>
 <header class="ttr-header">
     <div class="ttr-header-wrapper">
         <!--sidebar menu toggler start -->
@@ -29,16 +32,6 @@
                 <li>
                     <a href="home" class="ttr-material-button ttr-submenu-toggle">HOME</a>
                 </li>
-<!--                <li>
-                    <a href="#" class="ttr-material-button ttr-submenu-toggle">QUICK MENU <i class="fa fa-angle-down"></i></a>
-                    <div class="ttr-header-submenu">
-                        <ul>
-                            <li><a href="../courses.html">Our Courses</a></li>
-                            <li><a href="../event.html">New Event</a></li>
-                            <li><a href="../membership.html">Membership</a></li>
-                        </ul>
-                    </div>
-                </li>-->
             </ul>
             <!-- header left menu end -->
         </div>

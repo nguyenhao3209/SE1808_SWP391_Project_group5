@@ -19,10 +19,10 @@
         <meta name="format-detection" content="telephone=no">
 
         <!-- FAVICONS ICON ============================================= -->
-        <link rel="shortcut icon" type="image/x-icon" href="admin/assets/images/favicon.png" />
+        <link rel="shortcut icon" type="image/x-icon" href="img/iconAdmin.webp" />
 
         <!-- PAGE TITLE HERE ============================================= -->
-        <title>EduChamp : Category Form</title>
+        <title>Category Form</title>
 
         <!-- MOBILE SPECIFIC ============================================= -->
         <meta name="viewport" content="width=device-width, initial-scale=1">

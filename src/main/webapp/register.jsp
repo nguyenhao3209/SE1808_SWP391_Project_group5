@@ -24,7 +24,7 @@
         <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
         <!-- FAVICONS ICON ============================================= -->
         <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
-        <link rel="shortcut icon" type="image/x-icon" href="img/bg1" />
+        <link rel="shortcut icon" type="image/x-icon" href="img/iconHome.webp" />
 
         <!-- PAGE TITLE HERE ============================================= -->
         <title>G6 : Badminton Sales </title>
@@ -150,7 +150,7 @@
                                 <div class="col-lg-12">
                                     <h6>Sign Up with Social media</h6>
                                     <div class="d-flex">
-                                       <a class="btn flex-fill m-r5 google-plus" href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile%20openid&redirect_uri=<%= Constants.GOOGLE_REDIRECT_URI%>&response_type=code&client_id=<%= Constants.GOOGLE_CLIENT_ID%>&approval_prompt=force"><i class="fa fa-google-plus"></i>Google Plus</a>
+                                        <a class="btn flex-fill m-r5 google-plus" href="https://accounts.google.com/o/oauth2/auth?scope=email%20profile%20openid&redirect_uri=<%= Constants.GOOGLE_REDIRECT_URI%>&response_type=code&client_id=<%= Constants.GOOGLE_CLIENT_ID%>&approval_prompt=force"><i class="fa fa-google-plus"></i>Google Plus</a>
                                         <a class="btn flex-fill m-l5 facebook" href="https://www.facebook.com/v19.0/dialog/oauth?fields=id,name,email&client_id=<%= Constants.FACEBOOK_CLIENT_ID%>&redirect_uri=<%= Constants.FACEBOOK_REDIRECT_URI%>&auth_type=rerequest&scope=email"><i class="fa fa-facebook"></i>Facebook</a>
                                     </div>
                                 </div>

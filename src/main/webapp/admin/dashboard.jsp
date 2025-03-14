@@ -1,5 +1,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,28 +15,16 @@
         <meta name="author" content="" />
         <meta name="robots" content="" />
         <!-- DESCRIPTION -->
-        <meta name="description" content="EduChamp : Education HTML Template" />
-
-        <!-- OG -->
-        <meta property="og:title" content="EduChamp : Education HTML Template" />
-        <meta property="og:description" content="EduChamp : Education HTML Template" />
-        <meta property="og:image" content="" />
-        <meta name="format-detection" content="telephone=no">
 
         <!-- FAVICONS ICON ============================================= -->
         <link rel="icon" href="../error-404.html" type="image/x-icon" />
-        <link rel="shortcut icon" type="image/x-icon" href="admin/assets/images/favicon.png" />
+        <link rel="shortcut icon" type="image/x-icon" href="img/iconAdmin.webp" />
 
         <!-- PAGE TITLE HERE ============================================= -->
-        <title>EduChamp : Education HTML Template </title>
+
 
         <!-- MOBILE SPECIFIC ============================================= -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <!--[if lt IE 9]>
-        <script src="admin/assets/js/html5shiv.min.js"></script>
-        <script src="admin/assets/js/respond.min.js"></script>
-        <![endif]-->
 
         <!-- All PLUGINS CSS ============================================= -->
         <link rel="stylesheet" type="text/css" href="admin/assets/css/assets.css">
@@ -83,108 +73,67 @@
                                         All Customs Value
                                     </span>
                                     <span class="wc-stats">
-                                        $<span class="counter">18</span>M 
-                                    </span>		
-                                    <div class="progress wc-progress">
-                                        <div class="progress-bar" role="progressbar" style="width: 78%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <span class="wc-progress-bx">
-                                        <span class="wc-change">
-                                            Change
-                                        </span>
-                                        <span class="wc-number ml-auto">
-                                            78%
-                                        </span>
+                                        $<span class="counter">
+                                        <fmt:formatNumber value="${totalProfit}" pattern="###,##0.00"/>
                                     </span>
-                                </div>				      
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-3 col-xl-3 col-sm-6 col-12">
-                            <div class="widget-card widget-bg2">					 
-                                <div class="wc-item">
-                                    <h4 class="wc-title">
-                                        New Feedbacks
-                                    </h4>
-                                    <span class="wc-des">
-                                        Customer Review
-                                    </span>
-                                    <span class="wc-stats counter">
-                                        120 
-                                    </span>		
-                                    <div class="progress wc-progress">
-                                        <div class="progress-bar" role="progressbar" style="width: 88%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <span class="wc-progress-bx">
-                                        <span class="wc-change">
-                                            Change
-                                        </span>
-                                        <span class="wc-number ml-auto">
-                                            88%
-                                        </span>
-                                    </span>
-                                </div>				      
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-3 col-xl-3 col-sm-6 col-12">
-                            <div class="widget-card widget-bg3">					 
-                                <div class="wc-item">
-                                    <h4 class="wc-title">
-                                        New Orders 
-                                    </h4>
-                                    <span class="wc-des">
-                                        Fresh Order Amount 
-                                    </span>
-                                    <span class="wc-stats counter">
-                                        772 
-                                    </span>		
-                                    <div class="progress wc-progress">
-                                        <div class="progress-bar" role="progressbar" style="width: 65%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <span class="wc-progress-bx">
-                                        <span class="wc-change">
-                                            Change
-                                        </span>
-                                        <span class="wc-number ml-auto">
-                                            65%
-                                        </span>
-                                    </span>
-                                </div>				      
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-3 col-xl-3 col-sm-6 col-12">
-                            <div class="widget-card widget-bg4">					 
-                                <div class="wc-item">
-                                    <h4 class="wc-title">
-                                        New Users 
-                                    </h4>
-                                    <span class="wc-des">
-                                        Joined New User
-                                    </span>
-                                    <span class="wc-stats counter">
-                                        350 
-                                    </span>		
-                                    <div class="progress wc-progress">
-                                        <div class="progress-bar" role="progressbar" style="width: 90%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <span class="wc-progress-bx">
-                                        <span class="wc-change">
-                                            Change
-                                        </span>
-                                        <span class="wc-number ml-auto">
-                                            90%
-                                        </span>
-                                    </span>
-                                </div>				      
-                            </div>
+                                </span>
+
+                            </div>				      
                         </div>
                     </div>
-                    <!-- Card END -->
-                    <div class="row">
-                        <!-- Your Profile Views Chart -->
-                        <div class="col-lg-8 m-b30">
-                            <div class="widget-box">
-                                <div class="wc-title" style="display: flex; align-items: center">
-                                    <h4 style="margin-right: 16px; width: 200px">Revenue ${yearSelect}</h4>
+                    <div class="col-md-6 col-lg-3 col-xl-3 col-sm-6 col-12">
+                        <div class="widget-card widget-bg2">					 
+                            <div class="wc-item">
+                                <h4 class="wc-title">
+                                    New Feedbacks
+                                </h4>
+                                <span class="wc-des">
+                                    Customer Review
+                                </span>
+                                <span class="wc-stats counter">
+                                    ${totalFeedbacksInMonth}
+                                </span>
+                            </div>				      
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-xl-3 col-sm-6 col-12">
+                        <div class="widget-card widget-bg3">					 
+                            <div class="wc-item">
+                                <h4 class="wc-title">
+                                    New Orders 
+                                </h4>
+                                <span class="wc-des">
+                                    Fresh Order Amount 
+                                </span>
+                                <span class="wc-stats counter">
+                                    ${totalOrdersInMonth}
+                                </span>	
+                            </div>				      
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-xl-3 col-sm-6 col-12">
+                        <div class="widget-card widget-bg4">					 
+                            <div class="wc-item">
+                                <h4 class="wc-title">
+                                    Total Users 
+                                </h4>
+                                <span class="wc-des">
+                                    Sign account
+                                </span>
+                                <span class="wc-stats counter">
+                                    ${totalCustomers}
+                                </span>
+                            </div>				      
+                        </div>
+                    </div>
+                </div>
+                <!-- Card END -->
+                <div class="row">
+                    <!-- Your Profile Views Chart -->
+                    <div class="col-lg-8 m-b30">
+                        <div class="widget-box">
+                            <div class="wc-title" style="display: flex; align-items: center">
+                                <h4 style="margin-right: 16px; width: 200px">Revenue ${yearSelect}</h4>
                                 <select class="form-control" id="yearSelect" onchange="changeYear(this)">
                                     <c:forEach items="${years}" var="o">
                                         <option value="${o}" ${yearSelect == o ? 'selected' : ''}>${o}</option>

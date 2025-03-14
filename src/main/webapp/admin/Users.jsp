@@ -10,27 +10,11 @@
         <link rel="stylesheet" href="assets/css/style.css"> <!-- Thay thế CSS của template -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
         <!-- META ============================================= -->
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="keywords" content="" />
-        <meta name="author" content="" />
-        <meta name="robots" content="" />
-        <base href="${pageContext.request.contextPath}/">
-        <!-- DESCRIPTION -->
-        <meta name="description" content="EduChamp : Education HTML Template" />
-
-        <!-- OG -->
-        <meta property="og:title" content="EduChamp : Education HTML Template" />
-        <meta property="og:description" content="EduChamp : Education HTML Template" />
-        <meta property="og:image" content="" />
-        <meta name="format-detection" content="telephone=no">
 
         <!-- FAVICONS ICON ============================================= -->
         <link rel="icon" href="../error-404.html" type="image/x-icon" />
-        <link rel="shortcut icon" type="image/x-icon" href="admin/assets/images/favicon.png" />
+        <link rel="shortcut icon" type="image/x-icon" href="img/iconAdmin.webp" />
 
-        <!-- PAGE TITLE HERE ============================================= -->
-        <title>EduChamp : Education HTML Template </title>
 
         <!-- MOBILE SPECIFIC ============================================= -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -125,13 +109,13 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="orderDetailModalLabel">Customers Management</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="window.location.href='admin'"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="window.location.href = 'admin'"></button>
                             </div>
                             <div class="modal-body" id="orderDetailModalBody">
                                 <!-- Nội dung Order Details sẽ được load vào đây -->
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="window.location.href='admin'">Close</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="window.location.href = 'admin'">Close</button>
 
                             </div>
                         </div>

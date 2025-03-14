@@ -24,18 +24,18 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author HAO
  */
-public class AutificationFilter implements Filter {
-
+public class Authentication implements Filter {
+    
     private static final boolean debug = true;
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
     // configured. 
     private FilterConfig filterConfig = null;
-
-    public AutificationFilter() {
+    
+    public Authentication() {
     }
-
+    
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
@@ -63,7 +63,7 @@ public class AutificationFilter implements Filter {
 	}
          */
     }
-
+    
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
@@ -113,7 +113,10 @@ public class AutificationFilter implements Filter {
             "addProduct", "editProduct", "deleteProduct", "dashboard", "CustomerProfile",
             "CustomerOrders", "contact-list", "contact-detail", "CustomerOrders",
             "listProducts", "OrderDetailServlet", "OrdersServlet", "add-news", "news-management", "update-news", "delete-news", "profileStaff.jsp"};
-
+        if (uri.contains("img") || uri.contains("css") || uri.contains("common") || uri.contains("icomoon") || uri.contains("js") || uri.contains("resources") || uri.contains("assets")) {
+            chain.doFilter(request, response);
+            return;
+        }
         // Nếu người dùng chưa đăng nhập
         if (user == null) {
             // Nếu yêu cầu truy cập trang không phải là trang đăng nhập, đăng ký, hoặc trang chủ
@@ -148,6 +151,7 @@ public class AutificationFilter implements Filter {
         // Nếu tất cả kiểm tra đều hợp lệ, tiếp tục xử lý yêu cầu
         chain.doFilter(request, response);
     }
+
     /**
      * Return the filter configuration object for this filter.
      */
@@ -195,10 +199,10 @@ public class AutificationFilter implements Filter {
         sb.append(")");
         return (sb.toString());
     }
-
+    
     private void sendProcessingError(Throwable t, ServletResponse response) {
         String stackTrace = getStackTrace(t);
-
+        
         if (stackTrace != null && !stackTrace.equals("")) {
             try {
                 response.setContentType("text/html");
@@ -225,7 +229,7 @@ public class AutificationFilter implements Filter {
             }
         }
     }
-
+    
     public static String getStackTrace(Throwable t) {
         String stackTrace = null;
         try {
@@ -239,9 +243,9 @@ public class AutificationFilter implements Filter {
         }
         return stackTrace;
     }
-
+    
     public void log(String msg) {
         filterConfig.getServletContext().log(msg);
     }
-
+    
 }

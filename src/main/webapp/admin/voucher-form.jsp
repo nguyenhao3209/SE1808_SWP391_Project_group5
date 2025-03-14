@@ -13,7 +13,7 @@
         <base href="${pageContext.request.contextPath}/">
         <!-- DESCRIPTION -->
         <meta name="description" content="EduChamp : Education HTML Template" />
-
+        <link rel="shortcut icon" type="image/x-icon" href="img/iconAdmin.webp" />
         <!-- PAGE TITLE HERE ============================================= -->
         <title>
             <c:choose>

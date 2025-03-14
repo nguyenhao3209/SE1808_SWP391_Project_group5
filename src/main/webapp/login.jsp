@@ -24,7 +24,7 @@
         <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
         <!-- FAVICONS ICON ============================================= -->
         <link rel="icon" href="img/bg" type="image/x-icon" />
-        <link rel="shortcut icon" type="image/x-icon" href="img/bg" />
+        <link rel="shortcut icon" type="image/x-icon" href="img/iconHome.webp" />
 
         <!-- PAGE TITLE HERE ============================================= -->
         <title>G6 : Badminton Sales </title>

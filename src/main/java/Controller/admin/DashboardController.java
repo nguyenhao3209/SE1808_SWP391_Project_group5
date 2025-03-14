@@ -7,19 +7,15 @@ package Controller.admin;
 import dal.OrdersDAO;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  *
@@ -56,7 +52,10 @@ public class DashboardController extends HttpServlet {
         }
         request.setAttribute("years", years);
         request.setAttribute("yearSelect", yearSelectInt);
-
+        request.setAttribute("totalProfit", odao.getTotalProfit());
+        request.setAttribute("totalFeedbacksInMonth", odao.getTotalFeedbackInMonth());
+        request.setAttribute("totalOrdersInMonth", odao.getTotalOrdersInMonth());
+        request.setAttribute("totalCustomers", odao.getTotalCustomers());
         List<Integer> numberOfOrdersList = odao.getMonthlyOrderCountByYear(yearSelectInt);
         request.setAttribute("numberOfOrdersList", numberOfOrdersList);
         List<Map<String, Object>> topStaffs = odao.getTop10StaffByOrderCount(yearSelectInt);
