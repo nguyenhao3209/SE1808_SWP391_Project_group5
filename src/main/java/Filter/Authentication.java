@@ -112,7 +112,7 @@ public class Authentication implements Filter {
         String[] staffURIs = {"VoucherServlet", "importStock", "CategoryServlet", "stockImport", "viewStockProducts",
             "addProduct", "editProduct", "deleteProduct", "dashboard", "CustomerProfile",
             "CustomerOrders", "contact-list", "contact-detail", "CustomerOrders",
-            "listProducts", "OrderDetailServlet", "OrdersServlet", "add-news", "news-management", "update-news", "delete-news", "profileStaff.jsp"};
+            "listProducts", "OrdersServlet", "add-news", "news-management", "update-news", "delete-news", "profileStaff.jsp"};
         if (uri.contains("img") || uri.contains("css") || uri.contains("common") || uri.contains("icomoon") || uri.contains("js") || uri.contains("resources") || uri.contains("assets")) {
             chain.doFilter(request, response);
             return;

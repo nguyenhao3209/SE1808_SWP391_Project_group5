@@ -151,11 +151,7 @@
         <!-- Include header nếu cần -->
         <jsp:include page="common/header.jsp"/>
 
-        <div class="container mt-5">
-            <!-- Nếu cartList rỗng -->
-            <c:if test="${empty sessionScope.cartList}">
-                <p style="color:red;">Cart is empty</p>
-            </c:if>
+        <div style="margin-top: 120px;" class="container">
 
             <!-- HIỂN THỊ LỖI (NẾU CÓ) -->
             <c:if test="${not empty error}">

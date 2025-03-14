@@ -28,8 +28,8 @@
 
 </head>
 <style>  .user-avatar{
-        width: 50px;
-        height: 50px;
+        width: 45px;
+        height: 45px;
         border-radius: 25px;
     } </style>
 <div id="header-wrap">

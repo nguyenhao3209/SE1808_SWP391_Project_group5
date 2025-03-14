@@ -135,7 +135,7 @@
 
     <body>
         <jsp:include page="common/header.jsp"/>
-        <div class="container edit-profile">
+        <div style="margin-top: 120px;" class="container edit-profile">
             <!-- Hi?n th? th?ng b?o n?u profile ???c c?p nh?t th?nh c?ng -->
             <c:if test="${not empty sessionScope.successMessage}">
                 <p class="success-message">${sessionScope.successMessage}</p>
@@ -335,24 +335,12 @@
 
 
         </script>
-        <script src="admin/assets/js/jquery.min.js"></script>
-        <script src="admin/assets/vendors/bootstrap/js/popper.min.js"></script>
-        <script src="admin/assets/vendors/bootstrap/js/bootstrap.min.js"></script>
-        <script src="admin/assets/vendors/bootstrap-touchspin/jquery.bootstrap-touchspin.js"></script>
-        <script src="admin/assets/vendors/magnific-popup/magnific-popup.js"></script>
-        <script src="admin/assets/vendors/counter/waypoints-min.js"></script>
-        <script src="admin/assets/vendors/counter/counterup.min.js"></script>
-        <script src="admin/assets/vendors/imagesloaded/imagesloaded.js"></script>
-        <script src="admin/assets/vendors/masonry/masonry.js"></script>
-        <script src="admin/assets/vendors/masonry/filter.js"></script>
-        <script src="admin/assets/vendors/owl-carousel/owl.carousel.js"></script>
-        <script src="admin/assets/vendors/scroll/scrollbar.min.js"></script>
-        <script src="admin/assets/js/functions.js"></script>
-        <script src="admin/assets/vendors/chart/chart.min.js"></script>
-        <script src="admin/assets/js/admin.js"></script>
-        <script src="admin/assets/vendors/calendar/moment.min.js"></script>
-        <script src="admin/assets/vendors/calendar/fullcalendar.js"></script>
-        <script src="admin/assets/vendors/switcher/switcher.js"></script>
+         <script src="js/jquery-1.11.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/script.js"></script>
     </body>
 </html>
 

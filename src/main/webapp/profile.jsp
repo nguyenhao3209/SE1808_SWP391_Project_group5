@@ -134,7 +134,7 @@
 
     <body>
         <jsp:include page="common/header.jsp"/>
-        <div class="container edit-profile mt-5">
+        <div style="margin-top: 120px;" class="container edit-profile">
             <!-- Hi?n th? th?ng b?o n?u profile ???c c?p nh?t th?nh c?ng -->
             <c:if test="${not empty sessionScope.successMessage}">
                 <p class="success-message">${sessionScope.successMessage}</p>

@@ -112,7 +112,7 @@
     </head>
     <body>
         <jsp:include page="common/header.jsp"/>
-        <div class="invoice-container">
+        <div style="margin-top: 120px;"  class="invoice-container">
             <!-- Header with Logo -->
             <div class="invoice-header">
                 <img src="./img/logo4.png" alt="Company Logo" width="80" height="80">

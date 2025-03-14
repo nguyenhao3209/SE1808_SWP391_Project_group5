@@ -44,7 +44,7 @@
     <body>
         <jsp:include page="./common/header.jsp"/>
 
-        <div class="container mt-5">
+        <div style="margin-top: 120px;" class="container">
             <!-- Hình ảnh sản phẩm -->
             <div class="product-gallery">
                 <div class="main-image">
