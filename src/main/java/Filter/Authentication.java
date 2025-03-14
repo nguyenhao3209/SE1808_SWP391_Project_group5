@@ -128,7 +128,7 @@ public class Authentication implements Filter {
             // Nếu là nhân viên nhưng truy cập tài nguyên của admin
             for (String adminURI : adminURIs) {
                 if (uri.contains(adminURI) && ((Staffs) user).getRole().equals("STAFF")) {
-                    res.sendRedirect("dashboard");
+                    res.sendRedirect("contact-list");
                     return;
                 }
             }

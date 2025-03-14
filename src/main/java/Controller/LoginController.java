@@ -122,6 +122,9 @@ public class LoginController extends HttpServlet {
                     if (user != null) {
                         session.setAttribute("user", user);
                         response.sendRedirect("home");
+                    } else if ("STAFF".equals(staff.getRole().toString())) {
+                        session.setAttribute("user", staff);
+                        response.sendRedirect("contact-list");
                     } else {
                         session.setAttribute("user", staff);
                         response.sendRedirect("dashboard");

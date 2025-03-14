@@ -15,21 +15,21 @@
         <!-- sidebar menu start -->
         <nav class="ttr-sidebar-navi">
             <ul>
-
-                <li>
-                    <a href="dashboard" class="ttr-material-button">
-                        <span class="ttr-icon"><i class="ti-home"></i></span>
-                        <span class="ttr-label">Dashboard</span>
-                    </a>
-                </li>
-
-
+                <c:if test="${sessionScope.user.role eq 'ADMIN'}">
+                    <li>
+                        <a href="dashboard" class="ttr-material-button">
+                            <span class="ttr-icon"><i class="ti-home"></i></span>
+                            <span class="ttr-label">Dashboard</span>
+                        </a>
+                    </li>
+                </c:if>
                 <li>
                     <a href="contact-list" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-email"></i></span>
                         <span class="ttr-label">Contact</span>
                     </a>
                 </li>
+
                 <li>
                     <a href="OrdersServlet" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-shopping-cart"></i></span>
@@ -42,21 +42,23 @@
                         <span class="ttr-label">Customers Management</span>
                     </a>
                 </li>
-                <li>
-                    <a href="#" class="ttr-material-button">
-                        <span class="ttr-icon"><i class="ti-user"></i></span>
-                        <span class="ttr-label">Staffs Management</span>
-                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
-                    </a>
-                    <ul>
-                        <li>
-                            <a href="admin/addStaff.jsp" class="ttr-material-button"><span class="ttr-label">Add Staff</span></a>
-                        </li>
-                        <li>
-                            <a href="listStaffs" class="ttr-material-button"><span class="ttr-label">Staffs List</span></a>
-                        </li>
-                    </ul>
-                </li>
+                <c:if test="${sessionScope.user.role eq 'ADMIN'}">
+                    <li>
+                        <a href="#" class="ttr-material-button">
+                            <span class="ttr-icon"><i class="ti-user"></i></span>
+                            <span class="ttr-label">Staffs Management</span>
+                            <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="admin/addStaff.jsp" class="ttr-material-button"><span class="ttr-label">Add Staff</span></a>
+                            </li>
+                            <li>
+                                <a href="listStaffs" class="ttr-material-button"><span class="ttr-label">Staffs List</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                </c:if>
                 <li>
                     <a href="" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-package"></i></span>
@@ -68,11 +70,12 @@
                             <a href="viewStockProducts" class="ttr-material-button"><span
                                     class="ttr-label">View Stock Products</span></a>
                         </li>
-
-                        <li>
-                            <a href="viewImported" class="ttr-material-button"><span
-                                    class="ttr-label">Imported Invoices</span></a>
-                        </li>
+                        <c:if test="${sessionScope.user.role eq 'ADMIN'}">
+                            <li>
+                                <a href="viewImported" class="ttr-material-button"><span
+                                        class="ttr-label">Imported Invoices</span></a>
+                            </li> 
+                        </c:if>
                         <li>
                             <a href="admin/stock_import.jsp" class="ttr-material-button"><span
                                     class="ttr-label">Inventory In.</span></a>
