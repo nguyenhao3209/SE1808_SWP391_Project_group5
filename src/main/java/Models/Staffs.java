@@ -12,7 +12,6 @@ import java.sql.Timestamp;
  */
 public class Staffs {
 
-
     private String staffID;
     private String staffName;
     private String email;
@@ -27,6 +26,7 @@ public class Staffs {
     private Status status;
     private String passwordRecoveryToken;
     private Timestamp hireDate;
+    private String citizenID;
 
     public Staffs() {
     }
@@ -54,6 +54,24 @@ public class Staffs {
         this.status = status;
         this.passwordRecoveryToken = passwordRecoveryToken;
         this.hireDate = hireDate;
+    }
+
+    public Staffs(String staffID, String staffName, String email, String avatar, Timestamp tokenExpiry, String password, String phone, String gender, String address, Role role, Staffs supervisor, Status status, String passwordRecoveryToken, Timestamp hireDate, String citizenID) {
+        this.staffID = staffID;
+        this.staffName = staffName;
+        this.email = email;
+        this.avatar = avatar;
+        this.tokenExpiry = tokenExpiry;
+        this.password = password;
+        this.phone = phone;
+        this.gender = gender;
+        this.address = address;
+        this.role = role;
+        this.supervisor = supervisor;
+        this.status = status;
+        this.passwordRecoveryToken = passwordRecoveryToken;
+        this.hireDate = hireDate;
+        this.citizenID = citizenID;
     }
 
     public String getStaffID() {
@@ -170,7 +188,15 @@ public class Staffs {
 
     @Override
     public String toString() {
-        return "Staffs{" + "staffID=" + staffID + ", staffName=" + staffName + ", email=" + email + ", avatar=" + avatar + ", tokenExpiry=" + tokenExpiry + ", password=" + password + ", phone=" + phone + ", gender=" + gender + ", address=" + address + ", role=" + role + ", supervisor=" + supervisor + ", status=" + status + ", passwordRecoveryToken=" + passwordRecoveryToken + ", hireDate=" + hireDate + '}';
+        return "Staffs{" + "staffID=" + staffID + ", staffName=" + staffName + ", email=" + email + ", avatar=" + avatar + ", tokenExpiry=" + tokenExpiry + ", password=" + password + ", phone=" + phone + ", gender=" + gender + ", address=" + address + ", role=" + role + ", supervisor=" + supervisor + ", status=" + status + ", passwordRecoveryToken=" + passwordRecoveryToken + ", hireDate=" + hireDate + ", citizenID=" + citizenID + '}';
+    }
+
+    public String getCitizenID() {
+        return citizenID;
+    }
+
+    public void setCitizenID(String citizenID) {
+        this.citizenID = citizenID;
     }
 
 }

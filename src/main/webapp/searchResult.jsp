@@ -428,7 +428,7 @@
     </head>
     <body>
         <jsp:include page="common/header.jsp"/>
-        <div class="page-content bg-white">
+        <div class="page-content bg-white mt-3">
             <div class="content-block">
                 <!-- About Us -->
                 <div class="section-area section-sp1">

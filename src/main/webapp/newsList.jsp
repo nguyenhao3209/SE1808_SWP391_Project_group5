@@ -172,32 +172,23 @@
             .pagination {
                 display: flex;
                 justify-content: center;
-                margin-top: 30px;
-                padding: 20px 0;
             }
 
             .pagination button {
-                margin: 0 8px;
-                padding: 8px 16px;
-                border: 1px solid #ddd;
-                background-color: #fff;
+                margin: 0 5px;
+                padding: 0 12px;
+                border: 1px solid #ccc;
+                color: #333;
                 cursor: pointer;
-                border-radius: 8px;
-                font-size: 1em;
-                transition: background-color 0.3s ease, color 0.3s ease;
-            }
-
-            .pagination button:hover {
-                background-color: #2ecc71;
-                color: white;
-                border-color: #2ecc71;
+                border-radius: 4px;
             }
 
             .pagination button.active {
-                background-color: #2ecc71;
-                color: white;
-                border-color: #2ecc71;
+                color: #fff;
+                border-color: #007bff;
             }
+
+
 
             .news-card-content {
                 display: flex;
@@ -227,7 +218,7 @@
     </head>
     <body>
         <jsp:include page="./common/header.jsp"/>
-        <div class="container news-list">
+        <div class="container news-list mt-5">
             <h1 class="text-center">Sports ARTICLES</h1>
             <div class="news-grid">
                 <c:if test="${not empty sessionScope.newsList}">

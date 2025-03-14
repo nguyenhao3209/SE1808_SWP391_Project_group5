@@ -3,6 +3,14 @@
     <welcome-file-list>
         <welcome-file>home</welcome-file>
     </welcome-file-list>
+    <filter>
+        <filter-name>AutificationFilter</filter-name>
+        <filter-class>Filter.AutificationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AutificationFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <servlet>
         <servlet-name>VoucherServlet</servlet-name>
         <servlet-class>Controller.VoucherServlet</servlet-class>
@@ -99,6 +107,18 @@
         <servlet-name>ViewImportedServlet</servlet-name>
         <servlet-class>Controller.admin.ViewImportedServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CheckCitizenIDServlet</servlet-name>
+        <servlet-class>Controller.admin.CheckCitizenIDServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchStaffsServlet</servlet-name>
+        <servlet-class>Controller.admin.SearchStaffsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>profileStaffServlet</servlet-name>
+        <servlet-class>Controller.admin.profileStaffServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>VoucherServlet</servlet-name>
         <url-pattern>/VoucherServlet</url-pattern>
@@ -190,6 +210,18 @@
     <servlet-mapping>
         <servlet-name>ViewImportedServlet</servlet-name>
         <url-pattern>/viewImported</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckCitizenIDServlet</servlet-name>
+        <url-pattern>/checkCitizenID</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchStaffsServlet</servlet-name>
+        <url-pattern>/searchStaffs</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>profileStaffServlet</servlet-name>
+        <url-pattern>/profileStaff</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

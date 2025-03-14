@@ -283,14 +283,14 @@
                     <c:if test="${not empty newsList}">
                         <c:forEach var="news" items="${newsList}" varStatus="loop">
                             <div class="news-card" data-page="${Math.floor(loop.index / 6) + 1}">
-                                <div class="news-card-content">
-                                    <h2>${news.title}</h2>
+                                <div class="news-card-content d-flex flex-column">
+                                    <h2 style="height: 130px">${news.title}</h2>
                                     <span class="news-date"><i class="fas fa-calendar-alt"></i> ${news.publishedDate}</span>
-                                    <p><strong>Author:</strong> ${news.author}</p>
-                                    <p><strong>Email:</strong> ${news.staff.email}</p>
-                                    <p>${news.content}</p>
-                                    <img src="${news.image}" alt="${news.title}" class="img-fluid rounded">
-                                    <i class="fas fa-futbol sport-icon"></i> <!-- Biểu tượng thể thao -->
+                                    <p style="height: 30px;"><strong>Author:</strong> ${news.author}</p>
+                                    <p style="height: 30px;"><strong>Email:</strong> ${news.staff.email}</p>
+                                    <p style="height: 70px; margin-bottom: 30px;">${news.content}</p>
+                                    <img style="height: 200px;" class="bottom: 0" style="height: 30vh;" src="${news.image}" alt="${news.title}" class="img-fluid rounded">
+                                    <i  class="fas fa-futbol sport-icon"></i> <!-- Biểu tượng thể thao -->
 
                                     <!-- Action Buttons -->
                                     <div class="news-card-actions">

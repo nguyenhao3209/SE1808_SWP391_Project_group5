@@ -6,7 +6,6 @@ package Controller.admin;
 
 import Models.Staffs;
 import dal.StaffsDAO;
-import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,11 +14,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import utils.PasswordUtils;
 
 /**
@@ -94,10 +88,11 @@ public class AddStaff extends HttpServlet {
         String gender = request.getParameter("gender");
         String status = request.getParameter("status");
         String address = request.getParameter("address");
+        String citizenID = request.getParameter("citizenID");
 
         // Kiểm tra dữ liệu rỗng
         if (staffName.isEmpty() || password.isEmpty() || phone.isEmpty() || role.isEmpty()
-                || email.isEmpty() || gender.isEmpty() || status.isEmpty() || address.isEmpty()) {
+                || email.isEmpty() || gender.isEmpty() || status.isEmpty() || address.isEmpty() || citizenID.isEmpty()) {
             request.setAttribute("errorMessage", "All fields are required!");
             request.getRequestDispatcher("addStaff.jsp").forward(request, response);
             return;
@@ -130,6 +125,7 @@ public class AddStaff extends HttpServlet {
         staff.setGender(gender);
         staff.setStatus(Staffs.Status.valueOf(status));
         staff.setAddress(address);
+        staff.setCitizenID(citizenID);
         System.out.println(staff.toString());
         // Lưu nhân viên vào database
         staffDAO.addStaff(staff);

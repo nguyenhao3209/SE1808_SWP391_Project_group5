@@ -40,9 +40,11 @@
         <link rel="stylesheet" type="text/css" href="css/vendor.css">
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
+
     <body>
         <jsp:include page="./common/header.jsp"/>
-        <div class="container">
+
+        <div class="container mt-5">
             <!-- Hình ảnh sản phẩm -->
             <div class="product-gallery">
                 <div class="main-image">
@@ -132,7 +134,8 @@
                 </c:if>
             </div>
         </div>
-        <jsp:include page="common/footer.jsp"/>
+        <jsp:include page="feedbacks.jsp"/>
+
         <div id="notification" class="notification"></div>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
@@ -194,7 +197,6 @@
         </script>
         <c:remove var="notification" scope="session" />
         <c:remove var="notificationType" scope="session" />
-        <jsp:include page="feedbacks.jsp"/>
         <script src="js/jquery-1.11.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
@@ -202,4 +204,6 @@
         <script src="js/plugins.js"></script>
         <script src="js/script.js"></script>
     </body>
+    <jsp:include page="common/footer.jsp"/>
+
 </html>

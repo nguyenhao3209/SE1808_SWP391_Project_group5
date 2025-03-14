@@ -26,7 +26,7 @@ public class StaffsDAO extends DBContext {
 
     public List<Staffs> getAllStaffs(String gender, String status) {
         List<Staffs> staffs = new ArrayList<>();
-        String sql = "SELECT StaffID, StaffName, Email, Phone, Gender, Status, Address FROM Staffs Where [Status] != 'DELETED'";
+        String sql = "SELECT StaffID, StaffName, Email, Phone, Gender, Status, Address, CitizenID FROM Staffs Where [Status] != 'DELETED'";
         if (!gender.equalsIgnoreCase("all")) {
             sql = sql + " and Gender =" + "'" + gender + "'";
         }
@@ -45,6 +45,7 @@ public class StaffsDAO extends DBContext {
                 staff.setGender(rs.getString("Gender"));
                 staff.setStatus(Staffs.Status.valueOf(rs.getString("Status")));
                 staff.setAddress(rs.getString("Address"));
+                staff.setCitizenID(rs.getString("CitizenID"));
 
                 staffs.add(staff);
             }
@@ -91,7 +92,7 @@ public class StaffsDAO extends DBContext {
         String staffID = createStaffID();
         staff.setStaffID(staffID);
 
-        String sql = "INSERT INTO Staffs (StaffID, StaffName, Password, Phone, Role, Email, Gender, Status, Address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Staffs (StaffID, StaffName, Password, Phone, Role, Email, Gender, Status, Address, CitizenID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             ps = connection.prepareStatement(sql);
@@ -104,6 +105,7 @@ public class StaffsDAO extends DBContext {
             ps.setString(7, staff.getGender());
             ps.setString(8, staff.getStatus().toString());
             ps.setString(9, staff.getAddress());
+            ps.setString(10, staff.getCitizenID());
 
             int rowsInserted = ps.executeUpdate();
             if (rowsInserted > 0) {
@@ -136,7 +138,7 @@ public class StaffsDAO extends DBContext {
 
     public Staffs getStaffById(String staffId) {
         Staffs staff = null;
-        String sql = "SELECT StaffID, StaffName, Password, Phone, Role, Email, Gender, Status, Address FROM Staffs WHERE StaffID = ?";
+        String sql = "SELECT StaffID, StaffName, Password, Phone, Role, Email, Gender, Status, Address, CitizenID FROM Staffs WHERE StaffID = ?";
 
         try {
             ps = connection.prepareStatement(sql);
@@ -154,6 +156,8 @@ public class StaffsDAO extends DBContext {
                 staff.setGender(rs.getString("Gender"));
                 staff.setStatus(Staffs.Status.valueOf(rs.getString("Status")));
                 staff.setAddress(rs.getString("Address"));
+                staff.setCitizenID(rs.getString("CitizenID"));
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,7 +166,7 @@ public class StaffsDAO extends DBContext {
     }
 
     public void updateStaff(Staffs staff) {
-        String sql = "UPDATE Staffs SET StaffName=?, Password=?, Phone=?, Role=?, Email=?, Gender=?, Status=?, Address=? WHERE StaffId=?";
+        String sql = "UPDATE Staffs SET StaffName=?, Password=?, Phone=?, Role=?, Email=?, Gender=?, Status=?, Address=?, CitizenID = ? WHERE StaffId=?";
         try {
             ps = connection.prepareStatement(sql);
             ps.setString(1, staff.getStaffName());
@@ -173,7 +177,24 @@ public class StaffsDAO extends DBContext {
             ps.setString(6, staff.getGender());
             ps.setString(7, staff.getStatus().toString());
             ps.setString(8, staff.getAddress());
-            ps.setString(9, staff.getStaffID());
+            ps.setString(9, staff.getCitizenID());
+            ps.setString(10, staff.getStaffID());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void updateStaffProfile(Staffs staff) {
+        String sql = "UPDATE Staffs SET StaffName=?, Phone=?, Email=?, Gender=?, Address=?, WHERE StaffId=?";
+        try {
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, staff.getStaffName());
+            ps.setString(2, staff.getPhone());
+            ps.setString(3, staff.getEmail());
+            ps.setString(4, staff.getGender());
+            ps.setString(5, staff.getAddress());
+            ps.setString(6, staff.getStaffID());
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -211,6 +232,7 @@ public class StaffsDAO extends DBContext {
                 + "      ,[Status]\n"
                 + "      ,[PasswordRecoveryToken]\n"
                 + "      ,[HireDate]\n"
+                + "      ,[CitizenID]\n"
                 + "  FROM [dbo].[Staffs]\n"
                 + "  WHERE StaffID = ?";
         try {
@@ -233,6 +255,7 @@ public class StaffsDAO extends DBContext {
                 staff.setStatus(Staffs.Status.valueOf(rs.getString("Status")));
                 staff.setPasswordRecoveryToken(rs.getString("PasswordRecoveryToken"));
                 staff.setHireDate(rs.getTimestamp("HireDate"));
+                staff.setCitizenID(rs.getString("CitizenID"));
                 return staff;
             }
             rs.close();
@@ -274,8 +297,10 @@ public class StaffsDAO extends DBContext {
 
     public static void main(String[] args) {
         StaffsDAO staffDAO = new StaffsDAO();
-        Staffs s = staffDAO.loginWithEmailAndPassword("nguyenhao6822@gmail.com", "1234567");
-        System.out.println(s.toString());
+        ArrayList<Staffs> s = staffDAO.getSearchStaffs("Thanh H");
+        for (Staffs staffs : s) {
+            System.out.println(staffs.toString());
+        }
     }
 
     public Staffs getStaffByEmail(String email) {
@@ -302,10 +327,74 @@ public class StaffsDAO extends DBContext {
                 staff.setStatus(Staffs.Status.valueOf(rs.getString("Status")));
                 staff.setPasswordRecoveryToken(rs.getString("PasswordRecoveryToken"));
                 staff.setHireDate(rs.getTimestamp("HireDate"));
+                staff.setCitizenID(rs.getString("CitizenID"));
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return staff;
+    }
+
+    public boolean checkCitizenIDExists(String citizenID, String staffID) {
+        String query = "SELECT COUNT(*) FROM Staffs WHERE CitizenID = ?";
+        if (staffID != null && !staffID.isEmpty()) {
+            query += " AND StaffID = ?";
+        }
+        try ( PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, citizenID);
+            if (staffID != null && !staffID.isEmpty()) {
+                stmt.setString(2, staffID);
+            }
+            try ( ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public ArrayList<Staffs> getSearchStaffs(String keyword) {
+        ArrayList<Staffs> staffList = new ArrayList<>();
+        String sql = "SELECT [StaffID], [StaffName], [Email], [Avatar], [TokenExpiry], [Password], [Phone], [Gender], [Address], [Role], [SupervisorID], [Status], [PasswordRecoveryToken], [HireDate], [CitizenID] "
+                + "FROM [dbo].[Staffs] "
+                + "WHERE StaffID LIKE ? OR StaffName LIKE ? OR CitizenID LIKE ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            // Sử dụng ký tự '%' để tìm kiếm bất kỳ vị trí nào
+            String searchPattern = "%" + keyword + "%";
+            stmt.setString(1, searchPattern);
+            stmt.setString(2, searchPattern);
+            stmt.setString(3, searchPattern);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Staffs staff = new Staffs();
+                staff.setStaffID(rs.getString("StaffID"));
+                staff.setStaffName(rs.getString("StaffName"));
+                staff.setEmail(rs.getString("Email"));
+                staff.setAvatar(rs.getString("Avatar"));
+                staff.setTokenExpiry(rs.getTimestamp("TokenExpiry"));
+                staff.setPassword(rs.getString("Password"));
+                staff.setPhone(rs.getString("Phone"));
+                staff.setGender(rs.getString("Gender"));
+                staff.setAddress(rs.getString("Address"));
+                staff.setRole(Staffs.Role.valueOf(rs.getString("Role")));
+                staff.setStatus(Staffs.Status.valueOf(rs.getString("Status")));
+                staff.setPasswordRecoveryToken(rs.getString("PasswordRecoveryToken"));
+                staff.setHireDate(rs.getTimestamp("HireDate"));
+                staff.setCitizenID(rs.getString("CitizenID"));
+
+                staffList.add(staff);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return staffList;
     }
 }

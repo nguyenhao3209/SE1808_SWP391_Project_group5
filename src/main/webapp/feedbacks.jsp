@@ -27,7 +27,6 @@
                 font-family: 'Poppins', sans-serif;
                 /*        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);*/
                 color: #333;
-                padding: 20px;
             }
 
             h1 {

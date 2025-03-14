@@ -44,7 +44,7 @@
     </head>
     <body>
         <jsp:include page="common/header.jsp"/>
-        <form id="cart-form" action="cart" method="POST">
+        <form style="margin-top: 100px;" id="cart-form" action="cart" method="POST">
             <div class="cart-container">
                 <!-- Shopping Cart -->
                 <div class="cart-left">

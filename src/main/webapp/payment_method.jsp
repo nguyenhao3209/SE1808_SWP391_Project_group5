@@ -151,19 +151,18 @@
         <!-- Include header nếu cần -->
         <jsp:include page="common/header.jsp"/>
 
-        <!-- Nếu cartList rỗng -->
-        <c:if test="${empty sessionScope.cartList}">
-            <p style="color:red;">Cart is empty</p>
-        </c:if>
+        <div class="container mt-5">
+            <!-- Nếu cartList rỗng -->
+            <c:if test="${empty sessionScope.cartList}">
+                <p style="color:red;">Cart is empty</p>
+            </c:if>
 
-        <!-- HIỂN THỊ LỖI (NẾU CÓ) -->
-        <c:if test="${not empty error}">
-            <div class="alert alert-danger mx-3" role="alert">
-                ${error}
-            </div>
-        </c:if>
-
-        <div class="container">
+            <!-- HIỂN THỊ LỖI (NẾU CÓ) -->
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger mx-3" role="alert">
+                    ${error}
+                </div>
+            </c:if>
             <!-- LEFT COLUMN: Invoice -->
             <div class="left-column">
                 <h1 class="invoice-title">Invoice Details</h1>

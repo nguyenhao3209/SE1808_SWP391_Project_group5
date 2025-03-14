@@ -79,13 +79,13 @@
                                 <h4>Staff Management</h4>
                             </div>
                             <div class="widget-inner">
-                                <div class="container">
+                                <div class="container-fluid">
                                     <h2>Staffs Management</h2>
 
                                     <!-- Search Input -->
                                     <div class="form-group">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+                                            <input type="text" class="form-control" id="searchInput" placeholder="Search staff by ID, Name, CetizenID...">
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
@@ -117,6 +117,7 @@
                                                     <th>Staff Name</th>
                                                     <th>Email</th>
                                                     <th>Phone</th>
+                                                    <th>Citizen ID</th>
                                                     <th>Gender</th>
                                                     <th>Status</th>
                                                     <th>Address</th>
@@ -137,6 +138,7 @@
                                                                 <td>${staff.staffName}</td>
                                                                 <td>${staff.email}</td>
                                                                 <td>${staff.phone}</td>
+                                                                <td>${staff.citizenID}</td>
                                                                 <td>${staff.gender}</td>
                                                                 <td>${staff.status}</td>
                                                                 <td>${staff.address}</td>
@@ -197,25 +199,30 @@
                 }
                 document.addEventListener("DOMContentLoaded", function () {
                     const searchInput = document.getElementById("searchInput");
-                    const tableRows = document.querySelectorAll("#staffTable tbody tr");
-                    function updateTableVisibility() {
-                        tableRows.forEach(row => {
-                            const staffID = row.cells[0].textContent.toLowerCase();
-                            const staffName = row.cells[1].textContent.toLowerCase();
+                    const tbody = document.getElementById("staffTableBody");
 
-                            // Lấy giá trị từ input và dropdown
-                            const selectedInput = searchInput.value.toLowerCase();
+                    function fetchFilteredData() {
+                        const keyword = searchInput.value.trim().toLowerCase();
 
-                            // Điều kiện lọc
-                            const matchSearch = (selectedInput === "" || staffID.includes(selectedInput) || staffName.includes(selectedInput));
-
-                            // Hiển thị hoặc ẩn hàng
-                            row.style.display = (matchSearch) ? "" : "none";
+                        $.ajax({
+                            url: "searchStaffs",
+                            type: "GET",
+                            data: {keyword: keyword},
+                            success: function (data) {
+                                tbody.innerHTML = data;
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error fetching staff data:", xhr.responseText);
+                            }
                         });
                     }
+
                     // Gán sự kiện lắng nghe
-                    searchInput.addEventListener("input", updateTableVisibility);
+                    searchInput.addEventListener("input", function () {
+                        fetchFilteredData();
+                    });
                 });
+
             </script>
         </main>
 

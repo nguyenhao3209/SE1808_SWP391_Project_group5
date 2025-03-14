@@ -226,7 +226,7 @@
     </head>
     <body>
         <jsp:include page="./common/header.jsp"/>
-        <div class="container">
+        <div class="container mt-5">
             <h1 class="text-center">${news.title}</h1>
             <div class="news-content">
                 <img src="${news.image}" alt="${news.title}" />

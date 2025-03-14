@@ -100,8 +100,9 @@ public class EditStaff extends HttpServlet {
         String gender = request.getParameter("gender").trim();
         String status = request.getParameter("status").trim();
         String address = request.getParameter("address").trim();
+        String citizenID = request.getParameter("citizenID").trim();
 
-        if (staffName.isEmpty() || phone.isEmpty() || role.isEmpty() || gender.isEmpty() || status.isEmpty() || address.isEmpty()) {
+        if (staffName.isEmpty() || phone.isEmpty() || role.isEmpty() || gender.isEmpty() || status.isEmpty() || address.isEmpty() || citizenID.isEmpty()) {
             response.sendRedirect("editStaff.jsp?staffId=" + staffId);
             return;
         }
@@ -125,6 +126,7 @@ public class EditStaff extends HttpServlet {
         staff.setGender(gender);
         staff.setStatus(Staffs.Status.valueOf(status));
         staff.setAddress(address);
+        staff.setCitizenID(citizenID);
 
         // Gọi phương thức update (không kiểm tra kết quả)
         staffDAO.updateStaff(staff);

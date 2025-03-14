@@ -51,6 +51,7 @@
                     <div class="ttr-header-submenu">
                         <ul>
                             <li><a href="admin/contact-list.jsp">Contact</a></li>
+                            <li><a href="admin/profileStaff.jsp">Profile</a></li>
                             <li><a href="logout">Logout</a></li>
                         </ul>
                     </div>

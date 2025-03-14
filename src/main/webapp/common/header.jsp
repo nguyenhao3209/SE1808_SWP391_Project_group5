@@ -35,7 +35,7 @@
 <div id="header-wrap">
 
     <div class="top-content p-0">
-        <div class="container-fluid">
+        <div class="container-fluid fixed-top bg-light">
             <div class="row" style="display: flex;">
                 <div class="col-md-9">
                     <div class="row">

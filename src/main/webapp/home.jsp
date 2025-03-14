@@ -115,10 +115,10 @@
                                                         <figure class="product-style">
                                                             <c:choose>
                                                                 <c:when test="${sessionScope.check_click_category == '5'}">
-                                                                    <img style="height: 44vh;" src="./img/${product[6]}/${product[4]}" alt="Product" class="product-item img-fluid">
+                                                                    <img style="height: 40vh;" src="./img/${product[6]}/${product[4]}" alt="Product" class="product-item img-fluid">
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <img style="height: 44vh;" src="./img/${product[6]}/${product[3]}/${product[4]}" alt="Product" class="product-item img-fluid">
+                                                                    <img style="height: 40vh;" src="./img/${product[6]}/${product[3]}/${product[4]}" alt="Product" class="product-item img-fluid">
                                                                 </c:otherwise>
                                                             </c:choose>
                                                             <!-- Giá sale ở góc phải trên -->
@@ -177,12 +177,12 @@
                                     <c:forEach var="news" items="${sessionScope.newsList}" varStatus="loop" begin="0" end="2">
                                         <div class="col-md-4 d-flex align-items-stretch">
                                             <div class="news-card card mb-4 shadow-sm">
-                                                <img style="height: 40vh;" src="${news.image}" alt="${news.title}" class="card-img-top img-fluid rounded">
+                                                <img style="height: 30vh;" src="${news.image}" alt="${news.title}" class="card-img-top img-fluid rounded">
                                                 <div class="card-body d-flex flex-column">
-                                                    <p class="card-text"><strong><i class="bi bi-person-circle"></i> Author:</strong> ${news.author}</p>
-                                                    <p class="card-text"><strong><i class="bi bi-envelope"></i> Email:</strong> ${news.staff.email}</p>
-                                                    <p class="card-text"><strong><i class="bi bi-calendar"></i> Published on:</strong> ${news.publishedDate}</p>
-                                                    <h3 class="card-title">${news.title}</h3>
+                                                    <p class="card-text mb-2"><strong><i class="bi bi-person-circle"></i> Author:</strong> ${news.author}</p>
+                                                    <p class="card-text mb-2"><strong><i class="bi bi-envelope"></i> Email:</strong> ${news.staff.email}</p>
+                                                    <p class="card-text mb-2"><strong><i class="bi bi-calendar"></i> Published on:</strong> ${news.publishedDate}</p>
+                                                    <h3 class="card-title mb-2">${news.title}</h3>
                                                     <span class="news-date mb-3">
 
                                                     </span>

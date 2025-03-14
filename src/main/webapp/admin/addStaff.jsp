@@ -87,6 +87,7 @@
                                                 <label for="password">Password</label>
                                                 <input type="password" class="form-control" name="password" required>
                                             </div>
+                                            <br/>
                                             <div class="form-group">
                                                 <label for="phone">Phone</label>
                                                 <input type="text" class="form-control" name="phone" required>
@@ -105,8 +106,14 @@
                                                 <input type="email" class="form-control" name="email" required>
                                             </div>
                                             <div class="form-group">
+                                                <label for="citizenID">Citizen ID: </label>
+                                                <input type="text" class="form-control" name="citizenID" id="citizenID" required onblur="checkCitizenID()">
+                                                <small id="citizenIDError" class="text-danger"></small>
+                                                <br/>
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="gender">Gender</label>
-                                                <select name="gender" class="form-control" required>
+                                                <select name="gender" id="gender" class="form-control" required>
                                                     <option value="Male">Male</option>
                                                     <option value="Female">Female</option>
                                                 </select>
@@ -118,10 +125,10 @@
                                                     <option value="INACTIVE">Inactive</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="address">Address</label>
-                                                <input type="text" class="form-control" name="address" required>
-                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-12">
+                                            <label for="address">Address</label>
+                                            <input type="text" class="form-control" name="address" id="address" required>
                                         </div>
                                     </div>
                                     <div class="form-actions text-center">
@@ -135,7 +142,47 @@
                 </div>
             </div>
         </main>
+        <script>
+            function checkCitizenID() {
+                const citizenID = document.getElementById("citizenID").value.trim();
 
+                if (!/^\d{12}$/.test(citizenID)) {
+                    document.getElementById("citizenIDError").innerText = "Citizen ID must be 12 digits.";
+                    return;
+                } else {
+                    document.getElementById("citizenIDError").innerText = null;
+                }
+
+                $.ajax({
+                    url: "checkCitizenID",
+                    type: "POST",
+                    data: {citizenID: citizenID},
+                    success: function (response) {
+                        try {
+                            const data = typeof response === "string" ? JSON.parse(response) : response;
+
+                            if (data.status === "exists") {
+                                document.getElementById("citizenIDError").innerText = "Citizen ID already exists.";
+                            } else if (data.status === "invalid") {
+                                document.getElementById("citizenIDError").innerText = "Invalid Citizen ID.";
+                            } else if (data.status === "not_exists") {
+                                document.getElementById("citizenIDError").innerText = null;
+                                document.getElementById("address").value = data.address + `, `;
+                            } else {
+                                document.getElementById("citizenIDError").innerText = "An unexpected error occurred.";
+                            }
+                        } catch (e) {
+                            console.error("Error parsing JSON response:", e);
+                            document.getElementById("citizenIDError").innerText = "Error parsing response.";
+                        }
+                    },
+                    error: function () {
+                        document.getElementById("citizenIDError").innerText = "Error checking Citizen ID.";
+                    }
+                });
+            }
+
+        </script>
         <!-- External JavaScripts -->
         <script src="admin/assets/js/jquery.min.js"></script>
         <script src="admin/assets/vendors/bootstrap/js/popper.min.js"></script>
@@ -156,5 +203,6 @@
         <script src="admin/assets/vendors/calendar/moment.min.js"></script>
         <script src="admin/assets/vendors/calendar/fullcalendar.js"></script>
         <script src="admin/assets/vendors/switcher/switcher.js"></script>
+
     </body>
 </html>

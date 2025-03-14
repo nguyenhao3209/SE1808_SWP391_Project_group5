@@ -4,6 +4,7 @@
     Author     : Admin
 --%>
 
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -133,7 +134,7 @@
 
     <body>
         <jsp:include page="common/header.jsp"/>
-        <div class="container edit-profile">
+        <div class="container edit-profile mt-5">
             <!-- Hi?n th? th?ng b?o n?u profile ???c c?p nh?t th?nh c?ng -->
             <c:if test="${not empty sessionScope.successMessage}">
                 <p class="success-message">${sessionScope.successMessage}</p>
@@ -157,7 +158,6 @@
                     <select name="gender" class="form-control">
                         <option value="MALE" ${sessionScope.user.gender eq 'MALE' ? 'selected' : ''}>Male</option>
                         <option value="FEMALE" ${sessionScope.user.gender eq 'FEMALE' ? 'selected' : ''}>Female</option>
-                        <option value="OTHER" ${sessionScope.user.gender eq 'OTHER' ? 'selected' : ''}>Other</option>
                     </select>
                 </div>
 

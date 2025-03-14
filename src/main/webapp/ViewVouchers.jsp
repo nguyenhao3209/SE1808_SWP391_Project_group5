@@ -35,7 +35,7 @@
         <!-- Include header (chỉnh lại đường dẫn nếu cần) -->
         <jsp:include page="common/header.jsp" />
 
-        <div class="container mt-4">
+        <div class="container mt-5">
             <h2 class="text-center mb-4">Your Exclusive Vouchers</h2>
 
             <!-- Nếu danh sách voucher rỗng, hiển thị thông báo -->
@@ -121,6 +121,9 @@
         </div>
         <jsp:include page="common/footer.jsp"/>
         <script src="js/jquery-1.11.0.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>

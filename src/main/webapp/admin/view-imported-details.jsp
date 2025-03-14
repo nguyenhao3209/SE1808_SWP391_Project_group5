@@ -34,7 +34,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="4" align="right"><strong>Total:</strong></td>
+            <td colspan="5" align="right"><strong>Total:</strong></td>
             <td><strong>$${total}</strong></td>
         </tr>
     </tfoot>

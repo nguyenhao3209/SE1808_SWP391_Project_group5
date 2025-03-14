@@ -29,7 +29,7 @@
         <jsp:include page="common/header.jsp"/>
 
         <section id="subscribe">
-            <div class="container">
+            <div class="container mt-5">
                 <div class="row justify-content-center">
 
                     <div class="col-md-8">
