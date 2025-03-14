@@ -27,11 +27,33 @@
 
 
 </head>
-<style>  .user-avatar{
+<style>
+    .user-avatar{
         width: 45px;
         height: 45px;
         border-radius: 25px;
-    } </style>
+    }
+
+    .cart-container-menu {
+        position: relative;
+        display: inline-block;
+    }
+
+    .cart-count {
+        position: absolute;
+        top: 0;
+        right: 0px;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 12px;
+        font-weight: bold;
+        line-height: 1;
+        min-width: 20px;
+        text-align: center;
+    }
+</style>
 <div id="header-wrap">
 
     <div class="top-content p-0">
@@ -53,11 +75,19 @@
                                 <div class="main-menu stellarnav">
                                     <ul class="menu-list align-items-center">
                                         <li class="menu-item active"><a style="font-size: 20px;" href="home">Home</a></li>
-                                        <li class="menu-item "><a style="font-size: 20px;" href="searchServlet" class="nav-link">Products</a></li>
-                                        <li class="menu-item "><a style="font-size: 20px;" href="cart" class="nav-link">Cart</a></li>
-                                        <li class="menu-item "><a style="font-size: 20px;" href="ViewVouchersServlet" class="nav-link">Vouchers</a></li>
-                                        <li class="menu-item "><a style="font-size: 20px;" href="contact.jsp" class="nav-link">Contact</a></li>
-                                        <li class="menu-item "><a style="font-size: 20px;" href="news-list" class="nav-link">Articles</a></li>
+                                        <li class="menu-item"><a style="font-size: 20px;" href="searchServlet" class="nav-link">Products</a></li>
+                                        <li class="menu-item cart-container-menu">
+                                            <a style="font-size: 20px;
+                                               position: relative;" href="cart" class="nav-link">
+                                                Cart                                        
+                                                <c:if test="${not empty sessionScope.quantityTotal}">
+                                                    <span class="cart-count">${sessionScope.quantityTotal}</span>
+                                                </c:if>
+                                            </a>
+                                        </li>
+                                        <li class="menu-item"><a style="font-size: 20px;" href="ViewVouchersServlet" class="nav-link">Vouchers</a></li>
+                                        <li class="menu-item"><a style="font-size: 20px;" href="contact.jsp" class="nav-link">Contact</a></li>
+                                        <li class="menu-item"><a style="font-size: 20px;" href="news-list" class="nav-link">Articles</a></li>
                                     </ul>
 
                                     <div class="hamburger">

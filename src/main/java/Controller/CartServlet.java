@@ -52,13 +52,14 @@ public class CartServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         ProductsDAO proDAO = new ProductsDAO();
-
+        Customers customer = (Customers) session.getAttribute("user");
         try {
             String[] w = msg.split("_");
             if (w.length == 2) {
                 int itemID = Integer.parseInt(w[1]);
                 boolean isRemoved = proDAO.removeItemOfCart(itemID);
                 if (isRemoved) {
+                    session.setAttribute("quantityTotal", proDAO.getQuantityOfItemByUserID(customer.getCustomerId()));
                     session.setAttribute("success", "Item removed successfully!");
                 } else {
                     session.setAttribute("error", "Item removal failed. Item may not exist.");
@@ -118,7 +119,6 @@ public class CartServlet extends HttpServlet {
                     newList.add(item);
                 }
             }
-
             session.setAttribute("cartList", newList);
             session.setAttribute("brandTotal", brandTotal);
         }

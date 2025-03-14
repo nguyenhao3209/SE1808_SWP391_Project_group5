@@ -71,10 +71,12 @@ public class HomeServlet extends HttpServlet {
             HttpSession session = request.getSession();
             ProductsDAO productDAO = new ProductsDAO();
             Object user = session.getAttribute("user");
-
+            Customers customer = new Customers();
             if (user instanceof Staffs) {
                 session.removeAttribute("user");
                 // Xử lý logic cho nhân viên
+            } else if (user instanceof Customers){
+                customer = (Customers) user;
             }
             // Lấy danh sách slider
             ArrayList<Slider> slide = productDAO.getAllSliders();
@@ -90,7 +92,7 @@ public class HomeServlet extends HttpServlet {
             }
             saleList = productDAO.getTop8();
             ArrayList<News> newsList = newsDAO.getNewsList();
-
+            session.setAttribute("quantityTotal", productDAO.getQuantityOfItemByUserID(customer.getCustomerId()));
             session.setAttribute("newsList", newsList);
             session.setAttribute("saleList", saleList);
             session.setAttribute("check_click_category", categoryID); // Lưu trạng thái danh mục đã chọn

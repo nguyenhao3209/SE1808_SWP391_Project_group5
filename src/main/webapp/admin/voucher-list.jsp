@@ -10,6 +10,7 @@
         <meta name="author" content="" />
         <meta name="robots" content="" />
         <base href="${pageContext.request.contextPath}/">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
         <!-- DESCRIPTION -->
         <meta name="description" content="EduChamp : Education HTML Template" />
@@ -21,7 +22,7 @@
         <!-- FAVICONS ICON ============================================= -->
         <!-- Xoá hoặc sửa dòng dưới nếu không tồn tại error-404.html -->
         <!-- <link rel="icon" href="../error-404.html" type="image/x-icon" /> -->
-        <link rel="shortcut icon" type="image/x-icon" href="admin/assets/images/favicon.png" />
+        <link rel="shortcut icon" type="image/x-icon" href="img/iconAdmin.webp" />
 
         <!-- PAGE TITLE HERE ============================================= -->
         <title>EduChamp : Voucher Management</title>
@@ -77,14 +78,14 @@
                 <a href="admin/voucher-form.jsp" class="btn btn-success mb-3">Add New Voucher</a>
                 <!-- Content Row -->
                 <div class="row">
-                    <div class="col-lg-12 m-b30">
+                    <div class="col-lg-12">
                         <div class="widget-box">
                             <div class="wc-title">
                                 <h4>Manage Vouchers</h4>
                             </div>
                             <div class="widget-inner">
                                 <!-- NỘI DUNG CHÍNH: DANH SÁCH VOUCHER -->
-                                <div class="container">
+                                <div class="container-fluid ">
                                     <!-- Button to Add New Voucher -->
                                     <!-- CHỈNH SỬA: Dùng Servlet action=add thay vì gọi trực tiếp voucher-form.jsp -->
 
@@ -142,16 +143,15 @@
                                                                     </c:choose>
                                                                 </td>
                                                                 <td>
-                                                                    <div style="display: flex; flex-direction: column; align-items: center;">
+                                                                    <div style="display: flex; flex-direction: row; align-items: center;">
                                                                         <a href="VoucherServlet?action=edit&id=${v.voucherID}"
-                                                                           class="btn btn-warning btn-sm btn-edit"
-                                                                           style="margin-bottom: 5px;">
-                                                                            Edit
+                                                                           class="btn mr-1">
+                                                                             <i class="fas fa-pen"></i>
                                                                         </a>
                                                                         <a href="VoucherServlet?action=delete&id=${v.voucherID}"
-                                                                           class="btn btn-danger btn-sm"
+                                                                           class="btn"
                                                                            onclick="return confirm('Are you sure you want to delete this voucher?');">
-                                                                            Delete
+                                                                            <i class="fas fa-trash"></i>
                                                                         </a>
                                                                     </div>
                                                                 </td>
