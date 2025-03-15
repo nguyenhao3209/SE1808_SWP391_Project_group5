@@ -90,8 +90,8 @@ public class SaveStockImportServlet extends HttpServlet {
         String[] prices = request.getParameterValues("prices[]");
         ProductsDAO productDAO = new ProductsDAO();
         if ("saveNow".equals(action)) {
-            int importedID = productDAO.addImportStock(staffID, supplier, totalCostValue, "Completed", productIDs, quantities, size, prices);
-            response.sendRedirect("admin/stock_import_excel.jsp");
+            productDAO.addImportStock(staffID, supplier, totalCostValue, "Completed", productIDs, quantities, size, prices);
+            response.sendRedirect("admin/stock_import.jsp");
         } else {
             int importedID = productDAO.addImportStock(staffID, supplier, totalCostValue, "Pedding", productIDs, quantities, size, prices);
             exportToExcel(response, staffID, supplier, totalCostValue, productIDs, productNames, quantities, size, prices, importedID);

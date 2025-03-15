@@ -1218,12 +1218,12 @@ public class ProductsDAO extends DBContext {
                 // Lấy SizeID (nếu có)
                 if (size[i] != null && !size[i].isEmpty()) {
                     detailStmt.setInt(5, Integer.parseInt(size[i]));
-                    if (status.equals("Complete")) {
+                    if (status.equals("Completed")) {
                         updateQuantityOfProductHavSizeAfterInventory(getProductByID(Integer.parseInt(productIDs[i])), getProductSizeByID(Integer.parseInt(size[i])), Integer.parseInt(quantities[i]));
                     }
                 } else {
                     detailStmt.setNull(5, java.sql.Types.INTEGER);
-                    if (status.equals("Complete")) {
+                    if (status.equals("Completed")) {
                         updateQuantityOfProductAfterInventory(getProductByID(Integer.parseInt(productIDs[i])), Integer.parseInt(quantities[i]));
                     }
                 }
