@@ -142,7 +142,7 @@
                                                                 <td>${staff.gender}</td>
                                                                 <td>${staff.status}</td>
                                                                 <td>${staff.address}</td>
-                                                                <td>
+                                                                <td  style="height:1" class="d-flex flex-row">
                                                                     <a href="editStaff?staffId=${staff.staffID}" class="btn btn-warning btn-sm">Edit</a>
                                                                     <a href="deleteStaff?staffId=${staff.staffID}" class="btn btn-danger btn-sm"
                                                                        onclick="return confirm('Are you sure you want to delete?');">Delete</a>

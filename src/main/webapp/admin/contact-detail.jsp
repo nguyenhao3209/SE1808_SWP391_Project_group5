@@ -83,10 +83,6 @@
                                         <div class="email-menu-bar-inner">
                                             <ul>
                                                 <li class="active"><a href="contact-list"><i class="fa fa-envelope-o"></i>Inbox <span class="badge badge-success">8</span></a></li>
-                                                <li><a href="mailbox.html"><i class="fa fa-send-o"></i>Sent</a></li>
-                                                <li><a href="mailbox.html"><i class="fa fa-file-text-o"></i>Drafts <span class="badge badge-warning">8</span></a></li>
-                                                <li><a href="mailbox.html"><i class="fa fa-cloud-upload"></i>Outbox <span class="badge badge-danger">8</span></a></li>
-                                                <li><a href="mailbox.html"><i class="fa fa-trash-o"></i>Trash</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -128,16 +124,6 @@
                                                 </div>
                                                 <div class="ml-auto send-mail-full-info">
                                                     <div class="time"><span>${c.createAt}</span></div>
-                                                    <!--<span class="btn btn-info-icon">Reply</span>-->
-                                                    <div class="dropdown all-msg-toolbar ml-auto">
-                                                        <span class="btn btn-info-icon" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></span>
-                                                        <ul class="dropdown-menu dropdown-menu-right">
-                                                            <li><a href="#"><i class="fa fa-trash-o"></i> Delete</a></li>
-                                                            <!--                                                            <li><a href="#"><i class="fa fa-arrow-down"></i> Archive</a></li>
-                                                                                                                        <li><a href="#"><i class="fa fa-clock-o"></i> Snooze</a></li>
-                                                                                                                        <li><a href="#"><i class="fa fa-envelope-open"></i> Mark as unread</a></li>-->
-                                                        </ul>
-                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="read-content-body">
