@@ -120,7 +120,7 @@ public class Authentication implements Filter {
         // Nếu người dùng chưa đăng nhập
         if (user == null) {
             // Nếu yêu cầu truy cập trang không phải là trang đăng nhập, đăng ký, hoặc trang chủ
-            if (!uri.endsWith("login") && !uri.endsWith("register") && !uri.endsWith("home") && !uri.contains("news-list") && !uri.endsWith("ViewVouchersServlet") && !uri.endsWith("forget-password.jsp") && !uri.endsWith("forgotPassword") && !uri.endsWith("searchServlet") && !uri.contains("productDetails") && !uri.endsWith("ProductFilterServlet")) {
+            if (!uri.endsWith("login") && !uri.endsWith("register") && !uri.endsWith("home") && !uri.contains("news-list") && !uri.endsWith("ViewVouchersServlet") && !uri.endsWith("forget-password.jsp") && !uri.endsWith("forgotPassword") && !uri.endsWith("searchServlet") && !uri.contains("productDetails") && !uri.endsWith("ProductFilterServlet") && !uri.endsWith("filter-feedback")) {
                 res.sendRedirect("login");
                 return;
             }

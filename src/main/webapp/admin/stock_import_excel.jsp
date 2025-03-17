@@ -115,7 +115,12 @@
                         </table>
                         <input type="hidden" name="totalCost" value="${estimatedTotalCost}" readonly>
                         <input type="hidden" name="supplier" value="${supplier}" readonly>
-                        <input type="hidden" name="importID" value="${importID}" readonly>
+                        <c:if test="${not empty importID}">
+                            <input type="hidden" name="importID" value="${importID}" readonly>
+                        </c:if>
+                        <c:if test="${empty importID}">
+                            <input type="hidden" name="importID" value="newImport" readonly>
+                        </c:if>
                         <input type="hidden" name="staffID" value="${staffID}" readonly>
                         <h4 style="color: red;">Total Cost: $${estimatedTotalCost}</h4>
                         <h4>Supplier: ${supplier}</h4>

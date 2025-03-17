@@ -74,7 +74,7 @@ public class StockImportServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-
+            int importID = -1;
             String action = request.getParameter("action"); // Lấy giá trị của nút bấm
             String importIDStr = request.getParameter("importID");
 
@@ -84,9 +84,11 @@ public class StockImportServlet extends HttpServlet {
                 return;
             }
             ProductsDAO proDAO = new ProductsDAO();
-            int importID = Integer.parseInt(importIDStr.split("\\.")[0]);
+            if (!importIDStr.equals("newImport")) {
+                importID = Integer.parseInt(importIDStr.split("\\.")[0]);
+            }
 
-            if ("cancel".equals(action)) {
+            if ("cancel".equals(action) && !importIDStr.equals("newImport")) {
                 // Nếu nhấn Cancel, cập nhật trạng thái nhập hàng thành "Canceled"
                 proDAO.updateImportStatus(importID, "Canceled");
                 response.sendRedirect("admin/stock_import_excel.jsp");
@@ -129,8 +131,12 @@ public class StockImportServlet extends HttpServlet {
             System.out.println("Total Cost: " + totalCost);
             System.out.println("Products to import: " + productIDs.length);
 
-            // Gọi DAO để lưu vào database
-            proDAO.insertProductFromExcel(importID, productIDs, sizeIDs, quantities, prices, supplier, totalCost, staffID);
+            if (importIDStr.equals("newImport")) {
+                proDAO.addImportStock(staffID, supplier, totalCost, "Completed", productIDs, quantitiesStr, sizeIDs, pricesStr);
+            } else {
+                proDAO.insertProductFromExcel(importID, productIDs, sizeIDs, quantities, prices, supplier, totalCost, staffID);
+
+            }
 
             response.sendRedirect("admin/stock_import_excel.jsp?success=true");
         } catch (Exception e) {

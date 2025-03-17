@@ -56,7 +56,7 @@ public class ReadExcelFileToImportServlet extends HttpServlet {
 
         try ( FileInputStream fis = new FileInputStream(file);  Workbook workbook = new XSSFWorkbook(fis)) {
             Sheet sheet = workbook.getSheetAt(0);
-            for (int i = 2; i <= sheet.getLastRowNum() - 5; i++) {
+            for (int i = 2; i <= sheet.getLastRowNum() - 6; i++) {
                 Row row = sheet.getRow(i);
                 if (row == null || row.getCell(0) == null) {
                     continue;
@@ -71,22 +71,22 @@ public class ReadExcelFileToImportServlet extends HttpServlet {
                 productList.add(product);
             }
 
-            Row importIDRow = sheet.getRow(sheet.getLastRowNum() - 9);
+            Row importIDRow = sheet.getRow(sheet.getLastRowNum() - 10);
             if (importIDRow != null && importIDRow.getCell(5) != null) {
                 importID = getCellValue(importIDRow.getCell(5));
             }
 
-            Row supplierRow = sheet.getRow(sheet.getLastRowNum() - 8);
+            Row supplierRow = sheet.getRow(sheet.getLastRowNum() - 9);
             if (supplierRow != null && supplierRow.getCell(5) != null) {
                 supplier = getCellValue(supplierRow.getCell(5));
             }
 
-            Row personInChargeRow = sheet.getRow(sheet.getLastRowNum() - 7);
+            Row personInChargeRow = sheet.getRow(sheet.getLastRowNum() - 8);
             if (personInChargeRow != null && personInChargeRow.getCell(5) != null) {
                 personInCharge = getCellValue(personInChargeRow.getCell(5));
             }
 
-            Row staffIDRow = sheet.getRow(sheet.getLastRowNum() - 6);
+            Row staffIDRow = sheet.getRow(sheet.getLastRowNum() - 7);
             if (staffIDRow != null && staffIDRow.getCell(5) != null) {
                 staffID = getCellValue(staffIDRow.getCell(5));
             }

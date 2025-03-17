@@ -82,7 +82,10 @@ public class SaveStockImportServlet extends HttpServlet {
         String staffID = request.getParameter("staffId");
         String supplier = request.getParameter("supplier");
         String totalCost = request.getParameter("totalCost");
-        BigDecimal totalCostValue = new BigDecimal(totalCost.trim());
+        BigDecimal totalCostValue = BigDecimal.ZERO;
+        if (totalCost != null && !totalCost.isEmpty()) {
+            totalCostValue = new BigDecimal(totalCost.trim());
+        }
         String[] productIDs = request.getParameterValues("productIDs[]");
         String[] productNames = request.getParameterValues("productNames[]");
         String[] quantities = request.getParameterValues("quantities[]");
@@ -93,9 +96,14 @@ public class SaveStockImportServlet extends HttpServlet {
             productDAO.addImportStock(staffID, supplier, totalCostValue, "Completed", productIDs, quantities, size, prices);
             response.sendRedirect("admin/stock_import.jsp");
         } else {
-            int importedID = productDAO.addImportStock(staffID, supplier, totalCostValue, "Pedding", productIDs, quantities, size, prices);
-            exportToExcel(response, staffID, supplier, totalCostValue, productIDs, productNames, quantities, size, prices, importedID);
-            response.sendRedirect("admin/stock_import.jsp");
+            if (productIDs != null && productIDs.length != 0) {
+                int importedID = productDAO.addImportStock(staffID, supplier, totalCostValue, "Pedding", productIDs, quantities, size, prices);
+                exportToExcel(response, staffID, supplier, totalCostValue, productIDs, productNames, quantities, size, prices, importedID);
+                response.sendRedirect("admin/stock_import.jsp");
+            } else {
+                exportFormToExcel(response);
+                response.sendRedirect("admin/stock_import.jsp");
+            }
         }
 
     }
@@ -189,7 +197,8 @@ public class SaveStockImportServlet extends HttpServlet {
             "1. New products can be added but must have a valid Product ID.",
             "2. The actual price must be updated before adding data to the inventory.",
             "3. Ensure Product ID and Size (if applicable) are entered as text format.",
-            "4. Follow the correct form while entering data."
+            "4. Follow the correct form while entering data.",
+            "5. In the case of a new order, leave the 'Import ID' blank."
         };
 
         for (int i = 0; i < notes.length; i++) {
@@ -204,6 +213,87 @@ public class SaveStockImportServlet extends HttpServlet {
         // Export the file
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=StockImport.xlsx");
+        OutputStream outputStream = response.getOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+        outputStream.close();
+    }
+
+    private void exportFormToExcel(HttpServletResponse response) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Stock Import Form");
+
+        // Title styling
+        CellStyle titleStyle = workbook.createCellStyle();
+        Font titleFont = workbook.createFont();
+        titleFont.setBold(true);
+        titleFont.setFontHeightInPoints((short) 14);
+        titleStyle.setFont(titleFont);
+        titleStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        // Merge title
+        Row titleRow = sheet.createRow(0);
+        Cell titleCell = titleRow.createCell(0);
+        titleCell.setCellValue("Stock Import Report (Form Only)");
+        titleCell.setCellStyle(titleStyle);
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
+
+        // Column headers
+        Row headerRow = sheet.createRow(1);
+        String[] columns = {"Product ID", "Product Name", "Size", "Quantity", "Estimated Price",
+            "Estimated Total Price", "Actual Price", "Actual Total Price"};
+
+        CellStyle headerStyle = createHeaderCellStyle(workbook);
+        for (int i = 0; i < columns.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(columns[i]);
+            cell.setCellStyle(headerStyle);
+        }
+
+        // Summary Section (empty)
+        int lastRow = 5;
+        sheet.createRow(lastRow).createCell(4).setCellValue("Estimated Total Cost:");
+        sheet.getRow(lastRow).createCell(5).setCellValue("0.00");
+
+        sheet.createRow(lastRow + 1).createCell(4).setCellValue("Import ID:");
+        sheet.getRow(lastRow + 1).createCell(5).setCellValue("");
+
+        sheet.createRow(lastRow + 2).createCell(4).setCellValue("Supplier:");
+        sheet.getRow(lastRow + 2).createCell(5).setCellValue("N/A");
+
+        sheet.createRow(lastRow + 3).createCell(4).setCellValue("Person in charge:");
+        sheet.getRow(lastRow + 3).createCell(5).setCellValue("N/A");
+
+        sheet.createRow(lastRow + 4).createCell(4).setCellValue("Staff ID:");
+        sheet.getRow(lastRow + 4).createCell(5).setCellValue("N/A");
+
+        // Notes Section
+        int notesRowStart = lastRow + 6;
+        Row notesTitleRow = sheet.createRow(notesRowStart);
+        Cell notesTitleCell = notesTitleRow.createCell(0);
+        notesTitleCell.setCellValue("⚠ Important Notes:");
+        notesTitleCell.setCellStyle(headerStyle);
+
+        String[] notes = {
+            "1. New products can be added but must have a valid Product ID.",
+            "2. The actual price must be updated before adding data to the inventory.",
+            "3. Ensure Product ID and Size (if applicable) are entered as text format.",
+            "4. Follow the correct form while entering data.",
+            "5. In the case of a new order, leave the 'Import ID' blank."
+        };
+
+        for (int i = 0; i < notes.length; i++) {
+            sheet.createRow(notesRowStart + i + 1).createCell(0).setCellValue(notes[i]);
+        }
+
+        // Auto-size columns
+        for (int i = 0; i < columns.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        // Export the file
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=StockImportForm.xlsx");
         OutputStream outputStream = response.getOutputStream();
         workbook.write(outputStream);
         workbook.close();

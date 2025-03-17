@@ -113,7 +113,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Supplier</label>
                                 <div class="col-sm-7">
-                                    <input class="form-control" type="text" name="supplier" placeholder="Enter Supplier Name" required="">
+                                    <input class="form-control" type="text" name="supplier" placeholder="Enter Supplier Name">
                                 </div>
                             </div>
 
@@ -159,7 +159,7 @@
                             <div class="form-group row btn-container">
                                 <input type="hidden" name="totalCost" id="totalCost" value=""/>
                                 <button type="submit" name="action" value="saveNow" id="saveNow" class="btn btn-primary m-1" disabled>Inventory. Now</button>
-                                <button type="submit" name="action" value="export" id="exportExcel" class="btn btn-primary m-1" disabled>Export to Excel</button>
+                                <button type="submit" name="action" value="export" id="exportExcel" class="btn btn-primary m-1">Export to Excel</button>
                                 <button type="reset" class="btn btn-secondary m-1">Cancel</button>
                             </div>
                         </form>
@@ -322,10 +322,8 @@
             }
             function checkExportButton() {
                 if ($("#selectedProducts tr").length > 0) {
-                    $("#exportExcel").prop("disabled", false);
                     $("#saveNow").prop("disabled", false);
                 } else {
-                    $("#exportExcel").prop("disabled", true);
                     $("#saveNow").prop("disabled", true);
                 }
             }
