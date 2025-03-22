@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package Controller.admin;
 
+import Models.ProductSizes;
 import dal.ProductsDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,40 +12,44 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 
 /**
  *
  * @author Haontce180451
  */
-public class UpdateStockServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+public class ViewSizesServlet extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdateStockServlet</title>");  
+            out.println("<title>Servlet ViewSizesServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UpdateStockServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet ViewSizesServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -53,30 +57,40 @@ public class UpdateStockServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    } 
+            throws ServletException, IOException {
+        String productID = request.getParameter("productID");
+        ProductsDAO proDAO = new ProductsDAO();
+        // Lấy danh sách kích thước từ cơ sở dữ liệu (ví dụ)
+        ArrayList<ProductSizes> sizeList = proDAO.getSizesOfProductByID(Integer.parseInt(productID));
 
-    /** 
+        request.setAttribute("sizeList", sizeList);
+        request.getRequestDispatcher("admin/viewSizes.jsp").forward(request, response);
+    }
+
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int productID = Integer.parseInt(request.getParameter("productID"));
-        int newQuantity = Integer.parseInt(request.getParameter("newQuantity"));
-        ProductsDAO stockDAO = new ProductsDAO();
-        boolean success = stockDAO.updateStockQuantity(productID, newQuantity);
-
-        response.setContentType("application/json");
-        response.getWriter().write("{\"success\": " + success + "}");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+//        int sizeID = Integer.parseInt(request.getParameter("sizeID"));
+//        int newQuantity = Integer.parseInt(request.getParameter("newQuantity"));
+//        ProductsDAO proDAO = new ProductsDAO();
+//        boolean updateSuccess = proDAO.updateSizeQuantity(sizeID, newQuantity);
+//
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        response.getWriter().write("{\"success\": " + updateSuccess + "}");
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

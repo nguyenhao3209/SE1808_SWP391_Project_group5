@@ -156,8 +156,14 @@
                                     <td>${stock.category.categoryName}</td>
                                     <td>${stock.brand}</td>
                                     <td>
-                                        <input type="number" class="update-stock-input" data-id="${stock.productID}" value="${stock.stockQuantity}" min="0">
-                                        <button class="update-stock-btn btn btn-sm btn-primary" data-id="${stock.productID}">Update</button>
+                                        <c:if test="${stock.category.categoryName ne 'Shoes' && stock.category.categoryName ne 'Clothes'}">
+                                            <input type="number" class="update-stock-input" data-id="${stock.productID}" value="${stock.stockQuantity}" min="0">
+                                            <button class="update-stock-btn btn btn-sm btn-primary" data-id="${stock.productID}">Update</button>
+                                        </c:if>
+                                        <c:if test="${stock.category.categoryName eq 'Shoes' || stock.category.categoryName eq 'Clothes'}">
+                                            <button class="update-stock-btn btn btn-sm btn-primary" data-id="${stock.productID}" data-bs-toggle="modal" data-bs-target="#sizeListModal">View Sizes List</button>
+                                        </c:if>
+
                                     </td>
                                     <td>${stock.importDate}</td>
                                 </tr>
@@ -192,6 +198,25 @@
                         </nav>
                     </c:if>
                 </div>
+                <!-- Modal hiển thị danh sách size -->
+                <div class="modal fade" id="sizeListModal" tabindex="-1" aria-labelledby="sizeListModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="sizeListModalLabel">Size List</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" id="sizeListContainer">
+                                <!-- Nội dung danh sách size sẽ được tải ở đây -->
+                            </div>
+                            <div class="modal-footer">
+                                <h5 id="totalQuantity" style="margin-right: auto;">Total Quantity: 0</h5>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
         </main>
@@ -259,33 +284,58 @@
             $(document).ready(function () {
                 $(document).on("click", ".update-stock-btn", function () {
                     let productID = $(this).data("id");
-                    let newQuantity = $(this).siblings(".update-stock-input").val();
-
-                    if (newQuantity < 0 || isNaN(newQuantity)) {
-                        alert("Số lượng không hợp lệ!");
-                        return;
-                    }
-
-                    $.ajax({
-                        url: "updateStock",
-                        type: "POST",
-                        data: {productID, newQuantity},
-                        success: function (response) {
-                            if (response.success) {
-                                alert("Update successfully!");
-                                fetchFilteredData(); // Làm mới bảng sau khi cập nhật
-                            } else {
-                                alert("Failled!");
+                    let buttonText = $(this).text();
+                    console.log(buttonText);
+                    if (buttonText === "View Sizes List") {
+                        $.ajax({
+                            url: "viewSizes", // Đảm bảo rằng URL này là đúng
+                            type: "GET",
+                            data: {productID},
+                            success: function (data) {
+                                $("#sizeListContainer").html(data); // Cập nhật nội dung modal
+                                // Tính tổng số lượng size
+                                let totalQuantity = 0;
+                                $("#sizeListContainer .size-quantity").each(function () {
+                                    totalQuantity += parseInt($(this).val()) || 0;
+                                });
+                                $("#totalQuantity").text("Total Quantity: " + totalQuantity);
+                                $('#sizeListModal').modal('show');
+                            },
+                            error: function (xhr) {
+                                alert("Error loading size list!");
+                                console.error("Error response: " + xhr.responseText);
                             }
-                        },
-                        error: function (xhr) {
-                            alert("Error equirment!");
-                            console.error(xhr.responseText);
+                        });
+
+                    } else {
+                        let newQuantity = $(this).siblings(".update-stock-input").val();
+                        if (newQuantity < 0 || isNaN(newQuantity)) {
+                            alert("Invalid quantity!");
+                            return;
                         }
-                    });
+
+                        $.ajax({
+                            url: "updateStock",
+                            type: "POST",
+                            data: {productID, newQuantity},
+                            success: function (response) {
+                                if (response.success) {
+                                    alert("Update successfully!");
+                                    fetchFilteredData();  // Làm mới bảng sau khi cập nhật
+                                } else {
+                                    alert("Failed!");
+                                }
+                            },
+                            error: function (xhr) {
+                                alert("Error updating stock!");
+                                console.error(xhr.responseText);
+                            }
+                        });
+                    }
                 });
             });
 
         </script>
+
     </body>
 </html>

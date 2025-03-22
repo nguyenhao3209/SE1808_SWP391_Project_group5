@@ -64,7 +64,7 @@
                         </thead>
                         <tbody id="cart-items">
                             <c:forEach var="item" items="${sessionScope.cartList}">
-                                <tr class="cart-item" data-id="${item.product.productID}" data-price="${item.product.price}" data-discount="${item.product.discountProduct}" data-stock="${item.product.stockQuantity}">
+                                <tr class="cart-item" data-id="${item.product.productID}" data-price="${item.product.price}" data-discount="${item.product.discountProduct}"   data-sizeStock="${item.productSizes.stockQuantity}" data-stock="${item.product.stockQuantity}"  data-category="${item.product.category.categoryName}">
                                     <td>
                                         <input type="checkbox" class="select-item" name="selectedItems" value="${item.cartID}">
                                     </td>
@@ -87,9 +87,9 @@
                                     </td>
                                     <td>
                                         <input type="hidden" name="quantity_${item.cartID}" value="${item.quantity}" class="item-quantity">
-                                        <div class="qty-container">
+                                        <div class="qty-container d-flex">
                                             <button type="button" class="qty-btn decrease">−</button>
-                                            <span class="qty-display">${item.quantity}</span>
+                                            <input style="width: 50px;" type="text" name="quantity" class="qty-display mt-3" value="${item.quantity}">
                                             <button type="button" class="qty-btn increase">+</button>
                                         </div>
                                     </td>
@@ -153,7 +153,7 @@
 
                     cartItems.forEach(item => {
                         const checkbox = item.querySelector(".select-item");
-                        const quantity = parseInt(item.querySelector(".qty-display").textContent);
+                        const quantity = parseInt(item.querySelector(".qty-display").value);
                         const price = parseFloat(item.dataset.price);
                         const discount = parseFloat(item.dataset.discount) || 0;
                         const totalElement = item.querySelector(".total");
@@ -161,7 +161,6 @@
                         const discountedPrice = price - (price * discount / 100);
                         const totalPrice = quantity * discountedPrice;
                         totalElement.textContent = `$` + totalPrice.toFixed(2);
-                        ;
 
                         if (checkbox.checked) {
                             subtotal += totalPrice;
@@ -188,22 +187,34 @@
                     const quantityDisplay = item.querySelector(".qty-display");
                     const quantityInput = item.querySelector(".item-quantity");
                     const stock = parseInt(item.dataset.stock);
+                    const categoryName = item.dataset.category;
+                    const sizeStock = parseInt(item.dataset.sizestock);
 
+                    // Hàm kiểm tra giới hạn kho
+                    function isWithinStockLimit(quantity) {
+                        if (categoryName === 'Shoes' || categoryName === 'Clothes') {
+                            return quantity <= sizeStock;
+                        }
+                        return quantity <= stock;
+                    }
+
+                    // Sự kiện nhấn nút giảm
                     decreaseButton.addEventListener("click", () => {
-                        let quantity = parseInt(quantityDisplay.textContent);
+                        let quantity = parseInt(quantityDisplay.value);
                         if (quantity > 1) {
                             quantity--;
-                            quantityDisplay.textContent = quantity;
+                            quantityDisplay.value = quantity;
                             quantityInput.value = quantity;
                             calculateTotal();
                         }
                     });
 
+                    // Sự kiện nhấn nút tăng
                     increaseButton.addEventListener("click", () => {
-                        let quantity = parseInt(quantityDisplay.textContent);
-                        if (quantity < stock) {
+                        let quantity = parseInt(quantityDisplay.value);
+                        if (isWithinStockLimit(quantity + 1)) {
                             quantity++;
-                            quantityDisplay.textContent = quantity;
+                            quantityDisplay.value = quantity;
                             quantityInput.value = quantity;
                             calculateTotal();
                         } else {
@@ -211,11 +222,38 @@
                         }
                     });
 
+                    // Sự kiện nhập trực tiếp
+                    quantityDisplay.addEventListener("input", () => {
+                        // Loại bỏ tất cả các ký tự không phải là số
+                        quantityDisplay.value = quantityDisplay.value.replace(/[^0-9]/g, '');
+
+                        let quantity = parseInt(quantityDisplay.value);
+
+                        // Nếu giá trị sau khi lọc là rỗng hoặc nhỏ hơn 1 thì đặt mặc định là 1
+                        if (isNaN(quantity) || quantity <= 0) {
+                            quantity = 1;
+                            quantityDisplay.value = quantity;
+                            alert("Please enter a valid number!");
+                            return;
+                        }
+
+                        if (isWithinStockLimit(quantity)) {
+                            quantityInput.value = quantity;
+                        } else {
+                            quantity = categoryName === 'Shoes' || categoryName === 'Clothes' ? sizeStock : stock;
+                            quantityDisplay.value = quantity;
+                            quantityInput.value = quantity;
+                            alert("Cannot exceed stock limit!");
+                        }
+                        calculateTotal();
+                    });
+
                     item.querySelector(".select-item").addEventListener("change", calculateTotal);
                 });
 
                 calculateTotal();
             });
+
         </script>
         <script>
             // Display notification dynamically

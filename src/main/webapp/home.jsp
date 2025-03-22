@@ -46,11 +46,11 @@
                             <i class="icon icon-arrow-left"></i>
                         </button>
 
-                        <div style="height: 80vh;" class="main-slider pattern-overlay">
+                        <div style="height: 100vh;" class="main-slider pattern-overlay">
                             <c:forEach var="slide" items="${sessionScope.slides}">
-                                <div style="height: 60vh;" class="slider-item position-relative">
+                                <div style="height: 75vh;" class="slider-item position-relative">
                                     <img src="img/Slider/${slide.imageURL}" alt="banner" class="banner-image" 
-                                         style="height: 60vh; width: 100%; object-fit: cover; border-radius: 10px;">
+                                         style="height: 75vh; width: 100%; object-fit: cover; border-radius: 10px;">
 
 
                                     <div class="banner-content position-absolute top-50 start-50 translate-middle text-center text-white p-3"

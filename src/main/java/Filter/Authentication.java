@@ -25,17 +25,17 @@ import jakarta.servlet.http.HttpSession;
  * @author HAO
  */
 public class Authentication implements Filter {
-    
+
     private static final boolean debug = true;
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
     // configured. 
     private FilterConfig filterConfig = null;
-    
+
     public Authentication() {
     }
-    
+
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
@@ -63,7 +63,7 @@ public class Authentication implements Filter {
 	}
          */
     }
-    
+
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
@@ -111,9 +111,9 @@ public class Authentication implements Filter {
         // Mảng URI dành riêng cho staff
         String[] staffURIs = {"VoucherServlet", "importStock", "CategoryServlet", "stockImport", "viewStockProducts",
             "addProduct", "editProduct", "deleteProduct", "dashboard", "CustomerProfile",
-            "CustomerOrders", "contact-list", "contact-detail", "CustomerOrders",
-            "listProducts", "OrdersServlet", "add-news", "news-management", "update-news", "delete-news", "profileStaff.jsp"};
-        if (uri.contains("img") || uri.contains("css") || uri.contains("common") || uri.contains("icomoon") || uri.contains("js") || uri.contains("resources") || uri.contains("assets")) {
+            "CustomerOrders", "contact-list", "contact-detail", "CustomerOrders", "viewSizes",
+            "listProducts", "OrdersServlet", "add-news", "news-management", "update-news", "delete-news", "profileStaff.jsp", "updateStock"};
+        if (uri.contains("img") || uri.contains("css") || uri.contains("common") || uri.contains("icomoon") || uri.contains("js") || uri.contains("resources") || uri.contains("assets") || uri.endsWith("CheckVoucherServlet")) {
             chain.doFilter(request, response);
             return;
         }
@@ -199,10 +199,10 @@ public class Authentication implements Filter {
         sb.append(")");
         return (sb.toString());
     }
-    
+
     private void sendProcessingError(Throwable t, ServletResponse response) {
         String stackTrace = getStackTrace(t);
-        
+
         if (stackTrace != null && !stackTrace.equals("")) {
             try {
                 response.setContentType("text/html");
@@ -229,7 +229,7 @@ public class Authentication implements Filter {
             }
         }
     }
-    
+
     public static String getStackTrace(Throwable t) {
         String stackTrace = null;
         try {
@@ -243,9 +243,9 @@ public class Authentication implements Filter {
         }
         return stackTrace;
     }
-    
+
     public void log(String msg) {
         filterConfig.getServletContext().log(msg);
     }
-    
+
 }

@@ -384,16 +384,7 @@
                 </form>
             </div>
         </div>
-        <jsp:include page="common/footer.jsp"/>
-        <!-- Bootstrap JS -->
-        <script src="js/jquery-1.11.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-        crossorigin="anonymous"></script>
-        <script src="js/plugins.js"></script>
-        <script src="js/script.js"></script>
-
-        <!-- Toast hiển thị ở góc phải trên (top-right) -->
+                             <!-- Toast hiển thị ở góc phải trên (top-right) -->
         <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
             <div id="voucherToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="d-flex">
@@ -404,111 +395,117 @@
                 </div>
             </div>
         </div>
-
         <script>
-                                                // Mở modal voucher
-                                                function openVoucherModal() {
-                                                    let modalEl = document.getElementById('voucherModal');
-                                                    let modal = new bootstrap.Modal(modalEl);
-                                                    modal.show();
-                                                }
+            // Mở modal voucher
+            function openVoucherModal() {
+                let modalEl = document.getElementById('voucherModal');
+                let modal = new bootstrap.Modal(modalEl);
+                modal.show();
+            }
 
-                                                // Tạo tính năng toggle cho radio => cho phép bỏ chọn
-                                                document.addEventListener('DOMContentLoaded', () => {
-                                                    let radios = document.getElementsByName('selectedVoucher');
-                                                    radios.forEach(radio => {
-                                                        radio.addEventListener('click', function () {
-                                                            // Nếu radio này đã checked trước đó => bỏ check
-                                                            if (this.oldChecked) {
-                                                                this.checked = false;
-                                                            }
-                                                            // Reset oldChecked cho tất cả
-                                                            radios.forEach(r => r.oldChecked = false);
-                                                            // Đánh dấu oldChecked cho radio này
-                                                            this.oldChecked = this.checked;
-                                                        });
-                                                    });
-                                                });
+            // Tạo tính năng toggle cho radio => cho phép bỏ chọn
+            document.addEventListener('DOMContentLoaded', () => {
+                let radios = document.getElementsByName('selectedVoucher');
+                radios.forEach(radio => {
+                    radio.addEventListener('click', function () {
+                        // Nếu radio này đã checked trước đó => bỏ check
+                        if (this.oldChecked) {
+                            this.checked = false;
+                        }
+                        // Reset oldChecked cho tất cả
+                        radios.forEach(r => r.oldChecked = false);
+                        // Đánh dấu oldChecked cho radio này
+                        this.oldChecked = this.checked;
+                    });
+                });
+            });
 
-                                                // Hàm applyVoucher(): nếu không có radio nào được chọn => "NONE"
-                                                function applyVoucher() {
-                                                    let radios = document.getElementsByName('selectedVoucher');
-                                                    let selectedCode = null;
-                                                    let selectedName = "No voucher";
+            // Hàm applyVoucher(): nếu không có radio nào được chọn => "NONE"
+            function applyVoucher() {
+                let radios = document.getElementsByName('selectedVoucher');
+                let selectedCode = null;
+                let selectedName = "No voucher";
 
-                                                    for (let r of radios) {
-                                                        if (r.checked) {
-                                                            selectedCode = r.value;
-                                                            selectedName = r.dataset.vname;
-                                                            break;
-                                                        }
-                                                    }
+                for (let r of radios) {
+                    if (r.checked) {
+                        selectedCode = r.value;
+                        selectedName = r.dataset.vname;
+                        break;
+                    }
+                }
 
-                                                    // Nếu tất cả radio đều bỏ chọn => "NONE"
-                                                    if (!selectedCode) {
-                                                        selectedCode = "NONE";
-                                                    }
+                // Nếu tất cả radio đều bỏ chọn => "NONE"
+                if (!selectedCode) {
+                    selectedCode = "NONE";
+                }
 
-                                                    let formData = new FormData();
-                                                    formData.append("voucherCode", selectedCode);
+                let formData = new FormData();
+                formData.append("voucherCode", selectedCode);
 
-                                                    fetch("CheckVoucherServlet", {
-                                                        method: "POST",
-                                                        body: formData
-                                                    })
-                                                            .then(resp => resp.json())
-                                                            .then(data => {
-                                                                if (data.success) {
-                                                                    let discount = parseFloat(data.discount);
-                                                                    let discountPercent = parseFloat(data.discountPercentage);
-                                                                    let finalTotal = parseFloat(data.finalTotal);
+                fetch("/SP25_SE1808_SWP391_Project_G5/CheckVoucherServlet", {
+                    method: "POST",
+                    body: formData
+                })
+                        .then(resp => resp.json())
+                        .then(data => {
+                            if (data.success) {
+                                let discount = parseFloat(data.discount);
+                                let discountPercent = parseFloat(data.discountPercentage);
+                                let finalTotal = parseFloat(data.finalTotal);
 
-                                                                    let vName = data.voucherName;
-                                                                    let voucherNameSpan = document.getElementById('voucherName');
-                                                                    voucherNameSpan.textContent = vName;
-                                                                    voucherNameSpan.classList.remove('no-voucher');
+                                let vName = data.voucherName;
+                                let voucherNameSpan = document.getElementById('voucherName');
+                                voucherNameSpan.textContent = vName;
+                                voucherNameSpan.classList.remove('no-voucher');
 
-                                                                    let discountRow = document.getElementById('discountRow');
-                                                                    let discountPercentSpan = document.getElementById('discountPercent');
-                                                                    let discountValueSpan = document.getElementById('discountValue');
-                                                                    let finalRow = document.getElementById('finalTotalRow');
-                                                                    let finalAmountCell = document.getElementById('finalAmountCell');
+                                let discountRow = document.getElementById('discountRow');
+                                let discountPercentSpan = document.getElementById('discountPercent');
+                                let discountValueSpan = document.getElementById('discountValue');
+                                let finalRow = document.getElementById('finalTotalRow');
+                                let finalAmountCell = document.getElementById('finalAmountCell');
 
-                                                                    if (discount > 0) {
-                                                                        discountRow.style.display = 'table-row';
-                                                                        discountPercentSpan.textContent = discountPercent.toFixed(0);
-                                                                        discountValueSpan.textContent = discount.toFixed(2);
-                                                                    } else {
-                                                                        discountRow.style.display = 'none';
-                                                                    }
-                                                                    finalRow.style.display = 'table-row';
-                                                                    finalAmountCell.textContent = "$" + finalTotal.toFixed(2);
+                                if (discount > 0) {
+                                    discountRow.style.display = 'table-row';
+                                    discountPercentSpan.textContent = discountPercent.toFixed(0);
+                                    discountValueSpan.textContent = discount.toFixed(2);
+                                } else {
+                                    discountRow.style.display = 'none';
+                                }
+                                finalRow.style.display = 'table-row';
+                                finalAmountCell.textContent = "$" + finalTotal.toFixed(2);
 
-                                                                    showVoucherToast("Voucher applied! Discount: $" + discount.toFixed(2));
+                                showVoucherToast("Voucher applied! Discount: $" + discount.toFixed(2));
 
-                                                                    // Đóng modal
-                                                                    let modalEl = document.getElementById('voucherModal');
-                                                                    let modal = bootstrap.Modal.getInstance(modalEl);
-                                                                    modal.hide();
-                                                                } else {
-                                                                    alert(data.message);
-                                                                }
-                                                            })
-                                                            .catch(err => {
-                                                                console.error("Error applying voucher:", err);
-                                                                alert("Error applying voucher");
-                                                            });
-                                                }
+                                // Đóng modal
+                                let modalEl = document.getElementById('voucherModal');
+                                let modal = bootstrap.Modal.getInstance(modalEl);
+                                modal.hide();
+                            } else {
+                                alert(data.message);
+                            }
+                        })
+                        .catch(err => {
+                            console.error("Error applying voucher:", err);
+                            alert("Error applying voucher");
+                        });
+            }
 
-                                                // Hàm hiển thị Toast
-                                                function showVoucherToast(msg) {
-                                                    let toastEl = document.getElementById('voucherToast');
-                                                    let toastBody = toastEl.querySelector('.toast-body');
-                                                    toastBody.textContent = msg;
+            // Hàm hiển thị Toast
+            function showVoucherToast(msg) {
+                let toastEl = document.getElementById('voucherToast');
+                let toastBody = toastEl.querySelector('.toast-body');
+                toastBody.textContent = msg;
 
-                                                    let toast = new bootstrap.Toast(toastEl, {delay: 2000});
-                                                    toast.show();
-                                                }
+                let toast = new bootstrap.Toast(toastEl, {delay: 2000});
+                toast.show();
+            }
         </script>
+        <jsp:include page="common/footer.jsp"/>
+        <script src="js/jquery-1.11.0.min.js"></script>
+         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/script.js"></script>
+
+       
     </body>
 </html>

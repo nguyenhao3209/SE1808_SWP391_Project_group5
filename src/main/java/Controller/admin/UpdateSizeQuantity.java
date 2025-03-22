@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author Haontce180451
  */
-public class UpdateStockServlet extends HttpServlet {
+public class UpdateSizeQuantity extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -34,10 +34,10 @@ public class UpdateStockServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdateStockServlet</title>");  
+            out.println("<title>Servlet UpdateSizeQuantity</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UpdateStockServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet UpdateSizeQuantity at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,11 +65,12 @@ public class UpdateStockServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int productID = Integer.parseInt(request.getParameter("productID"));
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        int sizeID = Integer.parseInt(request.getParameter("sizeID"));
         int newQuantity = Integer.parseInt(request.getParameter("newQuantity"));
         ProductsDAO stockDAO = new ProductsDAO();
-        boolean success = stockDAO.updateStockQuantity(productID, newQuantity);
+        boolean success = stockDAO.updateSizeQuantity(sizeID, newQuantity);
 
         response.setContentType("application/json");
         response.getWriter().write("{\"success\": " + success + "}");

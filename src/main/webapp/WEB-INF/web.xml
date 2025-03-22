@@ -119,6 +119,14 @@
         <servlet-name>profileStaffServlet</servlet-name>
         <servlet-class>Controller.admin.profileStaffServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewSizesServlet</servlet-name>
+        <servlet-class>Controller.admin.ViewSizesServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateSizeQuantity</servlet-name>
+        <servlet-class>Controller.admin.UpdateSizeQuantity</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>VoucherServlet</servlet-name>
         <url-pattern>/VoucherServlet</url-pattern>
@@ -222,6 +230,14 @@
     <servlet-mapping>
         <servlet-name>profileStaffServlet</servlet-name>
         <url-pattern>/profileStaff</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewSizesServlet</servlet-name>
+        <url-pattern>/viewSizes</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateSizeQuantity</servlet-name>
+        <url-pattern>/updateSize</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

@@ -88,7 +88,7 @@ public class AddToCartServlet extends HttpServlet {
 
     }
 
-  private void buyNow(HttpServletRequest request, HttpServletResponse response)
+    private void buyNow(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
@@ -140,7 +140,7 @@ public class AddToCartServlet extends HttpServlet {
                 session.setAttribute("cartList", newList);
                 session.setAttribute("brandTotal", brandTotal);
                 session.setAttribute("user", user);
-                
+
                 // Lấy danh sách voucher phù hợp
                 request.setAttribute("availableVouchers", voucherDAO.getVouchersByPriceRange(brandTotal));
                 request.getRequestDispatcher("payment_method.jsp").forward(request, response);
@@ -161,87 +161,111 @@ public class AddToCartServlet extends HttpServlet {
     }
 
     private void addToCart(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        String categoryName = request.getParameter("categoryName");
-        String size = request.getParameter("sizeID");
-        HttpSession session = request.getSession();
-        ProductsDAO proDAO = new ProductsDAO();
-        Customers user = (Customers) session.getAttribute("user");
-        if (user == null) {
-            session.setAttribute("errorMessage", "You need to log in to add products to your cart.");
-            response.sendRedirect("login");
-            return;
-        }
-        String productID = request.getParameter("productId");
-        String quantityStr = request.getParameter("quantity");
+        throws ServletException, IOException {
+    response.setContentType("text/html;charset=UTF-8");
+    String categoryName = request.getParameter("categoryName");
+    String size = request.getParameter("sizeID");
+    HttpSession session = request.getSession();
+    ProductsDAO proDAO = new ProductsDAO();
+    Customers user = (Customers) session.getAttribute("user");
 
-        if (productID == null || quantityStr == null || productID.isEmpty() || quantityStr.isEmpty()) {
-            session.setAttribute("notification", "Invalid product information. Please try again.");
+    if (user == null) {
+        session.setAttribute("errorMessage", "You need to log in to add products to your cart.");
+        response.sendRedirect("login");
+        return;
+    }
+
+    String productID = request.getParameter("productId");
+    String quantityStr = request.getParameter("quantity");
+
+    if (productID == null || quantityStr == null || productID.isEmpty() || quantityStr.isEmpty()) {
+        session.setAttribute("notification", "Invalid product information. Please try again.");
+        session.setAttribute("notificationType", "error");
+        response.sendRedirect("productDetails?id=" + productID);
+        return;
+    }
+
+    try {
+        int quantity = Integer.parseInt(quantityStr);
+        if (quantity <= 0) {
+            session.setAttribute("notification", "Quantity must be greater than zero.");
             session.setAttribute("notificationType", "error");
             response.sendRedirect("productDetails?id=" + productID);
             return;
         }
 
-        try {
-            int quantity = Integer.parseInt(quantityStr);
-            if (quantity <= 0) {
-                session.setAttribute("notification", "Quantity must be greater than zero.");
+        Products pro = null;
+        ProductSizes proSize = null;
+        if ((categoryName.equals("Shoes") || categoryName.equals("Clothes")) && size != null) {
+            pro = proDAO.getProductByID(Integer.parseInt(productID));
+            proSize = proDAO.getProductSizeByID(Integer.parseInt(size));
+        } else {
+            pro = proDAO.getProductByID(Integer.parseInt(productID));
+        }
+
+        if (pro != null) {
+            int availableStock = (proSize != null) ? proSize.getStockQuantity() : pro.getStockQuantity();
+            if (quantity > availableStock) {
+                session.setAttribute("notification", "Requested quantity exceeds available stock (" + availableStock + ").");
                 session.setAttribute("notificationType", "error");
                 response.sendRedirect("productDetails?id=" + productID);
                 return;
             }
-            Products pro = null;
-            ProductSizes proSize = null;
-            if ((categoryName.equals("Shoes") || categoryName.equals("Clothes")) && size != null) {
-                pro = proDAO.getProductByID(Integer.parseInt(productID));
-                proSize = proDAO.getProductSizeByID(Integer.parseInt(size));
-            } else {
-                pro = proDAO.getProductByID(Integer.parseInt(productID));
-            }
-            if (pro != null) {
-                ArrayList<Cart> itemsList = proDAO.getCartByUserID(user.getCustomerId());
-                boolean itemExisted = false;
-                int cartID = -1;
 
-                if (itemsList != null) {
-                    for (Cart cart : itemsList) {
-                        if (cart.getProduct().getProductID() == pro.getProductID()) {
-                            itemExisted = true;
-                            cartID = cart.getCartID();
-                            break;
-                        }
+            ArrayList<Cart> itemsList = proDAO.getCartByUserID(user.getCustomerId());
+            boolean itemExisted = false;
+            int cartID = -1;
+
+            if (itemsList != null) {
+                for (Cart cart : itemsList) {
+                    if (cart.getProduct().getProductID() == pro.getProductID()
+                            && ((proSize != null && cart.getProductSizes().getSizeID() == proSize.getSizeID())
+                            || (proSize == null && cart.getProductSizes() == null))) {
+                        itemExisted = true;
+                        cartID = cart.getCartID();
+                        break;
                     }
                 }
-                if (!itemExisted) {
-                    Cart item = new Cart(user, pro, proSize, quantity);
-                    proDAO.insertToCart(item);
-                } else {
-                    Cart existingItem = proDAO.getCartByCartID(cartID);
-                    int newQuantity = existingItem.getQuantity() + quantity;
-                    proDAO.updateCart(new Cart(cartID, user, pro, newQuantity));
-                }
-                int quantityTotal = proDAO.getQuantityOfItemByUserID(user.getCustomerId());
-                session.setAttribute("quantityTotal", quantityTotal);
-
-                session.setAttribute("notification", pro.getProductName() + " added to cart successfully!");
-                session.setAttribute("notificationType", "success");
-                response.sendRedirect("productDetails?id=" + productID);
-            } else {
-                session.setAttribute("notification", "Failed to add item to cart.");
-                session.setAttribute("notificationType", "error");
-                response.sendRedirect("home");
             }
-        } catch (NumberFormatException e) {
-            session.setAttribute("notification", "Invalid quantity format.");
-            session.setAttribute("notificationType", "error");
+
+            if (!itemExisted) {
+                Cart item = new Cart(user, pro, proSize, quantity);
+                proDAO.insertToCart(item);
+            } else {
+                Cart existingItem = proDAO.getCartByCartID(cartID);
+                int newQuantity = existingItem.getQuantity() + quantity;
+
+                if (newQuantity > availableStock) {
+                    session.setAttribute("notification", "Total quantity exceeds available stock (" + availableStock + ").");
+                    session.setAttribute("notificationType", "error");
+                    response.sendRedirect("productDetails?id=" + productID);
+                    return;
+                }
+
+                proDAO.updateCart(new Cart(cartID, user, pro, newQuantity));
+            }
+
+            int quantityTotal = proDAO.getQuantityOfItemByUserID(user.getCustomerId());
+            session.setAttribute("quantityTotal", quantityTotal);
+            session.setAttribute("notification", pro.getProductName() + " added to cart successfully!");
+            session.setAttribute("notificationType", "success");
             response.sendRedirect("productDetails?id=" + productID);
-        } catch (Exception e) {
-            session.setAttribute("notification", "An error occurred. Please try again.");
+        } else {
+            session.setAttribute("notification", "Failed to add item to cart.");
             session.setAttribute("notificationType", "error");
             response.sendRedirect("home");
         }
+    } catch (NumberFormatException e) {
+        session.setAttribute("notification", "Invalid quantity format.");
+        session.setAttribute("notificationType", "error");
+        response.sendRedirect("productDetails?id=" + productID);
+    } catch (Exception e) {
+        session.setAttribute("notification", "An error occurred. Please try again.");
+        session.setAttribute("notificationType", "error");
+        response.sendRedirect("home");
     }
+}
+
 
     /**
      * Returns a short description of the servlet.

@@ -1681,4 +1681,58 @@ public class ProductsDAO extends DBContext {
         return false;
     }
 
+    public boolean updateSizeQuantity(int sizeID, int newQuantity) {
+        String updateSizeSql = "UPDATE ProductSizes SET StockQuantity = ? WHERE SizeID = ?";
+        String updateProductSql = "UPDATE Products SET StockQuantity = (\n"
+                + "    SELECT COALESCE(SUM(s.StockQuantity), 0) \n"
+                + "    FROM ProductSizes s \n"
+                + "    WHERE s.ProductID = Products.ProductID\n"
+                + ") \n"
+                + "WHERE ProductID = (\n"
+                + "    SELECT ps.ProductID \n"
+                + "    FROM ProductSizes ps \n"
+                + "    WHERE ps.SizeID = ?\n"
+                + ");";
+
+        try {
+            connection.setAutoCommit(false);
+
+            // Cập nhật số lượng size
+            try ( PreparedStatement stmt1 = connection.prepareStatement(updateSizeSql)) {
+                stmt1.setInt(1, newQuantity);
+                stmt1.setInt(2, sizeID);
+                int rowsUpdated = stmt1.executeUpdate();
+                if (rowsUpdated == 0) {
+                    connection.rollback();
+                    System.err.println("No size found with ID: " + sizeID);
+                    return false;
+                }
+            }
+
+            // Cập nhật tổng số lượng sản phẩm
+            try ( PreparedStatement stmt2 = connection.prepareStatement(updateProductSql)) {
+                stmt2.setInt(1, sizeID);
+                stmt2.executeUpdate();
+            }
+
+            connection.commit();
+            return true;
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+                System.err.println("Transaction rolled back due to error: " + e.getMessage());
+            } catch (SQLException rollbackEx) {
+                System.err.println("Error during rollback: " + rollbackEx.getMessage());
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                System.err.println("Failed to reset auto-commit: " + e.getMessage());
+            }
+        }
+    }
+
 }

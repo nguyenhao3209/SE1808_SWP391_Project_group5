@@ -31,6 +31,7 @@ public class CheckVoucherServlet extends HttpServlet {
         }
 
         String voucherCode = request.getParameter("voucherCode");
+        System.out.println("result: " + voucherCode);
         JsonObject json = new JsonObject();
 
         // ===== Xử lý trường hợp "NONE" => người dùng bỏ chọn voucher =====

@@ -80,18 +80,20 @@
                     <c:if test="${product.category.categoryName eq 'Shoes' || product.category.categoryName eq 'Clothes'}">
                         <div class="size-selector">
                             <label for="size">Size:</label>
-                            <select id="size" name="sizeID">
+                            <select id="size" name="sizeID" onchange="updateMaxQuantity()">
                                 <c:forEach var="spec" items="${productSizes}">
-                                    <option value="${spec.sizeID}">${spec.size}</option>
+                                    <option value="${spec.sizeID}" data-max="${spec.stockQuantity}">${spec.size}</option>
                                 </c:forEach>
                             </select>
                         </div>
                     </c:if>
 
+
+
                     <!-- Chọn số lượng -->
                     <div class="quantity-selector">
                         <button type="button" class="qty-btn decrease">–</button>
-                        <input type="text" name="quantity" class="qty-display" value="1" readonly>
+                        <input type="text" name="quantity" class="qty-display" value="1">
                         <button type="button" class="qty-btn increase">+</button>
                     </div>
 
@@ -142,36 +144,70 @@
                 const quantityInput = document.querySelector(".qty-display");
                 const increaseBtn = document.querySelector(".increase");
                 const decreaseBtn = document.querySelector(".decrease");
+                const sizeSelect = document.getElementById("size");
 
+                // Kiểm tra xem sản phẩm có thuộc Shoes hoặc Clothes không
+                const isSizeBasedProduct = "${product.category.categoryName}" === "Shoes" || "${product.category.categoryName}" === "Clothes";
+                const defaultStockQuantity = parseInt("${product.stockQuantity}") || 1; // Số lượng tồn kho của sản phẩm (dùng khi không có size)
+
+                // Cập nhật số lượng tối đa
+                function updateMaxQuantity() {
+                    let maxQuantity;
+
+                    if (isSizeBasedProduct) {
+                        const selectedOption = sizeSelect ? sizeSelect.options[sizeSelect.selectedIndex] : null;
+                        maxQuantity = selectedOption ? parseInt(selectedOption.getAttribute("data-max")) || 1 : 1;
+                    } else {
+                        maxQuantity = defaultStockQuantity;
+                    }
+
+                    quantityInput.setAttribute("max", maxQuantity);
+
+                    // Điều chỉnh lại số lượng nếu vượt quá giới hạn
+                    if (parseInt(quantityInput.value) > maxQuantity) {
+                        quantityInput.value = maxQuantity;
+                    }
+                }
+
+                // Cập nhật số lượng
                 function updateQuantity(value) {
+                    const maxQuantity = parseInt(quantityInput.getAttribute("max")) || 1;
                     let quantity = parseInt(quantityInput.value) + value;
+
                     if (quantity < 1)
                         quantity = 1;
+                    if (quantity > maxQuantity)
+                        quantity = maxQuantity;
+
                     quantityInput.value = quantity;
                 }
 
+                // Xử lý khi nhập trực tiếp số lượng
+                quantityInput.addEventListener("input", function () {
+                    let quantity = parseInt(quantityInput.value);
+                    const maxQuantity = parseInt(quantityInput.getAttribute("max")) || 1;
+
+                    if (isNaN(quantity) || quantity < 1) {
+                        quantity = 1;
+                    }
+                    if (quantity > maxQuantity) {
+                        quantity = maxQuantity;
+                        alert("Cannot exceed stock limit!");
+                    }
+
+                    quantityInput.value = quantity;
+                });
+
+                // Gọi hàm khi trang vừa tải
+                updateMaxQuantity();
+
+                // Gán sự kiện cho các nút và select
+                if (sizeSelect) {
+                    sizeSelect.addEventListener("change", updateMaxQuantity);
+                }
                 increaseBtn.addEventListener("click", () => updateQuantity(1));
                 decreaseBtn.addEventListener("click", () => updateQuantity(-1));
             });
-
-            function changeImage(imgElement) {
-                document.getElementById("main-product-image").src = imgElement.src;
-            }
-            document.addEventListener("DOMContentLoaded", function () {
-                const addToCartBtn = document.querySelector(".add-to-cart");
-                const buyNowBtn = document.querySelector(".buy-now");
-
-                addToCartBtn.addEventListener("click", function () {
-                    alert("🛒 Added to cart successfully!");
-                    // TODO: Gọi AJAX để thêm vào giỏ hàng
-                });
-
-                buyNowBtn.addEventListener("click", function () {
-                    alert("⚡ Redirecting to checkout...");
-                    window.location.href = "checkout.jsp"; // Điều hướng đến trang thanh toán
-                });
-            });
-
         </script>
         <script>
             function showNotification(message, type) {

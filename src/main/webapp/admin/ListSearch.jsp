@@ -31,6 +31,9 @@
                 color: white;
                 z-index: 2; /* Đảm bảo header nằm trên cùng */
             }
+            .header-search{
+                background-color: #EF9800;
+            }
             img {
                 width: 50px;
                 height: auto;
@@ -53,7 +56,7 @@
             <c:when test="${not empty productList}">
                 <div class="table-container">
                     <table>
-                        <thead>
+                        <thead class="header-search">
                             <tr>
                                 <th>Image</th>
                                 <th>ID</th>
