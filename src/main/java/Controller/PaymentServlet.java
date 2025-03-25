@@ -102,7 +102,6 @@ public class PaymentServlet extends HttpServlet {
         order.setPhone(phone);
         order.setAddress(address);
         order.setStatusDL("PENDING");
-        // == Xử lý voucher (nếu có) ==
         Integer selectedVoucherID = (Integer) session.getAttribute("selectedVoucherID");
         if (selectedVoucherID != null) {
             VoucherDAO voucherDAO = new VoucherDAO();
@@ -114,7 +113,6 @@ public class PaymentServlet extends HttpServlet {
                     // Người dùng đã xài đủ số lần
                     request.setAttribute("error", "You have reached the max usage for this voucher.");
 
-                    // **** Thêm dòng này: ****
                     request.setAttribute("availableVouchers", voucherDAO.getVouchersByPriceRange(totalPrice));
 
                     request.getRequestDispatcher("payment_method.jsp").forward(request, response);
@@ -153,7 +151,7 @@ public class PaymentServlet extends HttpServlet {
         // Cập nhật quantityTotal
         int quantityTotal = proDAO.getQuantityOfItemByUserID(customer.getCustomerId());
         session.setAttribute("quantityTotal", quantityTotal);
-
+        session.setAttribute("cartList", currentCart);
         // Tuỳ theo paymentMethod
         if (!"VNPay".equalsIgnoreCase(paymentMethod)) {
             // COD -> forward sang confirmation.jsp
@@ -177,7 +175,6 @@ public class PaymentServlet extends HttpServlet {
                 }
                 request.getRequestDispatcher("confirmation.jsp").forward(request, response);
             } else {
-                order.setStatus("COMPLETED");
                 int orderId = orderDAO.insertOrder(order, orderItemsList);
                 if (orderId == 0) {
                     request.setAttribute("error", "Cannot create order. Please try again.");
@@ -255,7 +252,7 @@ public class PaymentServlet extends HttpServlet {
                 String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hashData.toString());
                 queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
                 String paymentUrl = Config.vnp_PayUrl + "?" + queryUrl;
-
+                
                 response.sendRedirect(paymentUrl);
             }
         }

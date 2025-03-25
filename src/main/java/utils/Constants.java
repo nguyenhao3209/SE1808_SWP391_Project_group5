@@ -11,9 +11,9 @@ package utils;
 public class Constants {
     //gg
 
-    public static String GOOGLE_CLIENT_ID = "306610528753-fh3idh9puib2socq0qe81q5ddf2rbl1t.apps.googleusercontent.com";
+    public static String GOOGLE_CLIENT_ID = "47101268697-vgthlhuthqqos91hf5t62d99q1f2jeks.apps.googleusercontent.com";
 
-    public static String GOOGLE_CLIENT_SECRET = "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";
+    public static String GOOGLE_CLIENT_SECRET = "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";
 
     public static String GOOGLE_REDIRECT_URI = "http://localhost:8080/SP25_SE1808_SWP391_Project_G5/login-gg";
 

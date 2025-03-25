@@ -1,6 +1,8 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:formatDate value="<%= new java.util.Date() %>" pattern="MMMM yyyy" var="currentMonth" />
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -70,14 +72,14 @@
                                         Total Frofit
                                     </h4>
                                     <span class="wc-des">
-                                        All Customs Value
+                                        All Customs Value 
+                                    <br/>${currentMonth}
                                     </span>
                                     <span class="wc-stats">
                                         $<span class="counter">
                                         <fmt:formatNumber value="${totalProfit}" pattern="###,##0.00"/>
                                     </span>
                                 </span>
-
                             </div>				      
                         </div>
                     </div>
@@ -88,7 +90,7 @@
                                     New Feedbacks
                                 </h4>
                                 <span class="wc-des">
-                                    Customer Review
+                                    Customer Review  <br/> ${currentMonth}
                                 </span>
                                 <span class="wc-stats counter">
                                     ${totalFeedbacksInMonth}
@@ -103,7 +105,7 @@
                                     New Orders 
                                 </h4>
                                 <span class="wc-des">
-                                    Fresh Order Amount 
+                                    Fresh Order Amount   <br/> ${currentMonth}
                                 </span>
                                 <span class="wc-stats counter">
                                     ${totalOrdersInMonth}
@@ -118,7 +120,7 @@
                                     Total Users 
                                 </h4>
                                 <span class="wc-des">
-                                    Sign account
+                                    Sign account  <br/> ${currentMonth}
                                 </span>
                                 <span class="wc-stats counter">
                                     ${totalCustomers}
@@ -162,7 +164,7 @@
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="wc-title">
-                                <h4>Top 10 employees with the most sales ${yearSelect}</h4>
+                                <h4>Top 10 staffs with the most sales ${yearSelect}</h4>
                             </div>
                             <div class="widget-inner">
                                 <!--                                <div class="orders-list">

@@ -53,7 +53,7 @@ public class ProductsDAO extends DBContext {
         List<Products> productList = new ArrayList<>();
 //        String sql = "SELECT p.ProductID, p.ImageURL, p.ProductName, s.Size, p.Brand, p.Price, p.StockQuantity FROM Products p\n"
 //                + "JOIN ProductSizes s ON p.ProductID = s.ProductID;";
-        String sql = "select *from Products p  order by p.ProductID ASC OFFSET " + page_number + " ROWS\n"
+        String sql = "select *from Products p WHERE p.StockQuantity >= 0  order by p.ProductID ASC OFFSET " + page_number + " ROWS\n"
                 + "FETCH NEXT 20 ROWS ONLY;";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -192,7 +192,9 @@ public class ProductsDAO extends DBContext {
     }
 
     public void deleteProductById(int productId) {
-        String sql = "DELETE FROM Products WHERE productID = ?";
+        String sql = "UPDATE [dbo].[Products]\n"
+                + "   SET[StockQuantity] = -1\n"
+                + " WHERE ProductID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, productId);
@@ -201,32 +203,9 @@ public class ProductsDAO extends DBContext {
             e.printStackTrace(); // In lỗi ra console để debug
         }
     }
-
-//    public List<Products> searchProductsByName(String query, int page_number) {
-//        List<Products> products = new ArrayList<>();
-//        String sql = "SELECT * FROM Products WHERE ProductName LIKE ?";
-//        try {
-//            PreparedStatement ps = connection.prepareStatement(sql);
-//            ps.setString(1, "%" + query + "%");
-//            ResultSet rs = ps.executeQuery();
-//            while (rs.next()) {
-//                Products product = new Products();
-//                product.setProductID(rs.getInt("ProductID"));
-//                product.setImageURL(rs.getString("ImageURL"));
-//                product.setProductName(rs.getString("ProductName"));
-//                product.setBrand(rs.getString("Brand"));
-//                product.setPrice(rs.getBigDecimal("Price"));
-//                
-//                products.add(product);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return products;
-//    }
     public List<Products> searchProductsByName(String query, int offset, int limit) {
         List<Products> products = new ArrayList<>();
-        String sql = "SELECT * FROM Products WHERE ProductName LIKE ? "
+        String sql = "SELECT * FROM Products WHERE ProductName LIKE ? AND StockQuantity >= 0"
                 + "ORDER BY ProductID ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try ( PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -262,7 +241,7 @@ public class ProductsDAO extends DBContext {
                 + "    WHERE p.CategoryID = c.CategoryID\n"
                 + "    ORDER BY p.DiscountPercent DESC\n"
                 + ") p\n"
-                + "WHERE p.DiscountPercent > 0\n"
+                + "WHERE p.DiscountPercent > 0 AND p.StockQuantity >= 0\n"
                 + "ORDER BY c.CategoryID, p.DiscountPercent DESC;";
 
         try {
@@ -292,7 +271,7 @@ public class ProductsDAO extends DBContext {
     }
 
     public int count_product() {
-        String sql = "select count(*) from Products";
+        String sql = "select count(*) from Products WHERE StockQuantity >= 0";
         int count = 0;
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -308,7 +287,7 @@ public class ProductsDAO extends DBContext {
 
     public int countSearchResults(String searchQuery) {
         int count = 0;
-        String sql = "SELECT COUNT(*) FROM Products WHERE ProductName LIKE ?";
+        String sql = "SELECT COUNT(*) FROM Products WHERE ProductName LIKE ? AND StockQuantity >= 0";
 
         try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, "%" + searchQuery + "%");
@@ -377,7 +356,7 @@ public class ProductsDAO extends DBContext {
                 + "    COUNT(f.FeedbackID) AS FeedbackCount,\n"
                 + "    AVG(f.Rating) AS AverageRating, c.CategoryName\n"
                 + "FROM Products p LEFT JOIN Feedback f ON p.ProductID = f.ProductID left join Category c on c.CategoryID = p.CategoryID\n"
-                + "WHERE p.ProductName LIKE ?"
+                + "WHERE p.ProductName LIKE ? AND p.StockQuantity >= 0"
         );
 
         // Add category filter
@@ -472,99 +451,9 @@ public class ProductsDAO extends DBContext {
         }
         return list;
     }
-
-//    public ArrayList<Products> searchProductsWithFilters(String keyword, String[] categories, String[] brands, String priceRange, int pageNumber, int pageSize) {
-//        ArrayList<Products> list = new ArrayList<>();
-//        StringBuilder sql = new StringBuilder("SELECT * FROM Products WHERE ProductName LIKE ?");
-//
-//        // Thêm điều kiện lọc theo danh mục nếu có
-//        if (categories != null && categories.length > 0) {
-//            sql.append(" AND Category IN (");
-//            for (int i = 0; i < categories.length; i++) {
-//                sql.append("?");
-//                if (i < categories.length - 1) {
-//                    sql.append(",");
-//                }
-//            }
-//            sql.append(")");
-//        }
-//
-//        // Thêm điều kiện lọc theo thương hiệu nếu có
-//        if (brands != null && brands.length > 0) {
-//            sql.append(" AND Brand IN (");
-//            for (int i = 0; i < brands.length; i++) {
-//                sql.append("?");
-//                if (i < brands.length - 1) {
-//                    sql.append(",");
-//                }
-//            }
-//            sql.append(")");
-//        }
-//
-//        // Thêm điều kiện lọc theo giá
-//        if (priceRange != null && !priceRange.isEmpty()) {
-//            if (priceRange.equals("low")) {
-//                sql.append(" AND Price < 150"); // Giá thấp
-//            } else if (priceRange.equals("medium")) {
-//                sql.append(" AND Price BETWEEN 150 AND 300"); // Giá tầm trung
-//            } else if (priceRange.equals("high")) {
-//                sql.append(" AND Price > 300"); // Giá cao
-//            }
-//        }
-//
-//        // Thêm phân trang với OFFSET và FETCH
-//        sql.append(" ORDER BY ProductID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-//        
-//        try {
-//            PreparedStatement ps = connection.prepareStatement(sql.toString());
-//            int index = 1;
-//
-//            // Thêm từ khóa tìm kiếm
-//            ps.setString(index++, "%" + keyword + "%");
-//
-//            // Gán giá trị cho danh mục
-//            if (categories != null && categories.length > 0) {
-//                for (String category : categories) {
-//                    ps.setString(index++, category);
-//                }
-//            }
-//
-//            // Gán giá trị cho thương hiệu
-//            if (brands != null && brands.length > 0) {
-//                for (String brand : brands) {
-//                    ps.setString(index++, brand);
-//                }
-//            }
-//
-//            // Tính toán và gán giá trị cho OFFSET (vị trí bắt đầu của trang hiện tại)
-//            int offset = (pageNumber - 1) * pageSize;
-//            ps.setInt(index++, offset);
-//
-//            // Gán giá trị cho FETCH NEXT (số lượng sản phẩm mỗi trang)
-//            ps.setInt(index++, pageSize);
-//            
-//            ResultSet rs = ps.executeQuery();
-//            while (rs.next()) {
-//                Products p = new Products();
-//                p.setProductID(rs.getInt("ProductID"));
-//                p.setProductName(rs.getString("ProductName"));
-//                p.setPrice(rs.getBigDecimal("Price"));
-//                p.setStockQuantity(rs.getInt("StockQuantity"));
-//                p.setBrand(rs.getString("Brand"));
-//                p.setCategoryID(new Category(rs.getInt("CategoryID")));
-//                p.setDescription(rs.getString("Description"));
-//                p.setImageURL(rs.getString("ImageURL"));
-//                list.add(p);
-//            }
-//            rs.close();
-//            ps.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return list;
-//    }
+    
     public int getTotalProducts(String keyword, String[] categories, String[] brands, String priceRange) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Products WHERE ProductName LIKE ?");
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM Products WHERE ProductName LIKE ? AND StockQuantity >= 0");
 
         // Tương tự như phần điều kiện lọc trong phương thức tìm kiếm
         if (categories != null && categories.length > 0) {
@@ -637,7 +526,7 @@ public class ProductsDAO extends DBContext {
         ArrayList<String> listBrand = new ArrayList<>();
         String sql = "SELECT DISTINCT Brand\n"
                 + "FROM [dbo].[Products]\n"
-                + "WHERE CategoryID = ?;";
+                + "WHERE CategoryID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, category);
@@ -745,7 +634,7 @@ public class ProductsDAO extends DBContext {
 
     public Products getProductById(int productId) {
         Products product = null; // Khai báo product trước try
-        String sql = "SELECT ProductID, ProductName, Description, Brand, CategoryID, Price, DiscountPercent, ImageURL FROM Products WHERE ProductID = ?";
+        String sql = "SELECT ProductID, ProductName, Description, Brand, CategoryID, Price, DiscountPercent, ImageURL FROM Products WHERE ProductID = ? AND StockQuantity >= 0";
 
         try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, productId);
@@ -780,7 +669,7 @@ public class ProductsDAO extends DBContext {
                 + "FROM Products p "
                 + "LEFT JOIN Feedback f ON p.ProductID = f.ProductID "
                 + "LEFT JOIN Category c ON c.CategoryID = p.CategoryID "
-                + "WHERE p.ProductID = ? "
+                + "WHERE p.ProductID = ? AND p.StockQuantity >= 0"
                 + "GROUP BY p.ProductID, p.ProductName, p.Price, p.StockQuantity, p.Brand, "
                 + "p.CategoryID, CAST(p.Description AS NVARCHAR(MAX)), CAST(p.ImageURL AS NVARCHAR(MAX)), "
                 + "p.CreateAt, p.UpdateAt, p.DiscountPercent, c.CategoryName";
@@ -988,31 +877,6 @@ public class ProductsDAO extends DBContext {
         return productSizes;
     }
 
-//    public ArrayList<ProductSizes> getSizesByProductId(int productId) {
-//        ArrayList<ProductSizes> productSizes = new ArrayList<>();
-//        String sql = "SELECT Size FROM ProductSizes WHERE ProductID = ?";
-//
-//        try {
-//            PreparedStatement ps = connection.prepareStatement(sql);
-//            ps.setInt(1, productId);
-//            ResultSet rs = ps.executeQuery();
-//
-//            // Lấy thông tin sản phẩm một lần để tránh truy vấn dư thừa
-//            Products product = getProductById(productId);
-//
-//            while (rs.next()) {
-//                String size = rs.getString("Size");
-//                ProductSizes psObj = new ProductSizes(product, size);
-//                productSizes.add(psObj);
-//            }
-//
-//            rs.close();
-//            ps.close();
-//        } catch (SQLException e) {
-//            System.out.println("Error: " + e.getMessage());
-//        }
-//        return productSizes;
-//    }
     public ProductSizes getProductSizeByID(int sizeID) {
 
         String sql = "SELECT [SizeID], [ProductID], [Size], [StockQuantity] "
@@ -1143,7 +1007,7 @@ public class ProductsDAO extends DBContext {
         ArrayList<Products> listProduct = new ArrayList<>();
         String sql = "SELECT ProductID, ProductName, Description, StockQuantity, Brand, CategoryID, Price, DiscountPercent, ImageURL "
                 + "FROM Products "
-                + "WHERE ProductName LIKE ? OR ProductID = ?";
+                + "WHERE ProductName LIKE ? OR ProductID = ? AND StockQuantity >= 0";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -1483,7 +1347,7 @@ public class ProductsDAO extends DBContext {
     public ArrayList<Products> getAllStockProducts() {
         ArrayList<Products> productList = new ArrayList<>();
         String sql = "SELECT p.ProductID, p.ProductName, p.CategoryID, p.Brand, p.StockQuantity, p.ImageURL, si.ImportDate "
-                + "FROM Products p "
+                + "FROM Products p WHERE p.StockQuantity >= 0 "
                 + "LEFT JOIN StockImportDetails sid ON p.ProductID = sid.ProductID "
                 + "LEFT JOIN StockImport si ON sid.ImportID = si.ImportID";
 
@@ -1519,6 +1383,7 @@ public class ProductsDAO extends DBContext {
                 + "FROM Products p "
                 + "LEFT JOIN StockImportDetails sid ON p.ProductID = sid.ProductID "
                 + "LEFT JOIN StockImport si ON sid.ImportID = si.ImportID "
+                + "WHERE p.StockQuantity >= 0"
                 + "ORDER BY p.ProductID, si.ImportDate DESC " // Ưu tiên ngày nhập mới nhất trước
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
@@ -1596,7 +1461,7 @@ public class ProductsDAO extends DBContext {
                 + "(SELECT MAX(si.ImportDate) FROM StockImportDetails sid "
                 + " JOIN StockImport si ON sid.ImportID = si.ImportID "
                 + " WHERE sid.ProductID = p.ProductID) AS LatestImportDate "
-                + "FROM Products p WHERE 1=1 "
+                + "FROM Products p WHERE 1=1 AND p.StockQuantity >= 0 "
         );
 
         // Lọc theo từ khóa

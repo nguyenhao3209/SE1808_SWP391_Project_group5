@@ -89,27 +89,39 @@
                     </c:if>
 
 
-
-                    <!-- Chọn số lượng -->
-                    <div class="quantity-selector">
-                        <button type="button" class="qty-btn decrease">–</button>
-                        <input type="text" name="quantity" class="qty-display" value="1">
-                        <button type="button" class="qty-btn increase">+</button>
-                    </div>
-
+                    <c:if test="${product.stockQuantity > 0}">
+                        <!-- Chọn số lượng -->
+                        <div class="quantity-selector">
+                            <button type="button" class="qty-btn decrease">–</button>
+                            <input type="text" name="quantity" class="qty-display" value="1">
+                            <button type="button" class="qty-btn increase">+</button>
+                        </div>
+                    </c:if>
                     <!-- Gửi dữ liệu đến Servlet -->
                     <input type="hidden" name="categoryName" value="${product.category.categoryName}">
                     <input type="hidden" name="productId" value="${product.productID}">
                     <input type="hidden" name="productName" value="${product.productName}">
 
-                    <div class="row mt-3">
-                        <div class="col-6">
-                            <button type="submit" name="action" value="addToCart" class="btn btn-primary w-100"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+                    <c:if test="${product.stockQuantity > 0}">
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <button type="submit" name="action" value="addToCart" class="btn btn-primary w-100">
+                                    <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button type="submit" name="action" value="buyNow" class="btn btn-danger w-100">
+                                    <i class="fa-solid fa-cart-shopping"></i> Buy Now
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <button type="submit" name="action" value="buyNow" class="btn btn-danger w-100"><i class="fa-solid fa-cart-shopping"></i> Buy Now</button>
+                    </c:if>
+
+                    <c:if test="${product.stockQuantity == 0}">
+                        <div class="alert alert-danger mt-3 text-center">
+                            <strong>Out of Stock</strong> - This product is currently unavailable.
                         </div>
-                    </div>
+                    </c:if>
                 </form>
 
                 <c:if test="${not empty specifications}">

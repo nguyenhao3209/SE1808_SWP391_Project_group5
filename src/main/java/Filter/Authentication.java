@@ -105,7 +105,6 @@ public class Authentication implements Filter {
         HttpSession session = req.getSession(false);
         Object user = (session != null) ? session.getAttribute("user") : null;
         String uri = req.getRequestURI();
-
         // Mảng URI dành riêng cho admin
         String[] adminURIs = {"viewImported", "viewImportedDetails", "addStaff", "editStaff", "deleteStaff", "viewImported"};
         // Mảng URI dành riêng cho staff
@@ -120,7 +119,7 @@ public class Authentication implements Filter {
         // Nếu người dùng chưa đăng nhập
         if (user == null) {
             // Nếu yêu cầu truy cập trang không phải là trang đăng nhập, đăng ký, hoặc trang chủ
-            if (!uri.endsWith("login") && !uri.endsWith("register") && !uri.endsWith("home") && !uri.contains("news-list") && !uri.endsWith("ViewVouchersServlet") && !uri.endsWith("forget-password.jsp") && !uri.endsWith("forgotPassword") && !uri.endsWith("searchServlet") && !uri.contains("productDetails") && !uri.endsWith("ProductFilterServlet") && !uri.endsWith("filter-feedback")) {
+            if (!uri.endsWith("login-fb") && !uri.endsWith("login-gg") && !uri.endsWith("login") && !uri.endsWith("register") && !uri.endsWith("home") && !uri.contains("news-list") && !uri.endsWith("ViewVouchersServlet") && !uri.endsWith("forget-password.jsp") && !uri.endsWith("forgotPassword") && !uri.endsWith("searchServlet") && !uri.contains("productDetails") && !uri.endsWith("ProductFilterServlet") && !uri.endsWith("filter-feedback")) {
                 res.sendRedirect("login");
                 return;
             }

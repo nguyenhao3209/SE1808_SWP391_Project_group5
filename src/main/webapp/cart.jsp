@@ -286,6 +286,21 @@
                 // Hiển thị thông báo xác nhận
                 return confirm(`Are you sure you want to remove "` + productName + `" from your cart?`);
             }
+            
+            document.addEventListener("DOMContentLoaded", function () {
+    const checkoutButton = document.querySelector(".checkout-btn");
+    const cartForm = document.getElementById("cart-form");
+
+    checkoutButton.addEventListener("click", function (event) {
+        const selectedItems = document.querySelectorAll(".select-item:checked");
+
+        if (selectedItems.length === 0) {
+            event.preventDefault(); // Ngăn không cho gửi form
+            alert("Please select at least one product before checking out!");
+        }
+    });
+});
+
         </script>
         <script src="js/jquery-1.11.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"

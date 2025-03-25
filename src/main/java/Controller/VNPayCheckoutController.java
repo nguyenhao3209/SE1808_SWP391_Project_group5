@@ -4,6 +4,7 @@
  */
 package Controller;
 
+import Models.Cart;
 import Models.Orders;
 import dal.OrdersDAO;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -37,6 +39,7 @@ public class VNPayCheckoutController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
+            HttpSession session = request.getSession();
             String orderId = request.getParameter("orderId");
             String responseCode = request.getParameter("vnp_ResponseCode");
             if ("00".equals(responseCode)) {
@@ -44,6 +47,8 @@ public class VNPayCheckoutController extends HttpServlet {
                 OrdersDAO odao = new OrdersDAO();
                 odao.updateStatusPayment(new Orders(Integer.parseInt(orderId), "COMPLETED"));
             }
+            ArrayList<Cart> currentCart = (ArrayList<Cart>) session.getAttribute("cartList");
+            session.setAttribute("cartList", currentCart);
             request.setAttribute("paymentMethod", "VNPay");
             request.getRequestDispatcher("confirmation.jsp").forward(request, response);
         } catch (Exception e) {
