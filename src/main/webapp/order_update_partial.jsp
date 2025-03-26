@@ -120,6 +120,7 @@
                         <option value="PACK" ${order.statusDL == 'PACK' ? 'selected' : ''}>PACK</option>
                         <option value="DELIVERY" ${order.statusDL == 'DELIVERY' ? 'selected' : ''}>DELIVERY</option>
                         <option value="CANCELLED" ${order.statusDL == 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
+                        <option value="COMPLETED" ${order.statusDL == 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
                     </select>
                 </div>
 

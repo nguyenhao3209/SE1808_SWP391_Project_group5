@@ -106,8 +106,9 @@
                                     <input type="date" class="form-control w-auto" name="endDate" placeholder="End Day">
                                     <select name="statusDL" class="w-auto">
                                         <option value="">All</option>
-                                        <option value="Pending">Pending</option>
+                                        <option value="PACK">Pack</option>
                                         <option value="Completed">Completed</option>
+                                        <option value="PENDING">Pending</option>
                                         <option value="Cancelled">Cancelled</option>
                                     </select>
                                     <button type="submit" class="btn btn-primary">Filter</button>
@@ -143,9 +144,11 @@
                                             <button class="btn btn-primary view-order-btn" data-orderid="${orders.orderID}">
                                                 View
                                             </button>
-                                            <button class="btn btn-primary update-order-btn" data-orderid="${orders.orderID}">
-                                                Update
-                                            </button>
+                                            <c:if test="${orders.statusDL.trim() ne 'COMPLETED' and orders.statusDL.trim() ne 'CANCELLED'}">
+                                                <button class="btn btn-primary update-order-btn" data-orderid="${orders.orderID}">
+                                                    Update
+                                                </button>
+                                            </c:if>
                                         </td>
 
 
