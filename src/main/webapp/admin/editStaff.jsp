@@ -91,7 +91,7 @@
                                             <br/>
                                             <div class="form-group">
                                                 <label for="phone">Phone</label>
-                                                <input type="text" class="form-control" value="${staff.phone}" name="phone" required>
+                                                <input type="text" pattern="\d{10}" class="form-control" value="${staff.phone}" name="phone" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="role">Role</label>

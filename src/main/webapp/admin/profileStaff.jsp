@@ -110,7 +110,7 @@
 
                 <div class="mb-3">
                     <label for="phone" class="form-label">Phone</label>
-                    <input type="text" name="phone" class="form-control" value="${sessionScope.user.phone}" required>
+                    <input type="text" pattern="\d{10}" name="phone" class="form-control" value="${sessionScope.user.phone}" required>
                 </div>
 
                 <div class="mb-3">

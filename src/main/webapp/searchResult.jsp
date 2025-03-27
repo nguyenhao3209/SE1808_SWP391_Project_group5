@@ -461,9 +461,9 @@
                                         <h5 class="widget-title style-1">Price</h5>
                                         <ul>
                                             <label><input type="radio" name="priceRange" value="all" checked> All</label>
-                                            <label><input type="radio" name="priceRange"  value="low"> Under 150$</label>
-                                            <label><input type="radio" name="priceRange" value="medium"> 150$ - 300$</label>
-                                            <label><input type="radio" name="priceRange" value="high"> Over 300$</label>
+                                            <label><input type="radio" name="priceRange"  value="low"> Under $150</label>
+                                            <label><input type="radio" name="priceRange" value="medium"> $150 - $300</label>
+                                            <label><input type="radio" name="priceRange" value="high"> Over $300</label>
                                         </ul>
                                     </div>
                                 </div>

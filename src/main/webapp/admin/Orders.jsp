@@ -144,7 +144,7 @@
                                             <button class="btn btn-primary view-order-btn" data-orderid="${orders.orderID}">
                                                 View
                                             </button>
-                                            <c:if test="${orders.statusDL.trim() ne 'COMPLETED' and orders.statusDL.trim() ne 'CANCELLED'}">
+                                            <c:if test="${orders.statusDL ne 'COMPLETED' and orders.statusDL ne 'CANCELLED'}">
                                                 <button class="btn btn-primary update-order-btn" data-orderid="${orders.orderID}">
                                                     Update
                                                 </button>

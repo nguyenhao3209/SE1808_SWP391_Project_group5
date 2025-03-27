@@ -106,7 +106,7 @@
 
                 <div class="form-group">
                     <label for="phone">Phone</label>
-                    <input type="text" name="phone" value="${order.phone}" required>
+                    <input type="text" pattern="\d{10}" name="phone" value="${order.phone}" required>
                 </div>
 
                 <div class="form-group">

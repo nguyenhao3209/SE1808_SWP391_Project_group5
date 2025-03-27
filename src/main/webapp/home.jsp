@@ -137,10 +137,10 @@
                                                         <div class="item-price">
                                                             <c:choose>
                                                                 <c:when test="${not empty product[5] and product[5] != '0'}">
-                                                                    <span class="original-price text-decoration-line-through text-muted">${product[2]}$</span>
+                                                                    <span class="original-price text-decoration-line-through text-muted">$${product[2]}</span>
                                                                     <span class="discounted-price text-danger fw-bold">
                                                                         <c:set var="discountedPrice" value="${product[2] - (product[2] * product[5] / 100)}" />
-                                                                        <fmt:formatNumber value="${discountedPrice}" type="number" minFractionDigits="2" />$
+                                                                        $<fmt:formatNumber value="${discountedPrice}" type="number" minFractionDigits="2" />
                                                                     </span>
                                                                 </c:when>
                                                                 <c:otherwise>

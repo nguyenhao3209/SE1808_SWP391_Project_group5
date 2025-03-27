@@ -137,8 +137,9 @@
                                     <div class="mb-3">
                                         <label class="form-label">Discount Percentage (%)</label>
                                         <input type="number" class="form-control" name="discountPercentage"
-                                               step="1" required
-                                               value="${isEdit ? voucher.discountPercentage : ''}">
+                                               step="1" required min="0" max="50"
+                                               value="${isEdit ? voucher.discountPercentage : ''}"
+                                               oninput="validateDiscount(this)">
                                     </div>
 
                                     <!-- Max Reducing -->
@@ -245,6 +246,17 @@
             <div class="ttr-overlay"></div>
         </main>
         <!-- main end -->
+        <script>
+            function validateDiscount(input) {
+                if (input.value > 50) {
+                    alert("Discount Percentage cannot be more than 50%");
+                    input.value = 50;
+                } else if (input.value < 0) {
+                    alert("Discount Percentage cannot be negative!");
+                    input.value = 0;
+                }
+            }
+        </script>
 
         <!-- External JavaScripts (dùng chung với dashboard) -->
         <script src="admin/assets/js/jquery.min.js"></script>

@@ -44,7 +44,7 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
-        
+
         <!-- Nếu muốn thêm CSS tùy chỉnh cho form, đặt ở đây -->
         <style>
             /* Ví dụ: Tăng độ rộng form, căn giữa nhãn, ... */
@@ -128,7 +128,9 @@
                                                            name="discountPercentage" 
                                                            step="0.01"
                                                            value="${voucher.discountPercentage}" 
-                                                           required>
+                                                           max="50"
+                                                           required
+                                                           oninput="validateDiscount(this)">
                                                 </div>
 
                                                 <!-- Max Reducing -->
@@ -180,24 +182,24 @@
                                                     <label class="form-label">Is Active</label>
                                                     <select class="form-select" name="isActive">
                                                         <option value="true"  
-                                                            <c:if test="${voucher.isActive}">selected</c:if>>
-                                                            Active
-                                                        </option>
-                                                        <option value="false" 
-                                                            <c:if test="${not voucher.isActive}">selected</c:if>>
-                                                            Inactive
-                                                        </option>
-                                                    </select>
-                                                </div>
+                                                                <c:if test="${voucher.isActive}">selected</c:if>>
+                                                                    Active
+                                                                </option>
+                                                                <option value="false" 
+                                                                <c:if test="${not voucher.isActive}">selected</c:if>>
+                                                                    Inactive
+                                                                </option>
+                                                        </select>
+                                                    </div>
 
-                                                <!-- Min Order Value -->
-                                                <div class="mb-3">
-                                                    <label class="form-label">Min Order Value</label>
-                                                    <input type="number" 
-                                                           class="form-control" 
-                                                           name="minOrderValue" 
-                                                           step="0.01"
-                                                           value="${voucher.minOrderValue}">
+                                                    <!-- Min Order Value -->
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Min Order Value</label>
+                                                        <input type="number" 
+                                                               class="form-control" 
+                                                               name="minOrderValue" 
+                                                               step="0.01"
+                                                               value="${voucher.minOrderValue}">
                                                 </div>
 
                                                 <!-- Max Usage Per User -->
@@ -261,7 +263,17 @@
             <div class="ttr-overlay"></div>
         </main>
         <!-- main end -->
-
+        <script>
+            function validateDiscount(input) {
+                if (input.value > 50) {
+                    alert("Discount Percentage cannot be more than 50%");
+                    input.value = 50;
+                } else if (input.value < 0) {
+                    alert("Discount Percentage cannot be negative!");
+                    input.value = 0;
+                }
+            }
+        </script>
         <!-- External JavaScripts (dùng chung với dashboard) -->
         <script src="admin/assets/js/jquery.min.js"></script>
         <script src="admin/assets/vendors/bootstrap/js/popper.min.js"></script>
