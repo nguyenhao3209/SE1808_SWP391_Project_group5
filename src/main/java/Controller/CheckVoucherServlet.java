@@ -31,7 +31,6 @@ public class CheckVoucherServlet extends HttpServlet {
         }
 
         String voucherCode = request.getParameter("voucherCode");
-        System.out.println("result: " + voucherCode);
         JsonObject json = new JsonObject();
 
         // ===== Xử lý trường hợp "NONE" => người dùng bỏ chọn voucher =====
@@ -93,6 +92,9 @@ public class CheckVoucherServlet extends HttpServlet {
             valid = false;
             msg = "Voucher out of usage";
         }
+        // 5) user is used
+        
+        
 
         // Nếu bất kỳ điều kiện nào không thỏa => báo lỗi
         if (!valid) {

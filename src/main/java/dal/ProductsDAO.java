@@ -1383,7 +1383,7 @@ public class ProductsDAO extends DBContext {
                 + "FROM Products p "
                 + "LEFT JOIN StockImportDetails sid ON p.ProductID = sid.ProductID "
                 + "LEFT JOIN StockImport si ON sid.ImportID = si.ImportID "
-                + "WHERE p.StockQuantity >= 0"
+                + "WHERE  p.StockQuantity >= 0"
                 + "ORDER BY p.ProductID, si.ImportDate DESC " // Ưu tiên ngày nhập mới nhất trước
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 

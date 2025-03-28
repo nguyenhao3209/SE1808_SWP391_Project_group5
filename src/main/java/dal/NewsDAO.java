@@ -92,7 +92,8 @@ public class NewsDAO extends DBContext {
         ArrayList<News> newsList = new ArrayList<>();
         String sql = "SELECT n.NewsID, n.Author, n.Title, n.Content, n.PublishedDate, n.FilePath, n.ImageURL, s.StaffID, s.StaffName, s.Email "
                 + "FROM News n "
-                + "JOIN Staffs s ON n.StaffID = s.StaffID";
+                + "JOIN Staffs s ON n.StaffID = s.StaffID "
+                + "Order by n.PublishedDate DESC";
 
         try ( PreparedStatement ps = connection.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 

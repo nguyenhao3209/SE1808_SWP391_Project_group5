@@ -26,7 +26,7 @@
                     <h5>About Us</h5>
                     <ul class="menu-list">
                         <li class="menu-item">
-                            <a href="news-list">articles </a>
+                            <a href="news-list">Articles </a>
                         </li>
                     </ul>
                 </div>

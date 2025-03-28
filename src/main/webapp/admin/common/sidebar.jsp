@@ -68,7 +68,7 @@
                     <ul>
                         <li>
                             <a href="viewStockProducts" class="ttr-material-button"><span
-                                    class="ttr-label">View Stock Products</span></a>
+                                    class="ttr-label">Stock Products</span></a>
                         </li>
                         <c:if test="${sessionScope.user.role eq 'ADMIN'}">
                             <li>

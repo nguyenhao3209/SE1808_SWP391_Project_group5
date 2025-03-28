@@ -123,9 +123,9 @@
                                         <th>Customer Name</th>
                                         <th>Phone</th>
                                         <th>Date</th>
-                                        <th>Status</th>
+                                        <th>Paid</th>
                                         <th>Total Amount</th>
-                                        <th>StatusDL</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
 
                                     </tr>

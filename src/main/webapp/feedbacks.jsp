@@ -15,242 +15,262 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     </head>
-            <style>
-            /* Reset CSS */
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
+    <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-            body {
-                font-family: 'Poppins', sans-serif;
-                /*        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);*/
-                color: #333;
-            }
+        body {
+            font-family: 'Poppins', sans-serif;
+            /*        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);*/
+            color: #333;
+        }
 
-            h1 {
-                text-align: center;
-                color: #333;
-                font-size: 2.5rem;
-                margin-bottom: 30px;
-                font-weight: 600;
-            }
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
 
-            .filter-section {
-                text-align: center;
-                margin-bottom: 20px;
-            }
+        .filter-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-            .filter-section label {
-                font-size: 1rem;
-                color: #333;
-                margin-right: 10px;
-            }
+        .filter-section label {
+            font-size: 1rem;
+            color: #333;
+            margin-right: 10px;
+        }
 
-            .filter-section select {
-                padding: 8px 12px;
-                border-radius: 8px;
-                border: 1px solid #ddd;
-                font-size: 1rem;
-                background-color: #fff;
-                cursor: pointer;
-                transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            }
+        .filter-section select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            background-color: #fff;
+            cursor: pointer;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
 
-            .filter-section select:hover {
-                border-color: #6a11cb;
-                box-shadow: 0 0 8px rgba(106, 17, 203, 0.2);
-            }
+        .filter-section select:hover {
+            border-color: #6a11cb;
+            box-shadow: 0 0 8px rgba(106, 17, 203, 0.2);
+        }
 
-            .filter-section select:focus {
-                outline: none;
-                border-color: #6a11cb;
-                box-shadow: 0 0 12px rgba(106, 17, 203, 0.3);
-            }
+        .filter-section select:focus {
+            outline: none;
+            border-color: #6a11cb;
+            box-shadow: 0 0 12px rgba(106, 17, 203, 0.3);
+        }
 
-            .reviews {
-                max-width: 800px;
-                margin: 0 auto;
-            }
+        .reviews {
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-            .review {
-                background: #fff;
-                border-radius: 12px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                padding: 20px;
-                margin-bottom: 20px;
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-            }
+        .review {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-            .review:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-            }
+        .review:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
 
-            .review-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 15px;
-            }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
 
-            .username {
-                font-weight: 600;
-                color: #333;
-                font-size: 1.1rem;
-            }
+        .username {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
 
-            .rating {
-                color: #FFD700;
-            }
+        .rating {
+            color: #FFD700;
+        }
 
-            .rating .fa-star {
-                cursor: pointer;
-                font-size: 18px;
-                color: #ddd;
-                transition: color 0.3s ease;
-            }
+        .rating .fa-star {
+            cursor: pointer;
+            font-size: 18px;
+            color: #ddd;
+            transition: color 0.3s ease;
+        }
 
-            .rating .fa-star.checked {
-                color: #FFD700;
-            }
+        .rating .fa-star.checked {
+            color: #FFD700;
+        }
 
-            .review-body {
-                margin-bottom: 15px;
-            }
+        .review-body {
+            margin-bottom: 15px;
+        }
 
-            .review-body p {
-                margin: 0;
-                line-height: 1.6;
-                color: #555;
-            }
+        .review-body p {
+            margin: 0;
+            line-height: 1.6;
+            color: #555;
+        }
 
-            .btn-action {
-                background: linear-gradient(135deg, #6a11cb, #2575fc);
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                height: 30px;
-                border-radius: 25px;
-                cursor: pointer;
-                margin-right: 10px;
-                transition: background 0.3s ease, transform 0.3s ease;
-                font-size: 0.9rem;
-            }
+        .btn-action {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            height: 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background 0.3s ease, transform 0.3s ease;
+            font-size: 0.9rem;
+        }
 
-            .btn-action:hover {
-                background: linear-gradient(135deg, #2575fc, #6a11cb);
-                transform: scale(1.05);
-            }
+        .btn-action:hover {
+            background: linear-gradient(135deg, #2575fc, #6a11cb);
+            transform: scale(1.05);
+        }
 
-            .reply-form {
-                margin-top: 15px;
-            }
+        .reply-form {
+            margin-top: 15px;
+        }
 
-            .reply-form textarea {
-                width: 100%;
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                resize: vertical;
-                margin-bottom: 10px;
-                font-family: 'Poppins', sans-serif;
-                font-size: 0.9rem;
-            }
+        .reply-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+        }
 
-            .btn-minhanh {
-                background: linear-gradient(135deg, #6a11cb, #2575fc);
-                color: white;
-                border: none;
-                height: 30px;
-                padding: 8px 16px;
-                border-radius: 25px;
-                cursor: pointer;
-                transition: background 0.3s ease, transform 0.3s ease;
-                font-size: 0.9rem;
-            }
+        .btn-minhanh {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            height: 30px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            font-size: 0.9rem;
+        }
 
-            .btn-minhanh:hover {
-                background: linear-gradient(135deg, #2575fc, #6a11cb);
-                transform: scale(1.05);
-            }
+        .btn-minhanh:hover {
+            background: linear-gradient(135deg, #2575fc, #6a11cb);
+            transform: scale(1.05);
+        }
 
-            .review-replies {
-                margin-top: 15px;
-                padding-left: 20px;
-                border-left: 2px solid #6a11cb;
-            }
+        .review-replies {
+            margin-top: 15px;
+            padding-left: 20px;
+            border-left: 2px solid #6a11cb;
+        }
 
-            .reply {
-                background: #f8f9fa;
-                padding: 10px;
-                border-radius: 8px;
-                margin-bottom: 10px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            }
+        .reply {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
 
-            .reply p {
-                margin: 0;
-                line-height: 1.6;
-                color: #555;
-            }
+        .reply p {
+            margin: 0;
+            line-height: 1.6;
+            color: #555;
+        }
 
-            .star-rating {
-                margin-bottom: 15px;
-            }
+        .star-rating {
+            margin-bottom: 15px;
+        }
 
-            .star-rating .fa-star {
-                cursor: pointer;
-                font-size: 24px;
-                color: #ddd;
-                transition: color 0.3s ease;
-            }
+        .star-rating .fa-star {
+            cursor: pointer;
+            font-size: 24px;
+            color: #ddd;
+            transition: color 0.3s ease;
+        }
 
-            .star-rating .fa-star.checked {
-                color: #FFD700;
-            }
+        .star-rating .fa-star.checked {
+            color: #FFD700;
+        }
 
-            .review-form {
-                background: #fff;
-                border-radius: 12px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                padding: 20px;
-                margin-top: 30px;
-            }
+        .review-form {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 30px;
+        }
 
-            .review-form textarea {
-                width: 100%;
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                resize: vertical;
-                margin-bottom: 10px;
-                font-family: 'Poppins', sans-serif;
-                font-size: 0.9rem;
-            }
+        .review-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+        }
 
-            /* Thông báo khi không có đánh giá phù hợp */
-            .no-reviews-message {
-                text-align: center;
-                color: #ff4d4d;
-                font-size: 1.2rem;
-                margin-top: 20px;
-                display: none; /* Ẩn ban đầu */
-            }
+        /* Thông báo khi không có đánh giá phù hợp */
+        .no-reviews-message {
+            text-align: center;
+            color: #ff4d4d;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            display: none; /* Ẩn ban đầu */
+        }
 
-            .error-message {
-                color: red;
-                font-size: 0.9rem;
-                margin-bottom: 10px;
-                display: none;
-            }
-        </style>
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: none;
+        }
+    </style>
     <body>
-        <h1>Customer Feedback</h1>
-
-        <!-- Filter Section -->
-        <div class="filter-section">
+        <div class="reviews">
+            <!-- Thông báo khi không có đánh giá phù hợp -->
+            <div class="no-reviews-message"></div>
+            <c:if test="${sessionScope.user != null && isBought}">
+                <div class="review-form">
+                    <form action="feedbacks-controller" method="post" onsubmit="return validateRating()">
+                        <input type="hidden" name="action" value="add">
+                        <input type="hidden" name="productID" value="${product.productID}">
+                        <input type="hidden" name="customerId" value="${sessionScope.user.customerId}">
+                        <textarea name="comment" rows="4" placeholder="Write your feedback here..." required></textarea>
+                        <div class="star-rating">
+                            <i class="fas fa-star" data-value="1"></i>
+                            <i class="fas fa-star" data-value="2"></i>
+                            <i class="fas fa-star" data-value="3"></i>
+                            <i class="fas fa-star" data-value="4"></i>
+                            <i class="fas fa-star" data-value="5"></i>
+                        </div>
+                        <input type="hidden" name="rating" id="rating-value" required>
+                        <div class="error-message" style="color: red; display: none;">Please select a rating before submitting your feedback.</div>
+                        <button type="submit" class="btn-minhanh">Submit Feedback</button>
+                    </form>
+                </div>
+            </c:if>
+            <div class="filter-section">
             <label for="rating-filter">Filter by Rating:</label>
             <select id="rating-filter" onchange="filterFeedbacks()">
                 <option value="0">All Ratings</option>
@@ -261,10 +281,6 @@
                 <option value="5">5 Stars</option>
             </select>
         </div>
-
-        <div class="reviews">
-            <!-- Thông báo khi không có đánh giá phù hợp -->
-            <div class="no-reviews-message"></div>
             <div id="feedbackList">
                 <c:if test="${not empty sessionScope.reviews}">
                     <c:forEach var="feedback" items="${reviews}">
@@ -333,27 +349,6 @@
                 </c:if>
 
             </div>
-
-            <c:if test="${sessionScope.user != null && isBought}">
-                <div class="review-form">
-                    <form action="feedbacks-controller" method="post" onsubmit="return validateRating()">
-                        <input type="hidden" name="action" value="add">
-                        <input type="hidden" name="productID" value="${product.productID}">
-                        <input type="hidden" name="customerId" value="${sessionScope.user.customerId}">
-                        <textarea name="comment" rows="4" placeholder="Write your feedback here..." required></textarea>
-                        <div class="star-rating">
-                            <i class="fas fa-star" data-value="1"></i>
-                            <i class="fas fa-star" data-value="2"></i>
-                            <i class="fas fa-star" data-value="3"></i>
-                            <i class="fas fa-star" data-value="4"></i>
-                            <i class="fas fa-star" data-value="5"></i>
-                        </div>
-                        <input type="hidden" name="rating" id="rating-value" required>
-                        <div class="error-message" style="color: red; display: none;">Please select a rating before submitting your feedback.</div>
-                        <button type="submit" class="btn-minhanh">Submit Feedback</button>
-                    </form>
-                </div>
-            </c:if>
         </div>
 
         <script>

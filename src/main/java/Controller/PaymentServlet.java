@@ -113,7 +113,7 @@ public class PaymentServlet extends HttpServlet {
                     // Người dùng đã xài đủ số lần
                     request.setAttribute("error", "You have reached the max usage for this voucher.");
 
-                    request.setAttribute("availableVouchers", voucherDAO.getVouchersByPriceRange(totalPrice));
+                    request.setAttribute("availableVouchers", voucherDAO.getVouchersByPriceRange(totalPrice,  customer.getCustomerId()));
 
                     request.getRequestDispatcher("payment_method.jsp").forward(request, response);
                     return;

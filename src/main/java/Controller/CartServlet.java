@@ -130,7 +130,7 @@ public class CartServlet extends HttpServlet {
 
         // Lấy danh sách voucher phù hợp
         VoucherDAO voucherDAO = new VoucherDAO();
-        request.setAttribute("availableVouchers", voucherDAO.getVouchersByPriceRange(brandTotal));
+        request.setAttribute("availableVouchers", voucherDAO.getVouchersByPriceRange(brandTotal, customer.getCustomerId()));
 
         // Forward sang payment_method.jsp
         request.getRequestDispatcher("payment_method.jsp").forward(request, response);

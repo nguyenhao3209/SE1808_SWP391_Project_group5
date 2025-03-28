@@ -95,7 +95,7 @@
         <jsp:include page="../admin/common/header.jsp"></jsp:include>
         <jsp:include page="../admin/common/sidebar.jsp"></jsp:include>
             <main class="ttr-wrapper">
-                <div class="container">
+                <div class="container-fluid">
                     <h2 class="my-4">Stock Management</h2>
                     <div class="filters">
                         <input type="text" id="searchKeyword" placeholder="Search by ID or Name">
@@ -157,15 +157,14 @@
                                     <td>${stock.brand}</td>
                                     <td>
                                         <c:if test="${stock.category.categoryName ne 'Shoes' && stock.category.categoryName ne 'Clothes'}">
-                                            <input type="number" class="update-stock-input" data-id="${stock.productID}" value="${stock.stockQuantity}" min="0">
-                                            <button class="update-stock-btn btn btn-sm btn-primary" data-id="${stock.productID}">Update</button>
+                                            <input style="width: 100px;" type="number" class="update-stock-input" data-id="${stock.productID}" value="${stock.stockQuantity}" min="0">
+                                            <button class="update-stock-btn btn btn-sm btn-primary" data-id="${stock.productID}">Edit</button>
                                         </c:if>
                                         <c:if test="${stock.category.categoryName eq 'Shoes' || stock.category.categoryName eq 'Clothes'}">
                                             <button class="update-stock-btn btn btn-sm btn-primary" data-id="${stock.productID}" data-bs-toggle="modal" data-bs-target="#sizeListModal">View Sizes List</button>
                                         </c:if>
-
                                     </td>
-                                    <td>${stock.importDate}</td>
+                                    <td style="width: 200px;">${stock.importDate}</td>
                                 </tr>
                             </c:forEach>
                         </tbody>

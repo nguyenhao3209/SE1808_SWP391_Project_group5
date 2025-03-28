@@ -100,11 +100,13 @@ public class profileStaffServlet extends HttpServlet {
         Staffs user = (Staffs) session.getAttribute("user");
 
         // Cập nhật thông tin người dùng
+        user.setStaffID(user.getStaffID());
         user.setStaffName(userName);
         user.setEmail(email);
         user.setPhone(phone);
         user.setAddress(address);
         user.setGender(gender);
+        System.out.println(user.toString());
 
         // Kiểm tra xem người dùng có tải ảnh mới lên không
         Part filePart = request.getPart("avatar");

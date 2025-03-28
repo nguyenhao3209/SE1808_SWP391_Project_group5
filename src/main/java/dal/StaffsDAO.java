@@ -26,7 +26,7 @@ public class StaffsDAO extends DBContext {
 
     public List<Staffs> getAllStaffs(String gender, String status) {
         List<Staffs> staffs = new ArrayList<>();
-        String sql = "SELECT StaffID, StaffName, Email, Phone, Gender, Status, Address, CitizenID FROM Staffs Where [Status] != 'DELETED'";
+        String sql = "SELECT StaffID, StaffName, Email, Phone, Gender, Status, Address, CitizenID FROM Staffs Where [Status] != 'DELETED' AND Role != 'ADMIN'";
         if (!gender.equalsIgnoreCase("all")) {
             sql = sql + " and Gender =" + "'" + gender + "'";
         }
@@ -166,7 +166,7 @@ public class StaffsDAO extends DBContext {
     }
 
     public void updateStaff(Staffs staff) {
-        String sql = "UPDATE Staffs SET StaffName=?, Password=?, Phone=?, Role=?, Email=?, Gender=?, Status=?, Address=?, CitizenID = ? WHERE StaffId=?";
+        String sql = "UPDATE Staffs SET StaffName=?, Password=?, Phone=?, Role=?, Email=?, Gender=?, Status=?, Address=?, CitizenID = ? WHERE StaffID=?";
         try {
             ps = connection.prepareStatement(sql);
             ps.setString(1, staff.getStaffName());
@@ -186,7 +186,7 @@ public class StaffsDAO extends DBContext {
         }
     }
     public void updateStaffProfile(Staffs staff) {
-        String sql = "UPDATE Staffs SET StaffName=?, Phone=?, Email=?, Gender=?, Address=?, WHERE StaffId=?";
+        String sql = "UPDATE Staffs SET StaffName=?, Phone=?, Email=?, Gender=?, Address=?, Avatar=? WHERE StaffID=? ";
         try {
             ps = connection.prepareStatement(sql);
             ps.setString(1, staff.getStaffName());
@@ -194,7 +194,8 @@ public class StaffsDAO extends DBContext {
             ps.setString(3, staff.getEmail());
             ps.setString(4, staff.getGender());
             ps.setString(5, staff.getAddress());
-            ps.setString(6, staff.getStaffID());
+            ps.setString(6, staff.getAvatar());
+            ps.setString(7, staff.getStaffID());
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -267,9 +268,8 @@ public class StaffsDAO extends DBContext {
 
     public Staffs loginWithEmailAndPassword(String email, String password) {
         Staffs staff = null;
-        String query = "SELECT * FROM Staffs WHERE Email = ?";
+        String query = "SELECT * FROM Staffs WHERE Email = ? AND Status != 'DELETED'";
         try {
-            connection = new DBContext().connection;
             ps = connection.prepareStatement(query);
             ps.setString(1, email);
             rs = ps.executeQuery();
@@ -361,7 +361,7 @@ public class StaffsDAO extends DBContext {
         ArrayList<Staffs> staffList = new ArrayList<>();
         String sql = "SELECT [StaffID], [StaffName], [Email], [Avatar], [TokenExpiry], [Password], [Phone], [Gender], [Address], [Role], [SupervisorID], [Status], [PasswordRecoveryToken], [HireDate], [CitizenID] "
                 + "FROM [dbo].[Staffs] "
-                + "WHERE StaffID LIKE ? OR StaffName LIKE ? OR CitizenID LIKE ?";
+                + "WHERE Role != 'ADMIN' AND StaffID LIKE ? OR StaffName LIKE ? OR CitizenID LIKE ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
 

@@ -127,7 +127,7 @@
                                                                 -${product[5]}%
                                                             </span>
                                                         </c:if>
-                                                        <a href="./productDetails?id=${product[0]}" class="btn btn-primary mt-2">View Details</a>
+                                                        <a style="width: 100%;" href="./productDetails?id=${product[0]}" class="btn btn-primary mt-2">View Details</a>
                                                     </figure>
                                                     <figcaption>
                                                         <h3>${product[1]}</h3>
@@ -140,7 +140,7 @@
                                                                     <span class="original-price text-decoration-line-through text-muted">$${product[2]}</span>
                                                                     <span class="discounted-price text-danger fw-bold">
                                                                         <c:set var="discountedPrice" value="${product[2] - (product[2] * product[5] / 100)}" />
-                                                                        $<fmt:formatNumber value="${discountedPrice}" type="number" minFractionDigits="2" />
+                                                                        $<fmt:formatNumber value="${discountedPrice}" type="number" pattern="#0.00" />
                                                                     </span>
                                                                 </c:when>
                                                                 <c:otherwise>

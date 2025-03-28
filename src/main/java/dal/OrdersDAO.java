@@ -227,7 +227,7 @@ public class OrdersDAO extends DBContext {
         VoucherDAO voucherDAO = new VoucherDAO();
         StaffsDAO staffsdao = new StaffsDAO();
 
-        String sql = "SELECT * FROM [SE1808_SWP391_Group5].[dbo].[Orders] o";
+        String sql = "SELECT * FROM [SE1808_SWP391_Group5].[dbo].[Orders] o Order by o.StatusDL DESC, o.CreatedAt DESC";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();

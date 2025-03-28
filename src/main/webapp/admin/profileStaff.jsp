@@ -57,7 +57,7 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
         <style>
-             .success-message {
+            .success-message {
                 font-size: 18px; /* T?ng k?ch th??c font ch? */
                 padding: 15px 30px; /* T?ng padding ?? c? th?m kho?ng tr?ng b?n trong */
                 margin: 20px auto; /* ??t margin tr?n v? d??i */
@@ -132,6 +132,26 @@
             </form>
 
         </main>
+        <script>
+            // Hi?n th? preview ?nh ngay sau khi ng??i d?ng ch?n file
+            function previewAvatar(event) {
+                const input = event.target;
+                const reader = new FileReader();
+                reader.onload = function () {
+                    const avatarPreview = document.getElementById('avatarPreview');
+                    avatarPreview.src = reader.result;  // G?n URL c?a ?nh preview v?o th? img
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+
+            // ?n th?ng b?o sau 5 gi?y
+            setTimeout(function () {
+                const message = document.querySelector('.success-message');
+                if (message) {
+                    message.style.display = 'none';
+                }
+            }, 5000);  // ?n th?ng b?o sau 5 gi?y
+        </script>
         <!-- External JavaScripts -->
         <script src="admin/assets/js/jquery.min.js"></script>
         <script src="admin/assets/vendors/bootstrap/js/popper.min.js"></script>

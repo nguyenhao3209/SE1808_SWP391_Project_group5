@@ -72,7 +72,7 @@ public class StockImportServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        response.setContentType("text/html;charset=UTF-8");
         try {
             int importID = -1;
             String action = request.getParameter("action"); // Lấy giá trị của nút bấm

@@ -26,7 +26,9 @@ public class VoucherDAO extends DBContext {
     }
 
     private String formatTimestamp(Timestamp ts) {
-        if (ts == null) return null;
+        if (ts == null) {
+            return null;
+        }
         LocalDateTime ldt = ts.toLocalDateTime();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS");
         return ldt.format(dtf);
@@ -38,11 +40,10 @@ public class VoucherDAO extends DBContext {
     public List<Vouchers> getAllVouchers() {
         List<Vouchers> vouchers = new ArrayList<>();
         String sql = "SELECT VoucherID, [Name], [Description], DiscountPercentage, MaxReducing, "
-                   + "[Code], Quantity, ExpiryDate, IsActive, MinOrderValue, MaxUsagePerUser, UsageCount, ImageURL "
-                   + "FROM Vouchers";
+                + "[Code], Quantity, ExpiryDate, IsActive, MinOrderValue, MaxUsagePerUser, UsageCount, ImageURL "
+                + "FROM Vouchers";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try ( PreparedStatement stmt = connection.prepareStatement(sql);  ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Vouchers voucher = mapResultSetToVoucher(rs);
@@ -59,9 +60,9 @@ public class VoucherDAO extends DBContext {
     // ================================
     public Vouchers getVoucherById(int id) {
         String sql = "SELECT * FROM Vouchers WHERE VoucherID = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
+            try ( ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return mapResultSetToVoucher(rs);
                 }
@@ -77,9 +78,9 @@ public class VoucherDAO extends DBContext {
     // ================================
     public Vouchers getVoucherByCode(String code) {
         String sql = "SELECT * FROM Vouchers WHERE Code = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, code);
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return mapResultSetToVoucher(rs);
                 }
@@ -95,9 +96,9 @@ public class VoucherDAO extends DBContext {
     // ================================
     public boolean insertVoucher(Vouchers voucher) {
         String sql = "INSERT INTO Vouchers (Name, Description, DiscountPercentage, MaxReducing, "
-                   + "Code, Quantity, ExpiryDate, IsActive, MinOrderValue, MaxUsagePerUser, UsageCount, ImageURL) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                + "Code, Quantity, ExpiryDate, IsActive, MinOrderValue, MaxUsagePerUser, UsageCount, ImageURL) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, voucher.getName());
             stmt.setString(2, voucher.getDescription());
             stmt.setBigDecimal(3, voucher.getDiscountPercentage());
@@ -123,11 +124,11 @@ public class VoucherDAO extends DBContext {
     // ================================
     public boolean updateVoucher(Vouchers voucher) {
         String sql = "UPDATE Vouchers "
-                   + "SET [Name] = ?, [Description] = ?, DiscountPercentage = ?, MaxReducing = ?, "
-                   + "[Code] = ?, Quantity = ?, ExpiryDate = ?, IsActive = ?, MinOrderValue = ?, "
-                   + "MaxUsagePerUser = ?, UsageCount = ?, ImageURL = ? "
-                   + "WHERE VoucherID = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                + "SET [Name] = ?, [Description] = ?, DiscountPercentage = ?, MaxReducing = ?, "
+                + "[Code] = ?, Quantity = ?, ExpiryDate = ?, IsActive = ?, MinOrderValue = ?, "
+                + "MaxUsagePerUser = ?, UsageCount = ?, ImageURL = ? "
+                + "WHERE VoucherID = ?";
+        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, voucher.getName());
             stmt.setString(2, voucher.getDescription());
             stmt.setBigDecimal(3, voucher.getDiscountPercentage());
@@ -154,7 +155,7 @@ public class VoucherDAO extends DBContext {
     // ================================
     public boolean deleteVoucher(int id) {
         String sql = "DELETE FROM Vouchers WHERE VoucherID = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -166,16 +167,23 @@ public class VoucherDAO extends DBContext {
     // ================================
     // getVouchersByPriceRange(BigDecimal totalPrice)
     // ================================
-    public List<Vouchers> getVouchersByPriceRange(BigDecimal totalPrice) {
+    public List<Vouchers> getVouchersByPriceRange(BigDecimal totalPrice, String customerID) {
         List<Vouchers> result = new ArrayList<>();
-        String sql = "SELECT * FROM Vouchers "
-                   + "WHERE MinOrderValue <= ? "
-                   + "  AND IsActive = 1 "
-                   + "  AND ExpiryDate >= GETDATE() "
-                   + "  AND UsageCount < Quantity";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        String sql = "SELECT * FROM Vouchers v "
+                + "WHERE MinOrderValue <= ? "
+                + "  AND NOT EXISTS ( "
+                + "    SELECT 1 FROM Orders o "
+                + "    WHERE o.VoucherID = v.VoucherID "
+                + "    AND o.CustomerID = ? "
+                + "  ) "
+                + "  AND IsActive = 1 "
+                + "  AND ExpiryDate >= GETDATE() "
+                + "  AND UsageCount < Quantity";
+
+        try ( PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setBigDecimal(1, totalPrice);
-            try (ResultSet rs = ps.executeQuery()) {
+            ps.setString(2, customerID);
+            try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Vouchers v = mapResultSetToVoucher(rs);
                     result.add(v);
@@ -211,19 +219,19 @@ public class VoucherDAO extends DBContext {
         }
 
         return new Vouchers(
-            voucherID,
-            name,
-            description,
-            discountPercentage,
-            maxReducing,
-            code,
-            quantity,
-            expiryDateStr,
-            isActive,
-            minOrderValue,
-            maxUsagePerUser,
-            usageCount,
-            imageURL
+                voucherID,
+                name,
+                description,
+                discountPercentage,
+                maxReducing,
+                code,
+                quantity,
+                expiryDateStr,
+                isActive,
+                minOrderValue,
+                maxUsagePerUser,
+                usageCount,
+                imageURL
         );
     }
 
@@ -232,7 +240,7 @@ public class VoucherDAO extends DBContext {
     // ================================
     public static void main(String[] args) {
         VoucherDAO vDao = new VoucherDAO();
-        List<Vouchers> vl = vDao.getVouchersByPriceRange(new BigDecimal("80.00"));
+        List<Vouchers> vl = vDao.getVouchersByPriceRange(new BigDecimal("809.00"), "CU6001");
         System.out.println(vl.size());
     }
 }
