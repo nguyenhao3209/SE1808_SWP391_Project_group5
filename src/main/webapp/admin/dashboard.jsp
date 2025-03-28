@@ -69,7 +69,7 @@
                             <div class="widget-card widget-bg1">					 
                                 <div class="wc-item">
                                     <h4 class="wc-title">
-                                        Total Frofit
+                                        Total Revenue
                                     </h4>
                                     <span class="wc-des">
                                         All Customs Value 

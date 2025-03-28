@@ -562,36 +562,15 @@ public class OrdersDAO extends DBContext {
 
     public BigDecimal getTotalProfit() {
         BigDecimal totalProfit = BigDecimal.ZERO;
-        String sql = "SELECT SUM(\n"
-                + "        (\n"
-                + "            (COALESCE(Products.Price, 0) - (COALESCE(Products.Price, 0) * COALESCE(Products.DiscountPercent, 0) / 100)) \n"
-                + "            - COALESCE(RecentImport.CostPrice, 0)  -- Trừ giá nhập mới nhất\n"
-                + "        ) * COALESCE(OrderDetails.Quantity, 0)\n"
-                + "        - COALESCE(LEAST(Orders.TotalPrice * COALESCE(Vouchers.DiscountPercentage, 0) / 100, COALESCE(Vouchers.MaxReducing, 0)), 0)\n"
-                + "    ) AS TotalProfit\n"
-                + "FROM OrderDetails\n"
-                + "LEFT JOIN Orders ON OrderDetails.OrderID = Orders.OrderID\n"
-                + "LEFT JOIN Products ON OrderDetails.ProductID = Products.ProductID\n"
-                + "LEFT JOIN Vouchers ON Orders.VoucherID = Vouchers.VoucherID\n"
-                + "\n"
-                + "-- Lấy giá nhập theo ngày mới nhất cho từng sản phẩm\n"
-                + "LEFT JOIN (\n"
-                + "    SELECT s.ProductID, s.CostPrice\n"
-                + "    FROM StockImportDetails s\n"
-                + "    INNER JOIN (\n"
-                + "        SELECT ProductID, MAX(ImportDate) AS LatestDate\n"
-                + "        FROM StockImportDetails AS sid\n"
-                + "        INNER JOIN StockImport AS si ON sid.ImportID = si.ImportID\n"
-                + "        GROUP BY ProductID\n"
-                + "    ) AS LatestImport ON s.ProductID = LatestImport.ProductID\n"
-                + "    INNER JOIN StockImport AS si ON s.ImportID = si.ImportID AND si.ImportDate = LatestImport.LatestDate\n"
-                + ") AS RecentImport ON Products.ProductID = RecentImport.ProductID\n"
-                + " WHERE Orders.Status = 'COMPLETED'";
+        String sql = "SELECT SUM(TotalPrice) AS TotalPrice\n"
+                + "FROM [SE1808_SWP391_Group5].[dbo].[Orders]\n"
+                + "WHERE MONTH(CreatedAt) = MONTH(GETDATE()) \n"
+                + "AND YEAR(CreatedAt) = YEAR(GETDATE());";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                totalProfit = rs.getBigDecimal("TotalProfit");
+                totalProfit = rs.getBigDecimal("TotalPrice");
             }
             rs.close();
             ps.close();

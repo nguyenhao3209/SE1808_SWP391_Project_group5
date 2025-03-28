@@ -28,23 +28,6 @@ import java.util.List;
  */
 public class ProductsDAO extends DBContext {
 
-//     public List<String> getAllCategory() {
-//        ArrayList<String> list = new ArrayList<>();
-//        String sql = "select distinct c.CategoryName "
-//                + "  FROM [dbo].[Products] p, Category c where c.CategoryID = p.CategoryID";
-//        try {
-//            PreparedStatement ps = connection.prepareStatement(sql);
-//            ResultSet rs = ps.executeQuery();
-//            while (rs.next()) {
-//                list.add(rs.getString(1));
-//            }
-//            rs.close();
-//            ps.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace(); // Nên in lỗi để dễ dàng debug
-//        }
-//        return list;
-//    }
     public ProductsDAO() {
         super();
     }

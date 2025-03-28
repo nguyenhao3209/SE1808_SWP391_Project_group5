@@ -96,7 +96,6 @@ public class AddToCartServlet extends HttpServlet {
         HttpSession session = request.getSession();
         ProductsDAO proDAO = new ProductsDAO();
         VoucherDAO voucherDAO = new VoucherDAO();
-
         Customers user = (Customers) session.getAttribute("user");
         if (user == null) {
             session.setAttribute("errorMessage", "You need to log in to buy products.");
@@ -142,7 +141,7 @@ public class AddToCartServlet extends HttpServlet {
                 session.setAttribute("user", user);
 
                 // Lấy danh sách voucher phù hợp
-                request.setAttribute("availableVouchers", voucherDAO.getVouchersByPriceRange(brandTotal));
+                request.setAttribute("availableVouchers", voucherDAO.getVouchersByPriceRange(brandTotal, user.getCustomerId()));
                 request.getRequestDispatcher("payment_method.jsp").forward(request, response);
             } else {
                 session.setAttribute("notification", "Product not found!");
