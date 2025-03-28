@@ -329,7 +329,7 @@
                                                         <th>Name</th>
                                                         <th>Discount (%)</th>
                                                         <th>Max Reducing</th>
-                                                        <th>Expiry Date</th>
+                                                        <th>Min Order Value</th>
                                                         <th>Select</th>
                                                     </tr>
                                                 </thead>
@@ -340,7 +340,7 @@
                                                             <td>${v.name}</td>
                                                             <td>${v.discountPercentage}</td>
                                                             <td>$<fmt:formatNumber value="${v.maxReducing}" pattern="###,##0.00" /></td>
-                                                            <td>${v.expiryDate}</td>
+                                                            <td>${v.minOrderValue}</td>
                                                             <td>
                                                                 <!-- Radio => có thể bỏ chọn nhờ script toggle -->
                                                                 <input type="radio" 
@@ -373,18 +373,20 @@
                         <label class="form-check-label" for="cashOnDelivery">Cash on Delivery</label>
                     </div>
                     <div class="form-check">
+
                         <input class="form-check-input" type="radio" name="paymentMethod" id="paypal" value="VNPay">
                         <label class="form-check-label" for="paypal">VNPay</label>
                     </div>
 
                     <!-- Submit Button -->
                     <div class="text-end mt-3">
+                        <input type="hidden" id="finalAmountInput" name="finalAmount">
                         <button type="submit" class="btn btn-primary btn-submit btn-rounded">Confirm & Pay</button>
                     </div>
                 </form>
             </div>
         </div>
-                             <!-- Toast hiển thị ở góc phải trên (top-right) -->
+        <!-- Toast hiển thị ở góc phải trên (top-right) -->
         <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
             <div id="voucherToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="d-flex">
@@ -473,9 +475,9 @@
                                 }
                                 finalRow.style.display = 'table-row';
                                 finalAmountCell.textContent = "$" + finalTotal.toFixed(2);
+                                document.getElementById("finalAmountInput").value = document.getElementById("finalAmountCell").innerText;
 
                                 showVoucherToast("Voucher applied! Discount: $" + discount.toFixed(2));
-
                                 // Đóng modal
                                 let modalEl = document.getElementById('voucherModal');
                                 let modal = bootstrap.Modal.getInstance(modalEl);
@@ -502,10 +504,10 @@
         </script>
         <jsp:include page="common/footer.jsp"/>
         <script src="js/jquery-1.11.0.min.js"></script>
-         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/script.js"></script>
 
-       
+
     </body>
 </html>

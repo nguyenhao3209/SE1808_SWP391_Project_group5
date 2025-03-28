@@ -10,7 +10,7 @@
         <!-- Thư viện Bootstrap & Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-        
+
         <!-- File CSS của dự án -->
         <link rel="stylesheet" type="text/css" href="css/normalize.css">
         <link rel="stylesheet" type="text/css" href="icomoon/icomoon.css">
@@ -120,7 +120,9 @@
                         <option value="PACK" ${order.statusDL == 'PACK' ? 'selected' : ''}>PACK</option>
                         <option value="DELIVERY" ${order.statusDL == 'DELIVERY' ? 'selected' : ''}>DELIVERY</option>
                         <option value="CANCELLED" ${order.statusDL == 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
-                        <option value="COMPLETED" ${order.statusDL == 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
+                        <c:if test="${order.status == 'COMPLETED'}">
+                            <option value="COMPLETED" ${order.statusDL == 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
+                        </c:if>   
                     </select>
                 </div>
 

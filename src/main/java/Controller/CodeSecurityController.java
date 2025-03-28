@@ -20,7 +20,7 @@ import Models.Customers;
  *
  * @author CE180220_TranMinhKhanh
  */
-@WebServlet(name = "CodeSecurityController", urlPatterns = {"/code"})
+@WebServlet(name = "CodeSecurityController", urlPatterns = {"/codePass"})
 public class CodeSecurityController extends HttpServlet {
 
     /**
@@ -61,7 +61,7 @@ public class CodeSecurityController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        doPost(request, response);
     }
 
     /**

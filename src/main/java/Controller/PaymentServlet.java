@@ -113,10 +113,17 @@ public class PaymentServlet extends HttpServlet {
                     // Người dùng đã xài đủ số lần
                     request.setAttribute("error", "You have reached the max usage for this voucher.");
 
-                    request.setAttribute("availableVouchers", voucherDAO.getVouchersByPriceRange(totalPrice,  customer.getCustomerId()));
+                    request.setAttribute("availableVouchers", voucherDAO.getVouchersByPriceRange(totalPrice, customer.getCustomerId()));
 
                     request.getRequestDispatcher("payment_method.jsp").forward(request, response);
                     return;
+                }
+                String totalAfterVoucher = request.getParameter("finalAmount");
+                if (totalAfterVoucher != null && !totalAfterVoucher.isEmpty()) {
+                    totalAfterVoucher = totalAfterVoucher.replaceAll("[^0-9.]", "");
+                    order.setTotalPrice(new BigDecimal(totalAfterVoucher));
+                    totalPrice = order.getTotalPrice();
+                    session.setAttribute("brandTotal", totalPrice);
                 }
                 order.setVoucher(v);
             }
@@ -252,7 +259,7 @@ public class PaymentServlet extends HttpServlet {
                 String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hashData.toString());
                 queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
                 String paymentUrl = Config.vnp_PayUrl + "?" + queryUrl;
-                
+
                 response.sendRedirect(paymentUrl);
             }
         }

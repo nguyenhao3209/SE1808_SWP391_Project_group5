@@ -112,7 +112,7 @@ public class Authentication implements Filter {
             "addProduct", "editProduct", "deleteProduct", "dashboard", "CustomerProfile",
             "CustomerOrders", "contact-list", "contact-detail", "CustomerOrders", "viewSizes",
             "listProducts", "OrdersServlet", "add-news", "news-management", "update-news", "delete-news", "profileStaff.jsp", "updateStock"};
-        if (uri.contains("img") || uri.contains("css") || uri.contains("common") || uri.contains("icomoon") || uri.contains("js") || uri.contains("resources") || uri.contains("assets") || uri.endsWith("CheckVoucherServlet")) {
+        if (uri.contains("img") || uri.contains("css") || uri.contains("common") || uri.contains("icomoon") || uri.contains("js") || uri.contains("resources") || uri.contains("codePass") || uri.contains("assets") || uri.endsWith("CheckVoucherServlet") || uri.endsWith("code-security.jsp") || uri.contains("resetPassword")) {
             chain.doFilter(request, response);
             return;
         }

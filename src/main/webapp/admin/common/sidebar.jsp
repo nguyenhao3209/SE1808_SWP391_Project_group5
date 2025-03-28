@@ -95,7 +95,7 @@
                     <ul>
                         <li>
                             <a href="listProducts" class="ttr-material-button"><span
-                                    class="ttr-label">View Products</span></a>
+                                    class="ttr-label">Products List</span></a>
                         </li>
 
                         <li>
@@ -130,10 +130,10 @@
                     </a>
                     <ul>
                         <li>
-                            <a href="admin/voucher-form.jsp" class="ttr-material-button"><span class="ttr-label">Add Voucher</span></a>
+                            <a href="VoucherServlet?action=list" class="ttr-material-button"><span class="ttr-label">Voucher List</span></a>
                         </li>
                         <li>
-                            <a href="VoucherServlet?action=list" class="ttr-material-button"><span class="ttr-label">List Voucher</span></a>
+                            <a href="admin/voucher-form.jsp" class="ttr-material-button"><span class="ttr-label">Add Voucher</span></a>
                         </li>
                     </ul>
                 </li>
@@ -146,7 +146,7 @@
                     </a>
                     <ul>
                         <li>
-                            <a href="news-management" class="ttr-material-button"><span class="ttr-label">List News</span></a>
+                            <a href="news-management" class="ttr-material-button"><span class="ttr-label">News List</span></a>
                         </li>
                         <li>
                             <a href="add-news" class="ttr-material-button"><span class="ttr-label">Add News</span></a>

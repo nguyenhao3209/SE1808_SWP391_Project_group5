@@ -41,7 +41,6 @@
         <style>
             body {
                 background-color: #f8f9fa;
-                font-family: Arial, sans-serif;
             }
             .invoice-container {
                 max-width: 800px;

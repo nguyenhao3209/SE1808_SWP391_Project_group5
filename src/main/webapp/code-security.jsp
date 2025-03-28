@@ -105,7 +105,7 @@
                             <h2 class="title-head">Enter <span>Security Code</span></h2>
                             <p>Login Your Account <a href="login">Click here</a></p>
                         </div>	
-                        <form class="contact-bx" action="code" method="post">
+                        <form class="contact-bx" action="codePass" method="post">
                             <div class="row placeani">
                                 <div class="col-lg-12">
                                     <div class="form-group">
